@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#11162d" />
+    <title>Luminaria — игра воображения</title>
+    <meta name="description" content="Luminaria — онлайн-игра на ассоциации, тайные карты и воображение для 3–7 друзей." />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Luminaria — игра воображения" />
+    <meta property="og:description" content="Придумай ассоциацию, выбери карту и найди историю, которую увидят друзья." />
+    <meta property="og:image" content="/cards/moon-sailor.png" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,600;9..144,700&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+    <main>
+      <nav class="nav" aria-label="Primary navigation">
+        <a class="brand" href="#top" aria-label="Luminaria home"><span class="brand-mark">✦</span> Luminaria</a>
+        <div class="nav-actions">
+          <button class="language" id="languageToggle" type="button" aria-label="Change language">RU</button>
+          <button class="ghost-button" id="deckButton" type="button">Deck</button>
+          <button class="ghost-button" id="rulesButton" type="button" data-i18n="howToPlay">How to play</button>
+        </div>
+      </nav>
+
+      <section class="hero" id="top">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span><span data-i18n="eyebrow">A game for curious minds</span></p>
+          <h1 data-i18n="headline">See what others<br /><em>imagine.</em></h1>
+          <p class="lead" data-i18n="lead">Tell a clue. Choose a dreamlike card. Find the story only your friends can see.</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="playButton" type="button"><span data-i18n="playNow">Play now</span> <b>→</b></button>
+            <button class="text-button" id="scrollRooms" type="button" data-i18n="joinFriends">Join friends</button>
+          </div>
+          <div class="players"><div class="avatars"><span>✶</span><span>☽</span><span>♢</span><span>☼</span></div><span data-i18n="playersOnline">2,000+ dreamers playing today</span></div>
+        </div>
+
+        <div class="card-scene" aria-label="Illustrative game cards">
+          <div class="moon"></div><div class="arc"></div>
+          <article class="art-card card-back"><span>✦</span></article>
+          <article class="art-card card-one"><img src="/cards/moon-sailor.png" alt="A sailboat beneath a crescent moon" /><p>Wander</p></article>
+          <article class="art-card card-two"><img src="/cards/observatory-whale.png" alt="A whale carrying an observatory" /><p>Weightless</p></article>
+          <article class="art-card card-three"><img src="/cards/golden-door.png" alt="A glowing door in the night" /><p>Somewhere</p></article>
+          <div class="scene-caption"><span class="caption-dot"></span><span data-i18n="sceneCaption">Every card holds a different story</span></div>
+        </div>
+      </section>
+
+      <section class="rooms" id="rooms">
+        <div><p class="eyebrow"><span></span><span data-i18n="roomsEyebrow">Gather around</span></p><h2 data-i18n="roomsTitle">A table is waiting.</h2></div>
+        <div class="room-actions"><button class="room-card create" id="createRoom" type="button"><span class="icon">+</span><strong data-i18n="createRoom">Create a room</strong><small data-i18n="createRoomHint">Invite your favorite people</small></button><button class="room-card join" id="joinRoom" type="button"><span class="icon">↗</span><strong data-i18n="joinRoom">Join by code</strong><small data-i18n="joinRoomHint">Have an invitation?</small></button></div>
+      </section>
+
+      <section class="landing-guide" id="guide">
+        <header><p class="eyebrow"><span></span><span data-site-i18n="guideEyebrow">Three steps to a story</span></p><h2 data-site-i18n="guideTitle">Simple rules.<br /><em>Unexpected answers.</em></h2><p class="lead" data-site-i18n="guideLead">Luminaria is best with 3–7 people. Every round, a new player becomes the storyteller.</p></header>
+        <div class="guide-steps">
+          <article><span>01</span><h3 data-site-i18n="stepOneTitle">Make a clue</h3><p data-site-i18n="stepOneText">The storyteller chooses one private card and gives it a short, imaginative clue.</p></article>
+          <article><span>02</span><h3 data-site-i18n="stepTwoTitle">Add your card</h3><p data-site-i18n="stepTwoText">Everyone else secretly adds one card that could fit the clue.</p></article>
+          <article><span>03</span><h3 data-site-i18n="stepThreeTitle">Find the secret</h3><p data-site-i18n="stepThreeText">Vote for the storyteller’s card — but never for your own.</p></article>
+        </div>
+        <aside class="scoring-note"><span>✦</span><div><strong data-site-i18n="scoreTitle">A little scoring twist</strong><p data-site-i18n="scoreText">The storyteller scores only when some, but not all, players find their card. Clever clues win.</p></div></aside>
+      </section>
+
+      <section class="archive-teaser" aria-labelledby="archiveTitle">
+        <div class="archive-copy"><p class="eyebrow"><span></span><span data-site-i18n="archiveEyebrow">The Moonlit Archive</span></p><h2 id="archiveTitle" data-site-i18n="archiveTitle">102 cards.<br /><em>Countless stories.</em></h2><p class="lead" data-site-i18n="archiveText">Every card is a starting point for a strange, funny, or beautiful association.</p><button class="text-button archive-button" id="archiveDeck" type="button" data-site-i18n="archiveButton">Explore the full deck →</button></div>
+        <div class="archive-cards" aria-label="Deck preview"><img src="/deck-preview/11-ocean-bedroom.png" alt="Dreamlike card" /><img src="/deck-preview/27-world-elevator.png" alt="Dreamlike card" /><img src="/deck-preview/44-lantern-orchard.png" alt="Dreamlike card" /><img src="/deck-preview/65-whale-spaceship.png" alt="Dreamlike card" /><img src="/deck-preview/79-dream-card.png" alt="Dreamlike card" /><img src="/deck-preview/101-dream-card.png" alt="Dreamlike card" /></div>
+      </section>
+
+      <section class="faq" aria-labelledby="faqTitle">
+        <header><p class="eyebrow"><span></span><span data-site-i18n="faqEyebrow">Before you begin</span></p><h2 id="faqTitle" data-site-i18n="faqTitle">A few answers<br /><em>for the table.</em></h2></header>
+        <div class="faq-list">
+          <details open><summary data-site-i18n="faqOneQuestion">How many people can play?</summary><p data-site-i18n="faqOneAnswer">A real game starts with 3 players and supports up to 7. Three is the smallest table where bluffing and guessing stay interesting.</p></details>
+          <details><summary data-site-i18n="faqTwoQuestion">How long does a game last?</summary><p data-site-i18n="faqTwoAnswer">Each player spends one card every round. The number of rounds is calculated from the deck and player count before the game begins.</p></details>
+          <details><summary data-site-i18n="faqThreeQuestion">Do we need to create accounts?</summary><p data-site-i18n="faqThreeAnswer">No. Choose a nickname, create a room, and share its link. Guest sessions keep the table in sync while you play.</p></details>
+        </div>
+      </section>
+
+      <section class="final-cta">
+        <div><p class="eyebrow"><span></span><span data-site-i18n="ctaEyebrow">The table is waiting</span></p><h2 data-site-i18n="ctaTitle">Bring a clue.<br /><em>Leave with a story.</em></h2><p class="lead" data-site-i18n="ctaText">Create a private room in a moment. All your friends need is the invitation link.</p></div>
+        <div class="final-cta-actions"><button class="primary-button" id="finalPlay" type="button"><span data-site-i18n="ctaPlay">Create a room</span> <b>→</b></button><button class="text-button" id="finalJoin" type="button" data-site-i18n="ctaJoin">I have a room code</button></div>
+      </section>
+      <footer class="site-footer"><a class="brand" href="#top"><span class="brand-mark">✦</span> Luminaria</a><span data-site-i18n="footerText">A card game for curious minds</span><a href="#guide" data-site-i18n="footerRules">Rules</a></footer>
+    </main>
+
+    <dialog id="entryDialog">
+      <form method="dialog" class="modal" id="entryForm">
+        <button class="close" id="closeEntry" type="button" aria-label="Close">×</button>
+        <span class="modal-star">✦</span>
+        <h2 id="dialogTitle">Welcome to Luminaria</h2>
+        <p id="dialogText">Pick a name and join the table.</p>
+        <label for="nickname" id="nicknameLabel">Your nickname</label>
+        <input id="nickname" name="nickname" maxlength="20" autocomplete="nickname" placeholder="Moonwalker" required />
+        <div class="avatar-row" id="avatarPicker" aria-label="Choose avatar"><button type="button" class="avatar-choice selected">✶</button><button type="button" class="avatar-choice">☽</button><button type="button" class="avatar-choice">♢</button><button type="button" class="avatar-choice">☼</button><button type="button" class="avatar-choice">✿</button><label class="avatar-upload" id="avatarUploadLabel" title="Upload avatar">↑<input id="avatarUpload" type="file" accept="image/png,image/jpeg,image/webp" /></label></div>
+        <button class="primary-button full" id="entrySubmit" value="default" type="submit">Continue <b>→</b></button>
+      </form>
+    </dialog>
+    <dialog id="rulesDialog"><div class="modal rules-modal"><button class="close" id="closeRules" aria-label="Close">×</button><span class="modal-star">✦</span><h2 data-i18n="rulesTitle">How Luminaria works</h2><ol><li data-i18n="rule1">One player gives a clue for their secret card.</li><li data-i18n="rule2">Everyone else plays a card that could fit the clue.</li><li data-i18n="rule3">Guess the storyteller’s card — and surprise your friends.</li></ol><aside class="rules-score"><span>✦</span><p data-site-i18n="rulesScore">The storyteller gets 0 points if nobody — or everybody — finds the secret card. Give a clue that is just mysterious enough.</p></aside></div></dialog>
+    <dialog id="deckDialog"></dialog>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
