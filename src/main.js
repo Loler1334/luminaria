@@ -150,7 +150,8 @@ function syncLiveRoundNumber(){
   if(number&&liveTotalRounds){
     let limit=document.querySelector('.round-limit');
     if(!limit){limit=document.createElement('small');limit.className='round-limit';number.after(limit)}
-    limit.textContent=` / ${liveTotalRounds}`;
+    const limitText=` / ${liveTotalRounds}`;
+    if(limit.textContent!==limitText)limit.textContent=limitText;
   }
 }
 const roundNumberObserver=new MutationObserver(syncLiveRoundNumber);roundNumberObserver.observe(document.body,{childList:true,subtree:true});
