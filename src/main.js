@@ -77,8 +77,10 @@ addAuthButton();
 
 let liveRoomChannel=null;
 function makeRoomCode(){return Array.from(crypto.getRandomValues(new Uint32Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('')}
-function safeAvatar(player){const value=player.avatar||'☽';const image=value.match?.(/src="(data:image\/[^\"]+)"/i)?.[1];return image||value}
-async function ensureLivePlayer(player){let {data:{session}}=await supabase.auth.getSession();if(!session){const {data,error}=await supabase.auth.signInAnonymously();if(error)throw error;session=data.session}const {error}=await supabase.from('profiles').upsert({id:session.user.id,nickname:player.name,avatar:safeAvatar(player)},{onConflict:'id'});if(error)throw error;return session}
+function safeAvatar(player){const value=player.avatar||'☽';const image=value.match?.(/src="(data:image\/[^\"]+)"/i)?.[1];const candidate=image||value;return typeof candidate==='string'&&candidate.startsWith('data:image/')?(candidate.length<=60000?candidate:'☽'):candidate}
+function avatarDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(reader.error);reader.onload=()=>resolve(String(reader.result));reader.readAsDataURL(file)})}
+async function compressAvatar(file){const source=await avatarDataUrl(file);const image=await new Promise((resolve,reject)=>{const value=new Image();value.onload=()=>resolve(value);value.onerror=()=>reject(new Error('Could not read image'));value.src=source});for(const [maxSide,quality] of [[160,.7],[128,.65],[96,.6]]){const ratio=Math.min(1,maxSide/Math.max(image.naturalWidth||maxSide,image.naturalHeight||maxSide));const canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round((image.naturalWidth||maxSide)*ratio));canvas.height=Math.max(1,Math.round((image.naturalHeight||maxSide)*ratio));canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);const result=canvas.toDataURL('image/jpeg',quality);if(result.length<=60000)return result}return null}
+async function ensureLivePlayer(player){player.avatar=safeAvatar(player);let {data:{session}}=await supabase.auth.getSession();if(!session){const {data,error}=await supabase.auth.signInAnonymously();if(error)throw error;session=data.session}const {error}=await supabase.from('profiles').upsert({id:session.user.id,nickname:player.name,avatar:player.avatar},{onConflict:'id'});if(error)throw error;return session}
 async function startRoomFlow(player){try{const session=await ensureLivePlayer(player);if(entryMode==='create')return createLiveRoom(player,session);if(entryMode==='join'){const code=$('#roomCodeInput')?.value.trim().toUpperCase();return joinLiveRoom(player,session,code)}return createLiveRoom(player,session)}catch(error){console.error(error);const message=error.message?.includes('Anonymous')?(language==='ru'?'Для гостевой игры включи Anonymous Sign-ins в Supabase → Authentication → Sign In / Providers.':'Enable Anonymous Sign-ins in Supabase → Authentication → Sign In / Providers to play as a guest.'):error.message;alert(message||'Could not connect to Luminaria.');if(!entryDialog.open)entryDialog.showModal()}}
 
 document.addEventListener('click',event=>{const button=event.target.closest('#revealButton');if(!button?.classList.contains('is-ready'))return;const image=document.querySelector('.hand-card.selected img');if(image)activeStorytellerCard=image.src.split('/').pop()});
@@ -324,7 +326,7 @@ async function joinLiveRoom(player,session,code){
   }
   showLiveLobby(room,player,session)
 }
-async function loadLiveRoster(roomId){const {data:seats,error}=await supabase.from('room_players').select('user_id,is_ready,score').eq('room_id',roomId).order('joined_at');if(error)throw error;const ids=seats.map(seat=>seat.user_id);const {data:profiles}=ids.length?await supabase.from('profiles').select('id,nickname,avatar').in('id',ids):{data:[]};return seats.map(seat=>({...seat,profile:profiles?.find(profile=>profile.id===seat.user_id)}))}
+async function loadLiveRoster(roomId){const {data:seats,error}=await supabase.from('room_players').select('user_id,is_ready,score').eq('room_id',roomId).order('joined_at');if(error)throw error;const ids=seats.map(seat=>seat.user_id);const {data:profiles}=ids.length?await supabase.from('profiles').select('id,nickname,avatar').in('id',ids):{data:[]};const safeProfiles=(profiles||[]).map(profile=>({...profile,avatar:safeAvatar({avatar:profile.avatar})}));return seats.map(seat=>({...seat,profile:safeProfiles.find(profile=>profile.id===seat.user_id)}))}
 new MutationObserver(()=>{
   if(!liveGameContext||!document.querySelector('.lobby-page')||$('#leaveLobby')||liveGameContext.room.host_id===liveGameContext.session.user.id)return;
   const button=document.createElement('button');
@@ -354,7 +356,7 @@ syncAuthProfile=async function(session){
   $('#authEntry')?.remove();
   const saved=await loadSavedProfile(session).catch(()=>null);
   if(saved?.nickname){
-    localStorage.setItem('luminaria-player',JSON.stringify({name:saved.nickname,avatar:saved.avatar||'☽'}));
+    localStorage.setItem('luminaria-player',JSON.stringify({name:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})}));
     addAuthButton();
     return;
   }
@@ -364,14 +366,25 @@ syncAuthProfile=async function(session){
 
 // Store an uploaded avatar as data rather than HTML. Existing uploaded avatars
 // from older sessions are converted by safeAvatar() before they reach Supabase.
-document.addEventListener('change',event=>{
+document.addEventListener('change',async event=>{
   const input=event.target;
   if(input?.id!=='profileAvatarUpload')return;
+  event.stopImmediatePropagation();
   const file=input.files?.[0];
   if(!file||!file.type.startsWith('image/'))return;
-  const reader=new FileReader();
-  reader.onload=()=>{input.dataset.avatar=String(reader.result);const label=$('#profileUploadLabel');if(label){label.style.backgroundImage=`url(${reader.result})`;label.classList.add('has-image')}};
-  reader.readAsDataURL(file);
+  const avatar=await compressAvatar(file).catch(()=>null);
+  if(!avatar)return alert(language==='ru'?'Не удалось обработать фото. Выбери другое изображение.':'Could not process this photo. Please choose another image.');
+  input.dataset.avatar=avatar;const label=$('#profileUploadLabel');if(label){label.style.backgroundImage=`url(${avatar})`;label.classList.add('has-image')};
+},true);
+document.addEventListener('change',async event=>{
+  const input=event.target;
+  if(input?.id!=='avatarUpload')return;
+  event.stopImmediatePropagation();
+  const file=input.files?.[0];
+  if(!file||!file.type.startsWith('image/'))return;
+  const avatar=await compressAvatar(file).catch(()=>null);
+  if(!avatar)return alert(language==='ru'?'Не удалось обработать фото. Выбери другое изображение.':'Could not process this photo. Please choose another image.');
+  uploadedAvatar=avatar;const label=$('#avatarUploadLabel');if(label){label.style.backgroundImage=`url(${avatar})`;label.classList.add('has-image')};
 },true);
 document.addEventListener('click',event=>{if(event.target.closest('.profile-avatar'))$('#profileAvatarUpload')?.removeAttribute('data-avatar')},true);
 document.addEventListener('submit',async event=>{
@@ -394,6 +407,7 @@ function hydrateAvatarImages(){
   document.querySelectorAll('.lobby-avatar,.score-avatar,.waiting-players span').forEach(node=>{
     const value=node.textContent?.trim();
     if(!value?.startsWith('data:image/')||node.querySelector('img'))return;
+    if(value.length>60000){node.textContent='☽';return}
     node.textContent='';const image=document.createElement('img');image.src=value;image.alt='';image.loading='lazy';node.append(image);
   });
 }
