@@ -412,3 +412,20 @@ document.addEventListener('visibilitychange',async()=>{
     else await showGame();
   }finally{resumingLiveRoom=false}
 });
+
+function clearLiveRoomNavigation(){
+  liveRoomChannel?.unsubscribe();liveRoundChannel?.unsubscribe();
+  liveRoomChannel=null;liveRoundChannel=null;liveGameContext=null;liveRound=null;liveHandCache=[];
+  history.replaceState({},'',`${location.pathname}${location.hash}`);
+}
+// Brand links and browser Back both leave the room cleanly instead of leaving a
+// stale invitation code in the address bar.
+document.addEventListener('click',event=>{
+  if(!event.target.closest('a.brand'))return;
+  if(liveGameContext)clearLiveRoomNavigation();
+},true);
+window.addEventListener('popstate',()=>{
+  if(!liveGameContext||new URLSearchParams(location.search).get('room'))return;
+  clearLiveRoomNavigation();
+  location.replace('/');
+});
