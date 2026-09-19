@@ -1,5 +1,3 @@
--- Replace the room-start RPC when the old version gets stuck on a row lock.
--- Run the whole file in Supabase SQL Editor.
 create or replace function public.start_luminaria_game(
   target_room_id uuid,
   card_ids text[]
