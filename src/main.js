@@ -37,7 +37,7 @@ document.addEventListener('click',event=>{if(event.target.closest('#deckButton')
 if(document.querySelector('.lobby-page')&&document.body.textContent.includes('Демо-режим'))location.replace('/');
 function addDeckSearch(){const dialog=$('#deckDialog');if(!dialog?.open||$('#deckSearch'))return;const ru=language==='ru';const search=document.createElement('input');search.id='deckSearch';search.type='search';search.placeholder=ru?'Найти карту по номеру или названию':'Find a card by number or name';search.setAttribute('aria-label',search.placeholder);search.style.cssText='width:100%;margin-top:18px;padding:12px 14px;border:1px solid #ffffff2a;border-radius:9px;background:#111630;color:#fff;font:14px DM Sans;outline:none';search.addEventListener('input',()=>{const query=search.value.trim().toLowerCase();document.querySelectorAll('.deck-gallery-card').forEach(card=>{card.hidden=Boolean(query)&&!card.textContent.toLowerCase().includes(query)})});dialog.querySelector('.deck-gallery header')?.append(search)}
 new MutationObserver(()=>addDeckSearch()).observe(document.body,{childList:true,subtree:true});
-new MutationObserver(()=>{const preview=$('#cardPreviewDialog'),deck=$('#deckDialog');if(!preview||!deck?.open)return;const button=$('#previewChoose');if(button)button.textContent=language==='ru'?'Закрыть':'Close'}).observe(document.body,{childList:true,subtree:true});
+new MutationObserver(()=>{const preview=$('#cardPreviewDialog'),deck=$('#deckDialog');if(!preview||!deck?.open)return;const button=$('#previewChoose'),label=language==='ru'?'Закрыть':'Close';if(button&&button.textContent!==label)button.textContent=label}).observe(document.body,{childList:true,subtree:true});
 document.addEventListener('click',event=>{if(!event.target.closest('#previewChoose')||!$('#deckDialog')?.open)return;event.preventDefault();event.stopImmediatePropagation();$('#cardPreviewDialog')?.close()},true);
 function randomDeckHand(){if(liveGameContext)return liveHandCache;return [...deckCards].sort(()=>Math.random()-.5).slice(0,6)}
 function updateLanguage(){const t=copy[language],meta=document.querySelector('meta[name="description"]'),ogTitle=document.querySelector('meta[property="og:title"]'),ogDescription=document.querySelector('meta[property="og:description"]'),siteMeta=language==='ru'?{title:'Luminaria — игра воображения',description:'Luminaria — онлайн-игра на ассоциации, тайные карты и воображение для 3–7 друзей.',ogDescription:'Придумай ассоциацию, выбери карту и найди историю, которую увидят друзья.'}:{title:'Luminaria — a game of imagination',description:'Luminaria is an online game of clues, secret cards, and imagination for 3–7 friends.',ogDescription:'Give a clue, choose a card, and find the story your friends can see.'};document.documentElement.lang=language;document.title=siteMeta.title;if(meta)meta.content=siteMeta.description;if(ogTitle)ogTitle.content=siteMeta.title;if(ogDescription)ogDescription.content=siteMeta.ogDescription;$('#languageToggle').textContent=language==='en'?'RU':'EN';document.querySelectorAll('[data-i18n]').forEach(n=>n.innerHTML=t[n.dataset.i18n]);document.querySelectorAll('[data-site-i18n]').forEach(n=>n.innerHTML=siteCopy[language][n.dataset.siteI18n]);$('#dialogTitle').textContent=t.welcome;$('#dialogText').textContent=t.pickName;$('#nicknameLabel').textContent=t.nickname;$('#nickname').placeholder=t.placeholder;$('#entrySubmit').innerHTML=`${t.continue} <b>→</b>`}
@@ -251,7 +251,23 @@ setInterval(async()=>{
     notice.textContent=`${language==='ru'?'Не удалось обновить раунд':'Could not sync the round'}: ${error.message||'Connection error'}`;
   } finally {roundSyncBusy=false}
 },2000);
-showGame=async function(){if(!liveGameContext)return demoShowGame();await watchLiveRound();await Promise.all([loadLiveHand(),loadLiveDeckProgress()]);const round=await loadLiveRound();if(round)return routeLiveRound();if((liveStorytellerId||liveGameContext.room.host_id)===liveGameContext.session.user.id)return demoShowGame();showLiveRoundWaiting()};
+let openingLiveGame=false;
+showGame=async function(){
+  if(!liveGameContext)return demoShowGame();
+  if(openingLiveGame)return;
+  openingLiveGame=true;
+  try{
+    await watchLiveRound();
+    await Promise.all([loadLiveHand(),loadLiveDeckProgress()]);
+    const round=await loadLiveRound();
+    if(round)return routeLiveRound();
+    if((liveStorytellerId||liveGameContext.room.host_id)===liveGameContext.session.user.id)return demoShowGame();
+    showLiveRoundWaiting();
+  }catch(error){
+    console.error('Could not open live game',error);
+    alert(error.message||'Could not open the game.');
+  }finally{openingLiveGame=false}
+};
 // Realtime may be delayed on a freshly connected browser. Polling keeps the lobby
 // in sync and lets invitees enter an already started room without reloading.
 setInterval(async()=>{if(!liveGameContext||!document.querySelector('.lobby-page'))return;const {data}=await supabase.from('rooms').select('status').eq('id',liveGameContext.room.id).maybeSingle();if(data?.status==='playing')showGame()},1500);
@@ -412,7 +428,12 @@ function hydrateAvatarImages(){
     node.textContent='';const image=document.createElement('img');image.src=value;image.alt='';image.loading='lazy';node.append(image);
   });
 }
-new MutationObserver(hydrateAvatarImages).observe(document.body,{childList:true,subtree:true});
+let avatarHydrationQueued=false;
+new MutationObserver(()=>{
+  if(avatarHydrationQueued)return;
+  avatarHydrationQueued=true;
+  requestAnimationFrame(()=>{avatarHydrationQueued=false;hydrateAvatarImages()});
+}).observe(document.body,{childList:true,subtree:true});
 
 // A resumed tab can miss Realtime messages. Rehydrate from Supabase on return.
 let resumingLiveRoom=false;
