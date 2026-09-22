@@ -86,9 +86,12 @@ async function startRoomFlow(player){try{const session=await ensureLivePlayer(pl
 
 const openEntryWithoutSavedProfile=openEntry;
 let openingSavedRoom=false;
-openEntry=function(mode='play'){
+openEntry=async function(mode='play'){
+  const session=(await supabase.auth.getSession()).data.session;
+  const hasSavedAccount=Boolean(session&&!session.user?.is_anonymous);
   let player=null;
-  try{player=JSON.parse(localStorage.getItem('luminaria-player')||'null')}catch{}
+  if(hasSavedAccount){try{player=JSON.parse(localStorage.getItem('luminaria-player')||'null')}catch{}}
+  else localStorage.removeItem('luminaria-player');
   const linkedCode=new URLSearchParams(location.search).get('room')?.trim().toUpperCase();
   if(player?.name&&!openingSavedRoom&&(mode==='create'||mode==='play')){
     entryMode='create';openingSavedRoom=true;
@@ -101,7 +104,7 @@ openEntry=function(mode='play'){
     return;
   }
   openEntryWithoutSavedProfile(mode);
-  if(player?.name&&$('#nickname'))$('#nickname').value=player.name;
+  if($('#nickname'))$('#nickname').value=player?.name||'';
 };
 
 document.addEventListener('click',event=>{const button=event.target.closest('#revealButton');if(!button?.classList.contains('is-ready'))return;const image=document.querySelector('.hand-card.selected img');if(image)activeStorytellerCard=image.src.split('/').pop()});
