@@ -145,7 +145,9 @@ async function loadLiveDeckProgress(){
   return liveTotalRounds;
 }
 const demoShowGame=showGame,demoShowGuesser=showGuesser,renderLiveLobby=showLiveLobby;
-showLiveLobby=function(room,player,session){liveGameContext={room,player,session};localStorage.setItem('luminaria-last-room',JSON.stringify({code:room.code,player:{name:player.name,avatar:safeAvatar(player)}}));setupLiveChat();if(room.status==='playing')return showGame();if(room.status==='finished'){watchLiveRound();return showGameFinished()}return renderLiveLobby(room,player,session)};
+function roomRecoveryToken(code){let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}return saved?.code===code&&saved.recoveryToken?saved.recoveryToken:`${crypto.randomUUID()}${crypto.randomUUID()}`}
+async function rememberLiveRoom(room,player){const recoveryToken=roomRecoveryToken(room.code);localStorage.setItem('luminaria-last-room',JSON.stringify({code:room.code,recoveryToken,player:{name:player.name,avatar:safeAvatar(player)}}));const {error}=await supabase.rpc('set_luminaria_recovery_token',{target_room_id:room.id,recovery_token:recoveryToken});if(error)console.warn('Room recovery is not installed yet',error.message)}
+showLiveLobby=function(room,player,session){liveGameContext={room,player,session};rememberLiveRoom(room,player);setupLiveChat();if(room.status==='playing')return showGame();if(room.status==='finished'){watchLiveRound();return showGameFinished()}return renderLiveLobby(room,player,session)};
 function nextRoundStorageKey(){return `luminaria-next-round-${liveGameContext.room.id}`}
 async function loadLiveRound(){
   if(!liveGameContext)return null;
@@ -265,17 +267,17 @@ async function advanceLiveRound(){
   advancingRound=true;
   try {
     const round=await loadLiveRound();
-    if(!round||round.phase==='results'||round.storyteller_id!==liveGameContext.session.user.id)return;
-    const {data:progress,error}=await supabase.rpc('luminaria_round_progress',{target_round_id:round.id}).single();
+    if(!round||round.phase==='results')return;
+    const {error}=await supabase.rpc('advance_luminaria_round',{target_round_id:round.id});
+    if(error&&error.code==='PGRST202'){
+      if(round.storyteller_id!==liveGameContext.session.user.id)return;
+      const {data:progress,error:progressError}=await supabase.rpc('luminaria_round_progress',{target_round_id:round.id}).single();
+      if(progressError)throw progressError;
+      if(round.phase==='submitting'&&progress.submission_count>=progress.participant_count){const {error:updateError}=await supabase.from('rounds').update({phase:'voting'}).eq('id',round.id);if(updateError)throw updateError}
+      if(round.phase==='voting'&&progress.vote_count>=progress.participant_count-1){const {error:finishError}=await supabase.rpc('finalize_luminaria_round',{target_round_id:round.id});if(finishError)throw finishError}
+      return;
+    }
     if(error)throw error;
-    if(round.phase==='submitting'&&progress.participant_count>1&&progress.submission_count>=progress.participant_count){
-      const {error}=await supabase.from('rounds').update({phase:'voting'}).eq('id',round.id).eq('phase','submitting').select().single();
-      if(error)throw error;
-    }
-    if(round.phase==='voting'&&progress.participant_count>1&&progress.vote_count>=progress.participant_count-1){
-      const {error}=await supabase.rpc('finalize_luminaria_round',{target_round_id:round.id});
-      if(error)throw error;
-    }
   } finally { advancingRound=false; }
 }
 // Private card inserts are not visible to the storyteller through Realtime.
@@ -390,7 +392,14 @@ async function joinLiveRoom(player,session,code){
   const {data:existingSeat,error:seatLookupError}=await supabase.from('room_players').select('user_id').eq('room_id',room.id).eq('user_id',session.user.id).maybeSingle();
   if(seatLookupError)throw seatLookupError;
   if(!existingSeat){
-    if(room.status!=='lobby')throw new Error(language==='ru'?'Игра уже началась — новые игроки не могут присоединиться.':'This game has already started, so new players cannot join.');
+    let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}
+    if(room.status!=='lobby'&&saved?.code===room.code&&saved.recoveryToken){
+      const {error:reclaimError}=await supabase.rpc('reclaim_luminaria_seat',{room_code:room.code,recovery_token:saved.recoveryToken});
+      if(reclaimError)throw new Error(language==='ru'?'Не удалось восстановить место в комнате. Открой ссылку в том же браузере, где ты играл.':'Could not recover your seat. Open the link in the same browser you played in.');
+      const {data:recoveredRoom}=await supabase.from('rooms').select().eq('id',room.id).single();
+      return showLiveLobby(recoveredRoom||room,player,session);
+    }
+    if(room.status!=='lobby')throw new Error(language==='ru'?'Игра уже началась. Вернуться может только игрок, который уже был за этим столом.':'The game has already started. Only a player who was already seated can return.');
     const roster=await loadLiveRoster(room.id);
     if(roster.length>=7)throw new Error(language==='ru'?'В комнате уже максимум 7 игроков.':'This room already has the maximum of 7 players.');
     if(roster.some(seat=>seat.profile?.nickname?.trim().toLocaleLowerCase()===player.name.trim().toLocaleLowerCase()))throw new Error(language==='ru'?'Этот ник уже занят в комнате. Выбери другой.':'This nickname is already used in the room. Please choose another one.');
