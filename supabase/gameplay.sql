@@ -164,17 +164,26 @@ language plpgsql
 security definer
 set search_path = public
 as $$
-declare active_room uuid;
+declare
+  active_room uuid;
+  previous_card text;
 begin
-  select room_id into active_room from rounds where id = target_round_id and phase = 'submitting';
-  if active_room is null or not exists (select 1 from room_players where room_id = active_room and user_id = auth.uid()) then
+  select room_id into active_room from rounds where id = target_round_id and phase = 'submitting' for update;
+  if active_room is null or not exists (select 1 from room_players where room_id = active_room and user_id = (select auth.uid())) then
     raise exception 'You cannot play in this round';
   end if;
+  select card_id into previous_card from card_submissions
+    where round_id = target_round_id and player_id = (select auth.uid());
+  if previous_card is not null then
+    if previous_card <> chosen_card_id then raise exception 'A card has already been submitted for this round'; end if;
+    return;
+  end if;
   update room_deck_cards set is_played = true
-  where room_id = active_room and card_id = chosen_card_id and owner_id = auth.uid() and not is_played;
+  where room_id = active_room and card_id = chosen_card_id and owner_id = (select auth.uid()) and not is_played;
   if not found then raise exception 'This card is not in your hand'; end if;
   insert into card_submissions (round_id, player_id, card_id)
-  values (target_round_id, auth.uid(), chosen_card_id);
+  values (target_round_id, (select auth.uid()), chosen_card_id)
+  on conflict (round_id, player_id) do nothing;
 end;
 $$;
 
