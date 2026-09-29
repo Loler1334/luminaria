@@ -197,6 +197,19 @@ openProfileSetup=async function(session,profile=null){
   if(!profile)profile=await loadSavedProfile(session).catch(()=>null);
   const suggested=profile?.nickname||metadata.nickname||metadata.name||metadata.full_name?.split(' ')[0]||'';
   await renderProfileSetup({...session,user:{...session.user,user_metadata:{...metadata,name:escapeHtml(suggested),full_name:escapeHtml(suggested)}}});
+  if(session?.user?.is_anonymous){
+    const form=$('#profileSetupForm');
+    const ru=language==='ru';
+    const signInButton=document.createElement('button');signInButton.type='button';signInButton.className='text-button full';signInButton.id='guestSignIn';signInButton.textContent=ru?'Выйти и войти по почте':'Sign out and sign in with email';
+    form?.querySelector('.auth-note')?.before(signInButton);
+    signInButton.addEventListener('click',async()=>{
+      if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты.':'Leave the current room first.');return}
+      const {error}=await supabase.auth.signOut();if(error){alert(error.message);return}
+      localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');
+      sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);navProfileCache=null;uploadedAvatar=null;
+      $('#profileSetupDialog')?.close();$('#profileSetupDialog')?.remove();$('#authEntry')?.remove();addAuthButton();openAuth();
+    });
+  }
   const nameInput=$('#profileNickname');if(nameInput&&profile?.nickname)nameInput.value=profile.nickname;
   if(!profile)return;
   navProfileCache={id:session.user.id,nickname:profile.nickname,avatar:safeAvatar({avatar:profile.avatar})};
