@@ -15,7 +15,7 @@ begin
     raise exception 'Invalid recovery token';
   end if;
   update public.room_players
-  set recovery_token_hash = encode(digest(recovery_token, 'sha256'), 'hex')
+  set recovery_token_hash = encode(extensions.digest(recovery_token, 'sha256'), 'hex')
   where room_id = target_room_id and user_id = auth.uid();
   if not found then raise exception 'You are not seated in this room'; end if;
 end;
@@ -41,7 +41,7 @@ begin
   select user_id into previous_user
   from public.room_players
   where room_id = target_room.id
-    and recovery_token_hash = encode(digest(recovery_token, 'sha256'), 'hex')
+    and recovery_token_hash = encode(extensions.digest(recovery_token, 'sha256'), 'hex')
   for update;
   if previous_user is null then raise exception 'This seat cannot be recovered'; end if;
 
