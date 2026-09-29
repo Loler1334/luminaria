@@ -96,7 +96,66 @@ document.addEventListener('click',(event)=>{if(!event.target.closest('.avatar-ch
 $('#entryForm').addEventListener('submit',async event=>{event.preventDefault();event.stopImmediatePropagation();const nickname=$('#nickname'),name=nickname.value.trim().replace(/\s+/g,' '),codeInput=$('#roomCodeInput');if(name.length<2){nickname.setCustomValidity(language==='ru'?'Ник должен содержать минимум 2 символа.':'Nickname must contain at least 2 characters.');nickname.reportValidity();nickname.focus();return}nickname.value=name;nickname.setCustomValidity('');if(entryMode==='join'&&!/^[A-Z0-9]{6}$/.test(codeInput?.value.trim().toUpperCase()||'')){codeInput?.setCustomValidity(language==='ru'?'Введите шестизначный код комнаты.':'Enter a six-character room code.');codeInput?.reportValidity();codeInput?.focus();return}codeInput?.setCustomValidity('');const player={name,avatar:uploadedAvatar||$('.avatar-choice.selected').textContent};entryDialog.close();await startRoomFlow(player)},true);
 function addDeckSelector(){const ru=language==='ru';const grid=$('.lobby-grid');if(!grid)return;grid.insertAdjacentHTML('beforeend',`<article class="lobby-panel deck-panel"><div class="panel-title"><div><p class="eyebrow"><span></span><span>${ru?'Колода комнаты':'Room deck'}</span></p><h2>${ru?'Выбери настроение игры':'Choose the mood'}</h2></div><span class="deck-count">${gameDeckSize} ${ru?'карт':'cards'}</span></div><div class="deck-list"><button class="deck-choice selected"><span class="deck-art moon-deck">☾</span><span><strong>${ru?'Лунный Архив':'The Moonlit Archive'}</strong><small>${ru?`Случайные ${gameDeckSize} из ${deckPool.length} карт`:`Random ${gameDeckSize} of ${deckPool.length} cards`}</small></span><b>${ru?'Бесплатно':'Free'}</b></button><button class="deck-choice locked" disabled><span class="deck-art ember-deck">✦</span><span><strong>${ru?'Янтарные сны':'Amber Dreams'}</strong><small>${ru?'Премиум-колода · скоро':'Premium deck · coming soon'}</small></span><b>🔒</b></button><button class="deck-choice locked" disabled><span class="deck-art forest-deck">♧</span><span><strong>${ru?'Шёпот чащи':'Whispers of the Wildwood'}</strong><small>${ru?'Премиум-колода · скоро':'Premium deck · coming soon'}</small></span><b>🔒</b></button></div></article>`)}
 const originalShowLobby=showLobby;showLobby=function(player){originalShowLobby(player);addDeckSelector()};
-async function addAuthButton(){const session=(await supabase.auth.getSession()).data.session,signedIn=Boolean(session&&!session.user?.is_anonymous);let button=$('#authEntry');if(!button){button=document.createElement('button');button.type='button';button.id='authEntry';button.className='ghost-button auth-entry';button.addEventListener('click',openAuth)}const label=signedIn?(session.user.user_metadata?.nickname||session.user.email||'Profile'):(language==='ru'?'Авторизоваться':'Sign in');if(button.textContent!==label)button.textContent=label;const target=document.querySelector('.nav-tools')||document.querySelector('.nav-actions')||document.querySelector('.nav');if(target&&button.parentElement!==target){const languageButton=[...target.children].find(child=>child.matches?.('.language'))||null;target.insertBefore(button,languageButton)}}
+let navProfileCache=null;
+async function addAuthButton(){
+  const session=(await supabase.auth.getSession()).data.session;
+  let button=$('#authEntry');
+  if(!button){button=document.createElement('button');button.type='button';button.id='authEntry'}
+  button.replaceChildren();
+  if(session){
+    const profile=navProfileCache?.id===session.user.id?navProfileCache:null;
+    let localAvatar='☽';try{localAvatar=JSON.parse(localStorage.getItem('luminaria-player')||'{}').avatar||'☽'}catch{}
+    const avatar=safeAvatar({avatar:profile?.avatar||localAvatar});
+    button.className='profile-entry';
+    button.setAttribute('aria-label',language==='ru'?`Профиль: ${profile?.nickname||'гость'}`:`Profile: ${profile?.nickname||'guest'}`);
+    button.title=profile?.nickname|| (session.user.is_anonymous?(language==='ru'?'Гостевой профиль':'Guest profile'):(session.user.email||'Profile'));
+    if(typeof avatar==='string'&&avatar.startsWith('data:image/')){const image=document.createElement('img');image.src=avatar;image.alt='';button.append(image)}else button.textContent=avatar;
+    button.onclick=()=>session.user.is_anonymous?openProfileSetup(session,profile):openAuth();
+  }else{
+    button.className='ghost-button auth-entry';
+    button.textContent=language==='ru'?'Авторизоваться':'Sign in';
+    button.setAttribute('aria-label',button.textContent);button.title=button.textContent;
+    button.onclick=()=>openAuth();
+  }
+  const target=document.querySelector('.nav-tools')||document.querySelector('.nav-actions')||document.querySelector('.nav');
+  if(target&&button.parentElement!==target){const languageButton=[...target.children].find(child=>child.matches?.('.language'))||null;target.insertBefore(button,languageButton)}
+}
+function setEntryProfileDraft(profile){
+  const nickname=$('#nickname');if(nickname)nickname.value=profile?.name||'';
+  uploadedAvatar=null;
+  const avatar=safeAvatar({avatar:profile?.avatar||'✶'});
+  const choice=[...document.querySelectorAll('.avatar-choice')].find(button=>button.textContent===avatar)||document.querySelector('.avatar-choice');
+  document.querySelector('.avatar-choice.selected')?.classList.remove('selected');choice?.classList.add('selected');
+  const label=$('#avatarUploadLabel'),input=$('#avatarUpload');
+  if(input)input.value='';
+  if(typeof avatar==='string'&&avatar.startsWith('data:image/')){uploadedAvatar=avatar;if(label){label.style.backgroundImage=`url(${avatar})`;label.classList.add('has-image')}}
+  else if(label){label.style.backgroundImage='';label.classList.remove('has-image')}
+}
+async function openPlayChoice(){
+  const ru=language==='ru';
+  const currentSession=(await supabase.auth.getSession()).data.session;
+  const hasSavedAccount=Boolean(currentSession&&!currentSession.user.is_anonymous);
+  const existing=$('#playChoiceDialog');existing?.remove();
+  const dialog=document.createElement('dialog');dialog.id='playChoiceDialog';
+  dialog.innerHTML=`<section class="modal auth-modal play-choice-modal"><button class="close" id="closePlayChoice" type="button" aria-label="${ru?'Закрыть':'Close'}">×</button><span class="modal-star">✦</span><h2>${ru?'Как войдём в игру?':'How would you like to play?'}</h2><p>${ru?'Можно присоединиться как гость с новым ником или использовать сохранённый аккаунт.':'Join as a guest with a nickname, or use your saved account.'}</p><button class="primary-button full" id="playAsGuest">${ru?'Продолжить как гость':'Continue as guest'} <b>→</b></button><button class="google-button choice-signin" id="playSignIn">${hasSavedAccount?(ru?'Играть с сохранённым аккаунтом':'Play with saved account'):`<span>G</span>${ru?'Войти в аккаунт':'Sign in to account'}`}</button></section>`;
+  document.body.append(dialog);dialog.showModal();
+  $('#closePlayChoice').addEventListener('click',()=>dialog.close());
+  $('#playSignIn').addEventListener('click',()=>{dialog.close();dialog.remove();if(hasSavedAccount)openEntry('create');else openAuth()});
+  $('#playAsGuest').addEventListener('click',async()=>{
+    if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты.':'Leave the current room first.');return}
+    let session=(await supabase.auth.getSession()).data.session;
+    if(session&&!session.user.is_anonymous){const {error}=await supabase.auth.signOut();if(error){alert(error.message);return}localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');navProfileCache=null;session=null}
+    let profile=null;
+    if(session?.user.is_anonymous)profile=await loadSavedProfile(session).catch(()=>null);
+    dialog.close();dialog.remove();
+    openEntryWithoutSavedProfile('create');
+    setEntryProfileDraft(profile?{name:profile.nickname,avatar:profile.avatar}:null);
+  });
+}
+document.addEventListener('click',event=>{
+  if(!event.target.closest('#playButton,#finalPlay'))return;
+  event.preventDefault();event.stopImmediatePropagation();openPlayChoice();
+},true);
 function ensureGameNavTools(){const nav=$('.nav');if(!nav||nav.querySelector('.nav-actions'))return;let tools=nav.querySelector('.nav-tools');if(!tools){tools=document.createElement('div');tools.className='nav-tools';nav.append(tools)}if(!tools.querySelector('#deckButton')){const deck=document.createElement('button');deck.type='button';deck.id='deckButton';deck.className='ghost-button deck-nav-button';deck.textContent=language==='ru'?'Колода':'Deck';deck.addEventListener('click',openDeckGallery);tools.append(deck)}addAuthButton()}
 let navToolsQueued=false;const navToolsObserver=new MutationObserver(()=>{if(navToolsQueued)return;navToolsQueued=true;requestAnimationFrame(()=>{navToolsQueued=false;ensureGameNavTools()})});navToolsObserver.observe(document.body,{childList:true,subtree:true});
 async function openAuth(){
@@ -106,15 +165,17 @@ async function openAuth(){
   const signedIn=Boolean(session&&!session.user?.is_anonymous);
   const dialog=document.createElement('dialog');dialog.id='authDialog';
   dialog.innerHTML=signedIn
-    ?`<div class="modal auth-modal"><button class="close" id="closeAuth">×</button><span class="modal-star">✦</span><h2>${ru?'Профиль сохранён':'Profile saved'}</h2><p>${session.user.email||''}</p><p class="auth-note">${ru?'Профиль аккаунта сохранится. После выхода в следующей игре можно будет выбрать другой ник и аватар.':'Your account profile will stay saved. After signing out, you can choose a different nickname and avatar for your next game.'}</p><button class="primary-button full" id="signOut">${ru?'Выйти и сыграть гостем':'Sign out and play as guest'}</button></div>`
+    ?`<div class="modal auth-modal"><button class="close" id="closeAuth">×</button><span class="modal-star">✦</span><h2>${ru?'Профиль аккаунта':'Account profile'}</h2><p>${session.user.email||''}</p><button class="primary-button full" id="editAccountProfile">${ru?'Изменить ник и аватар':'Edit nickname and avatar'}</button><p class="auth-note">${ru?'Или выйди из аккаунта — в следующей игре можно будет выбрать гостевой профиль.':'Or sign out and choose a guest profile for your next game.'}</p><button class="text-button full" id="signOut">${ru?'Выйти из аккаунта':'Sign out'}</button></div>`
     :`<div class="modal auth-modal"><button class="close" id="closeAuth">×</button><span class="modal-star">✦</span><h2>${ru?'Сохрани профиль':'Save your profile'}</h2><p>${ru?'Играть можно и без аккаунта. Вход сохранит твой профиль на других устройствах.':'You can play as a guest. Signing in saves your profile across devices.'}</p><button class="google-button" id="googleSignIn"><span>G</span>${ru?'Продолжить с Google':'Continue with Google'}</button><div class="auth-divider"><span>${ru?'или':'or'}</span></div><label class="auth-label" for="authEmail">${ru?'Войти по email':'Sign in with email'}</label><input id="authEmail" type="email" placeholder="you@example.com" autocomplete="email"><button class="primary-button full" id="emailSignIn">${ru?'Отправить ссылку для входа':'Send sign-in link'} <b>→</b></button><small class="auth-note">${ru?'Мы отправим безопасную ссылку на твой email — пароль не нужен.':'We’ll send a secure sign-in link — no password needed.'}</small></div>`;
   document.body.append(dialog);dialog.showModal();
   $('#closeAuth').addEventListener('click',()=>dialog.close());
   if(signedIn){
+    $('#editAccountProfile').addEventListener('click',()=>{dialog.close();dialog.remove();openProfileSetup(session,navProfileCache?.id===session.user.id?navProfileCache:null)});
     $('#signOut').addEventListener('click',async()=>{
       if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты: выход из аккаунта прервёт твои действия в этой партии.':'Leave the current room first. Signing out now would interrupt your actions in this game.');return}
       const {error}=await supabase.auth.signOut();if(error)return alert(error.message);
       localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');
+      navProfileCache=null;
       sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);
       uploadedAvatar=null;
       const avatarInput=$('#avatarUpload');if(avatarInput)avatarInput.value='';
@@ -131,7 +192,23 @@ async function openAuth(){
 }
 async function openProfileSetup(session){if($('#profileSetupDialog'))return;const ru=language==='ru';const dialog=document.createElement('dialog');dialog.id='profileSetupDialog';const suggested=(session.user.user_metadata?.full_name||session.user.user_metadata?.name||'').split(' ')[0];dialog.innerHTML=`<form class="modal auth-modal profile-setup" id="profileSetupForm"><button type="button" class="close" id="closeProfileSetup" aria-label="${ru?'Закрыть':'Close'}">×</button><span class="modal-star">✦</span><h2>${ru?'Создай свой профиль':'Create your profile'}</h2><p>${ru?'Придумай ник и выбери аватар — они будут видны игрокам за столом.':'Choose a nickname and avatar — other players will see them at the table.'}</p><label class="auth-label" for="profileNickname">${ru?'Никнейм':'Nickname'}</label><input id="profileNickname" maxlength="24" value="${suggested}" placeholder="${ru?'Лунный странник':'Moonwalker'}" autocomplete="nickname" required><p class="avatar-title">${ru?'Аватар':'Avatar'}</p><div class="profile-avatar-grid"><button type="button" class="profile-avatar selected">☽</button><button type="button" class="profile-avatar">✦</button><button type="button" class="profile-avatar">☼</button><button type="button" class="profile-avatar">♢</button><button type="button" class="profile-avatar">☁</button><label class="profile-upload" id="profileUploadLabel" title="${ru?'Загрузить фото':'Upload photo'}"><input id="profileAvatarUpload" type="file" accept="image/*" hidden>＋</label></div><button class="primary-button full" type="submit">${ru?'Сохранить профиль':'Save profile'} <b>→</b></button><small class="auth-note">${ru?'Фото пока сохраняется в профиле; выбранный символ — в аккаунте.':'A photo is saved in your profile; the selected symbol is saved to your account.'}</small></form>`;document.body.append(dialog);dialog.showModal();const dismiss=()=>{sessionStorage.setItem(`luminaria-profile-dismissed-${session.user.id}`,'1');dialog.close();dialog.remove()};$('#closeProfileSetup').addEventListener('click',dismiss);dialog.addEventListener('cancel',event=>{event.preventDefault();dismiss()});let avatar='☽',uploaded=null;dialog.querySelectorAll('.profile-avatar').forEach(button=>button.addEventListener('click',()=>{dialog.querySelector('.profile-avatar.selected')?.classList.remove('selected');button.classList.add('selected');avatar=button.textContent;uploaded=null;const label=$('#profileUploadLabel');label.style.backgroundImage='';label.classList.remove('has-image')}));$('#profileAvatarUpload').addEventListener('change',event=>{const file=event.target.files?.[0];if(!file||!file.type.startsWith('image/'))return;const reader=new FileReader();reader.onload=()=>{uploaded=reader.result;const label=$('#profileUploadLabel');label.style.backgroundImage=`url(${uploaded})`;label.classList.add('has-image');dialog.querySelector('.profile-avatar.selected')?.classList.remove('selected')};reader.readAsDataURL(file)});$('#profileSetupForm').addEventListener('submit',async event=>{event.preventDefault();const name=$('#profileNickname').value.trim();if(!name)return;const player={name,avatar:uploaded?`<img src="${uploaded}" alt="">`:avatar};localStorage.setItem('luminaria-player',JSON.stringify(player));const {error}=await supabase.auth.updateUser({data:{nickname:name,avatar:avatar}});if(error){alert(error.message);return}sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);dialog.close();dialog.remove();$('#authEntry')?.remove();addAuthButton()})}
 const renderProfileSetup=openProfileSetup;
-openProfileSetup=function(session){const metadata=session?.user?.user_metadata||{};return renderProfileSetup({...session,user:{...session.user,user_metadata:{...metadata,name:escapeHtml(metadata.name||''),full_name:escapeHtml(metadata.full_name||'')}}})};
+openProfileSetup=async function(session,profile=null){
+  const metadata=session?.user?.user_metadata||{};
+  if(!profile)profile=await loadSavedProfile(session).catch(()=>null);
+  const suggested=profile?.nickname||metadata.nickname||metadata.name||metadata.full_name?.split(' ')[0]||'';
+  await renderProfileSetup({...session,user:{...session.user,user_metadata:{...metadata,name:escapeHtml(suggested),full_name:escapeHtml(suggested)}}});
+  const nameInput=$('#profileNickname');if(nameInput&&profile?.nickname)nameInput.value=profile.nickname;
+  if(!profile)return;
+  navProfileCache={id:session.user.id,nickname:profile.nickname,avatar:safeAvatar({avatar:profile.avatar})};
+  const avatar=navProfileCache.avatar;
+  if(typeof avatar==='string'&&avatar.startsWith('data:image/')){
+    const input=$('#profileAvatarUpload'),label=$('#profileUploadLabel');if(input)input.dataset.avatar=avatar;if(label){label.style.backgroundImage=`url(${avatar})`;label.classList.add('has-image')}
+    document.querySelector('.profile-avatar.selected')?.classList.remove('selected');
+  }else{
+    const choice=[...document.querySelectorAll('.profile-avatar')].find(button=>button.textContent===avatar);
+    if(choice){document.querySelector('.profile-avatar.selected')?.classList.remove('selected');choice.classList.add('selected')}
+  }
+};
 async function syncAuthProfile(session){if(!session)return;$('#authEntry')?.remove();addAuthButton();if(!session.user.user_metadata?.nickname)openProfileSetup(session)}
 supabase.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>syncAuthProfile(session),0)});
 const lobbyWithDecks=showLobby;showLobby=function(player){lobbyWithDecks(player);addAuthButton()};
@@ -167,7 +244,7 @@ async function compressAvatar(file){
   const stopDrag=()=>{drag=null};canvas.addEventListener('pointerup',stopDrag);canvas.addEventListener('pointercancel',stopDrag);draw();
   return new Promise(resolve=>{const finish=value=>{dialog.close();dialog.remove();resolve(value)};$('#cancelAvatarCrop').addEventListener('click',()=>finish(null));dialog.addEventListener('cancel',event=>{event.preventDefault();finish(null)});$('#saveAvatarCrop').addEventListener('click',()=>{const output=document.createElement('canvas');output.width=160;output.height=160;const outputContext=output.getContext('2d');outputContext.drawImage(canvas,0,0,size,size,0,0,160,160);let result=output.toDataURL('image/jpeg',.75);if(result.length>60000)result=output.toDataURL('image/jpeg',.58);finish(result.length<=60000?result:null)})})
 }
-async function ensureLivePlayer(player){player.name=String(player.name||'Dreamer').replace(/[<>]/g,'').trim().slice(0,24)||'Dreamer';player.avatar=safeAvatar(player);let {data:{session}}=await supabase.auth.getSession();if(!session){const {data,error}=await supabase.auth.signInAnonymously();if(error)throw error;session=data.session}const {error}=await supabase.from('profiles').upsert({id:session.user.id,nickname:player.name,avatar:player.avatar},{onConflict:'id'});if(error)throw error;cachePlayer(player,session.user.id);return session}
+async function ensureLivePlayer(player){player.name=String(player.name||'Dreamer').replace(/[<>]/g,'').trim().slice(0,24)||'Dreamer';player.avatar=safeAvatar(player);let {data:{session}}=await supabase.auth.getSession();if(!session){const {data,error}=await supabase.auth.signInAnonymously();if(error)throw error;session=data.session}const {error}=await supabase.from('profiles').upsert({id:session.user.id,nickname:player.name,avatar:player.avatar},{onConflict:'id'});if(error)throw error;cachePlayer(player,session.user.id);navProfileCache={id:session.user.id,nickname:player.name,avatar:player.avatar};addAuthButton();return session}
 async function startRoomFlow(player){try{const session=await ensureLivePlayer(player);if(entryMode==='create')return createLiveRoom(player,session);if(entryMode==='join'){const code=$('#roomCodeInput')?.value.trim().toUpperCase();return joinLiveRoom(player,session,code)}return createLiveRoom(player,session)}catch(error){console.error(error);const message=error.message?.includes('Anonymous')?(language==='ru'?'Для гостевой игры включи Anonymous Sign-ins в Supabase → Authentication → Sign In / Providers.':'Enable Anonymous Sign-ins in Supabase → Authentication → Sign In / Providers to play as a guest.'):error.message;alert(message||'Could not connect to Luminaria.');if(!entryDialog.open)entryDialog.showModal()}}
 
 const openEntryWithoutSavedProfile=openEntry;
@@ -529,15 +606,18 @@ async function loadSavedProfile(session){
 syncAuthProfile=async function(session){
   $('#authEntry')?.remove();
   if(!session){
+    navProfileCache=null;
     addAuthButton();
     return;
   }
   const saved=await loadSavedProfile(session).catch(()=>null);
   if(saved?.nickname){
+    navProfileCache={id:session.user.id,nickname:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})};
     cachePlayer({name:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})},session.user.id);
     addAuthButton();
     return;
   }
+  navProfileCache={id:session.user.id,nickname:session.user.user_metadata?.nickname||session.user.user_metadata?.name||'Dreamer',avatar:safeAvatar({avatar:session.user.user_metadata?.avatar||'☽'})};
   addAuthButton();
   if(session.user?.is_anonymous)return;
   if(sessionStorage.getItem(`luminaria-profile-dismissed-${session.user.id}`))return;
@@ -579,6 +659,8 @@ document.addEventListener('submit',async event=>{
   if(error)return alert(error.message);
   await supabase.auth.updateUser({data:{nickname:name}});
   cachePlayer({name,avatar},session.user.id);
+  navProfileCache={id:session.user.id,nickname:name,avatar:safeAvatar({avatar})};
+  liveProfileCache.delete(session.user.id);
   $('#profileSetupDialog')?.close();$('#profileSetupDialog')?.remove();
   $('#authEntry')?.remove();addAuthButton();
 },true);
