@@ -1,0 +1,55 @@
+.game-finale{max-width:1050px;padding-bottom:70px}
+.finale-room{font-size:11px;color:#b5bdd5;letter-spacing:.08em}
+.finale-heading{text-align:center;padding:65px 0 25px}
+.finale-heading .eyebrow{justify-content:center}
+.finale-heading h1{font-size:clamp(40px,6vw,68px);line-height:1.08;letter-spacing:-2px;margin:18px 0}
+.finale-heading>p:last-child{color:#b3bad4;line-height:1.6;max-width:440px;margin:0 auto;font-size:14px}
+.finale-podium{display:grid;grid-template-columns:1fr 1.16fr 1fr;align-items:end;gap:14px;max-width:710px;margin:28px auto 52px;position:relative}
+.finale-podium::before{content:"";position:absolute;inset:-40px 0 0;background:radial-gradient(ellipse at 50% 42%,#e9b96119,transparent 65%);pointer-events:none}
+.podium-step{position:relative;min-width:0;text-align:center}
+.podium-award{width:80px;height:80px;margin:0 auto 10px}
+.podium-place-1 .podium-award{width:100px;height:100px;filter:drop-shadow(0 0 19px #e8b45e30)}
+.podium-people{display:grid;gap:15px;padding:0 6px 20px}
+.podium-person{display:grid;justify-items:center;gap:6px;min-width:0}
+.podium-person strong{max-width:100%;overflow-wrap:anywhere;font-size:15px}
+.podium-names{display:grid;gap:4px;max-width:100%}
+.podium-person small{color:#e5c694;font-size:12px}
+.podium-avatar{width:42px;height:42px;display:grid;place-items:center;border-radius:50%;background:#403957;border:1px solid #ffffff30;font-size:22px;overflow:hidden}
+.podium-avatar img{width:100%;height:100%;object-fit:cover}
+.podium-you .podium-avatar{box-shadow:0 0 0 3px #c5a2ec50}
+.podium-plinth{height:120px;display:grid;align-content:center;gap:5px;border:1px solid #e7b96850;border-radius:14px 14px 4px 4px;background:linear-gradient(150deg,#68647960,#252745);box-shadow:0 16px 28px #0002}
+.podium-plinth b{font:600 44px Fraunces,serif;color:#e4d9ec}
+.podium-plinth span{font-size:12px;color:#c4bed6}
+.podium-place-1 .podium-plinth{height:164px;background:linear-gradient(145deg,#b88a4550,#4e3c36);border-color:#eec67588}
+.podium-place-1 .podium-plinth b,.podium-place-1 .podium-plinth span{color:#f6d390}
+.podium-place-3 .podium-plinth{height:94px;background:linear-gradient(145deg,#9b654d40,#332c43)}
+.podium-empty .podium-people{font-size:12px;color:#adb3ca}
+.finale-scoreboard,.finale-story,.finale-history{max-width:760px;margin:0 auto 24px;border:1px solid #ffffff1b;border-radius:20px;background:#ffffff05;padding:28px}
+.finale-scoreboard h2{font-size:27px;margin:0}
+.finale-tie-note{color:#959dbd;font-size:12px;line-height:1.5;margin:12px 0 24px}
+.finale-scoreboard table{width:100%;border-collapse:collapse;table-layout:fixed;text-align:left}
+.finale-scoreboard thead th{font-size:11px;text-transform:uppercase;letter-spacing:.06em;font-weight:500;color:#9ba5c3;padding:0 10px 13px}
+.finale-scoreboard th:first-child{width:14%}.finale-scoreboard th:nth-child(2){width:33%}.finale-scoreboard th:last-child{width:14%;text-align:right}
+.finale-scoreboard tbody td,.finale-scoreboard tbody th{padding:17px 10px;border-top:1px solid #ffffff12;font-size:14px;overflow-wrap:anywhere}
+.finale-scoreboard tbody th{font-weight:600}
+.finale-scoreboard tbody th small{display:block;margin-top:4px;color:#c5a2ec;font-size:10px;font-weight:400}
+.finale-scoreboard tbody td:first-child{color:#b6aacd}
+.finale-scoreboard tbody td:nth-child(3){font-size:12px;color:#b8bdd2;line-height:1.45}
+.finale-scoreboard tbody td:last-child{text-align:right;color:#9bddbd;font-size:18px}
+.finale-me{background:#c9a3ed09}
+.finale-story{position:relative;text-align:center;padding:35px 42px;background:radial-gradient(ellipse at 50% 0,#e9b65c15,transparent 70%),#ffffff04}
+.story-spark{color:#f1c982;font-size:40px}.finale-story .eyebrow{justify-content:center}
+.finale-story h2{font:500 36px/1.1 Fraunces,serif;margin:16px 0 24px;color:#f8eedc}
+.party-story{font:400 21px/1.65 Fraunces,serif;color:#e0d7ed;overflow-wrap:anywhere;max-width:590px;margin:0 auto 24px}
+.story-status{font-size:12px;line-height:1.6;color:#969fbe;max-width:480px;margin:0 auto}
+.story-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:18px}
+.story-actions button{color:#ebc686;font-size:12px;padding:8px}.story-actions [hidden]{display:none}
+.finale-history{padding:0;overflow:hidden}.finale-history summary{display:flex;justify-content:space-between;align-items:center;padding:22px 28px;cursor:pointer;color:#d4d8e8;list-style:none;font-size:14px}
+.finale-history summary::after{content:"+";margin-left:16px;font-size:22px;color:#e9c587}.finale-history[open] summary::after{content:"−"}
+.finale-history summary span{margin-left:auto;color:#a8a3c9;font-size:12px}
+.finale-history ol{margin:0 28px 24px;padding-left:26px}.finale-history li{padding:16px 8px;border-top:1px solid #ffffff15;color:#c6a674;font-size:12px}
+.finale-history blockquote{margin:0 0 8px;font:400 18px/1.4 Fraunces,serif;color:#e6dff0;overflow-wrap:anywhere}.finale-history small{color:#969fbe;font-size:11px}
+.finale-actions{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:25px;margin:36px auto 0}.finale-actions p{font-size:13px;color:#b2bad2;text-align:center}
+.visually-hidden{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(max-width:600px){.game-finale{padding:20px 16px 45px}.finale-heading{padding-top:42px}.finale-heading h1{font-size:39px;letter-spacing:-1.7px}.finale-heading>p:last-child{font-size:13px;padding:0 15px}.finale-podium{gap:7px;margin:20px 0 34px}.podium-award{width:64px;height:64px}.podium-place-1 .podium-award{width:82px;height:82px}.podium-person strong{font-size:12px}.podium-person small{font-size:11px}.podium-avatar{width:34px;height:34px}.podium-people{padding:0 2px 16px}.podium-plinth{height:102px}.podium-place-1 .podium-plinth{height:142px}.podium-place-3 .podium-plinth{height:80px}.podium-plinth b{font-size:36px}.podium-plinth span{font-size:11px}.finale-scoreboard{padding:22px 12px}.finale-scoreboard .panel-title{padding:0 4px;gap:8px}.finale-scoreboard h2{font-size:23px}.finale-scoreboard .count{font-size:10px;white-space:nowrap}.finale-tie-note{padding:0 4px}.finale-scoreboard thead th{font-size:9px;padding:0 5px 12px;letter-spacing:0}.finale-scoreboard tbody td,.finale-scoreboard tbody th{padding:14px 5px;font-size:12px}.finale-scoreboard tbody td:nth-child(3){font-size:10px}.finale-scoreboard tbody td:last-child{font-size:17px}.finale-story{padding:28px 22px}.finale-story h2{font-size:30px}.party-story{font-size:19px}.finale-history summary{padding:20px;font-size:13px}.finale-history ol{margin:0 20px 20px}.finale-actions{gap:20px;flex-direction:column}.finale-actions .primary-button{width:100%;justify-content:center}}
+@media(prefers-reduced-motion:reduce){.game-finale *{animation:none!important;transition:none!important}}
