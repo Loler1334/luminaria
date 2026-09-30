@@ -1,0 +1,12 @@
+#roundSettings label{display:block;margin:20px 0 10px;color:var(--gold,#f3c879)}
+#roundCycles{width:100%;padding:14px;border:1px solid #ffffff35;border-radius:12px;background:#242442;color:#fff;font:inherit}
+#roundCycles:disabled{opacity:.65}.round-capacity{line-height:1.65}
+.waiting-stage .waiting-score{text-align:left;width:100%;margin:28px 0}
+.waiting-stage .waiting-score .score-row{grid-template-columns:42px minmax(0,1fr) auto}
+.waiting-stage .waiting-score .score-row em{display:none}
+.phase-waiting{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:14px 0 24px}
+.phase-waiting span{padding:8px 12px;border-radius:20px;background:#f3c87918;color:#f3c879;overflow-wrap:anywhere;max-width:100%}
+.phase-waiting .done{background:#8ad4ac15;color:#8ad4ac}
+#awaitedStoryteller{margin:18px 0}
+#awaitedStoryteller small{font-size:15px;line-height:1.5}
+#awaitedStoryteller>div{max-width:100%;width:auto}

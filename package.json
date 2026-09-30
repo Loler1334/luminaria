@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "node tests/round-state.cjs && node tests/finale.cjs && node tests/story-service.mjs",
+    "test": "node tests/round-state.cjs && node tests/round-options.cjs && node tests/finale.cjs && node tests/story-service.mjs",
     "dev": "vite",
     "build": "vite build && node scripts/build-worker.mjs",
     "preview": "vite preview"
