@@ -6,3 +6,6 @@
 
 /deck-preview/*
   Cache-Control: public, max-age=31536000, immutable
+
+/deck-thumbs/*
+  Cache-Control: public, max-age=31536000, immutable

@@ -43,6 +43,23 @@
 @media(max-width:780px){.nav-actions .profile-entry,.nav-tools .profile-entry{display:grid!important;width:36px;height:36px}.nav-tools .profile-entry{margin-left:2px}}
 
 /* Keep the hero's four illustrated cards balanced and its caption clear. */
+.deck-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.deck-menu{position:relative;width:min(640px,calc(100vw - 32px));box-sizing:border-box;padding:30px;background:#1b2142;border:1px solid #ffffff26;border-radius:18px}
+.deck-menu h2{font-size:32px;margin:12px 0 24px}
+.deck-menu-options{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.deck-menu-options button{display:grid;gap:10px;padding:12px;background:#111630;border:1px solid #ffffff30;border-radius:14px;color:#fff;text-align:left;cursor:pointer;font:inherit}
+.deck-menu-options button:hover,.deck-menu-options button:focus-visible{border-color:#e6bb77;outline:2px solid #e6bb77;outline-offset:2px}
+.deck-menu-options img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover;border-radius:8px}
+.deck-menu-options span{font-size:12px;color:#c3c9de}
+@media(max-width:420px){.deck-menu{padding:24px 16px}.deck-menu-options{gap:10px}.deck-menu-options button{padding:8px;font-size:14px}}
+.deck-tabs button{padding:12px 18px;border:1px solid #ffffff35;border-radius:12px;background:#141a35;color:#fff;cursor:pointer;font:inherit}
+.deck-tabs button[aria-pressed="true"]{border-color:#e6bb77;background:#44334c}
+.deck-option{min-width:0;display:grid;gap:10px}
+.deck-option .deck-choice{width:100%;height:100%;text-align:left}
+.deck-option .deck-choice:disabled{opacity:1;cursor:default}
+.deck-option .text-button{justify-self:start;margin:0;padding:10px}
+.deck-gallery-card img{aspect-ratio:2/3;object-fit:cover;width:100%;height:auto}
+.deck-tabs button:focus-visible,.deck-option button:focus-visible{outline:3px solid #e6bb77;outline-offset:4px}
 .art-card img{display:block;width:100%;height:169px;object-fit:cover;border-radius:6px}
 .card-four{right:25px;top:142px;transform:rotate(12deg)}
 .scene-caption{bottom:-12px;right:22px}
