@@ -9,7 +9,7 @@ export function starAwardMarkup(ranking, starScores = {}, language = 'ru') {
   const best = Math.max(0, ...eligible.map(seat => seat.stars));
   const winners = eligible.filter(seat => seat.stars === best);
   if (!winners.length) return '';
-  return `<span class="star-award-icon" aria-hidden="true">🏆 ✦</span><h2>${ru ? 'Главный ловитель звёзд' : 'Star-catching champion'}</h2><p class="star-award-names">${winners.map(seat => escape(seat.name)).join(' · ')}</p><p>${best} ${ru ? 'пойманных звёзд · рекорд этой комнаты' : 'stars caught · this room’s record'}</p>${winners.length > 1 ? `<small>${ru ? 'Равный результат — награда каждому!' : 'A tie — everyone receives the award!'}</small>` : ''}`;
+  return `<span class="star-award-icon" aria-hidden="true">🏆 ✦</span><h2>${ru ? 'Главный ловитель звёзд' : 'Star-catching champion'}</h2><p class="star-award-names">${winners.map(seat => escape(seat.name)).join(' · ')}</p><p>${best} ${ru ? 'пойманных звёзд · за эту партию' : 'stars caught · this game'}</p>${winners.length > 1 ? `<small>${ru ? 'Равный результат — награда каждому!' : 'A tie — everyone receives the award!'}</small>` : ''}`;
 }
 
 export function finaleMarkup({ ranking, rounds, roomId, roomCode, userId, language, story, isHost, starScores = {} }) {

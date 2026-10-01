@@ -10,7 +10,7 @@ const prepare=extract('async function prepareNextLiveRound(){','async function a
   for(let players=3;players<=7;players++){
     const saved=new Map([['pending',JSON.stringify({completedRoundId:'old-round',storytellerId:'old-leader'})]]);
     const state={liveGameEpoch:0,liveGameContext:{room:{id:'room',host_id:'host',status:'playing'},session:{user:{id:'host'}}},liveRound:{id:'old-round'},liveStorytellerId:'old-leader',liveHandCache:['old-card'],liveRoundNumber:99,liveRoundNumberForId:'old-round',liveTotalRounds:99,liveHandVersion:99,activeRoundClue:'old',activeStorytellerCard:'old',activeMoonPhase:{},preparingNextRound:false,
-      nextRoundStorageKey:()=> 'pending',localStorage:{getItem:k=>saved.get(k),removeItem:k=>saved.delete(k),setItem:(k,v)=>saved.set(k,v)},escapeHtml:x=>x};
+      resetPartyStars:()=>{},nextRoundStorageKey:()=> 'pending',localStorage:{getItem:k=>saved.get(k),removeItem:k=>saved.delete(k),setItem:(k,v)=>saved.set(k,v)},escapeHtml:x=>x};
     vm.createContext(state);vm.runInContext(reset+load,state);state.resetLiveParty();
     assert.equal(state.liveStorytellerId,null);assert.equal(state.liveRoundNumber,1);assert.equal(state.liveHandCache.length,0);assert.equal(saved.size,0);
     let release;
