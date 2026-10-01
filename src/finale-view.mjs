@@ -2,7 +2,17 @@ import { awardFor, awardIcon } from './game-finale.mjs';
 
 const escape = value => String(value ?? '').replace(/[&<>"']/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[char]));
 
-export function finaleMarkup({ ranking, rounds, roomId, roomCode, userId, language, story, isHost }) {
+export function starAwardMarkup(ranking, starScores = {}, language = 'ru') {
+  const ru = language === 'ru';
+  const eligible = ranking.map(seat => ({...seat, stars: starScores[seat.user_id]?.score}))
+    .filter(seat => Number.isSafeInteger(seat.stars) && seat.stars > 0);
+  const best = Math.max(0, ...eligible.map(seat => seat.stars));
+  const winners = eligible.filter(seat => seat.stars === best);
+  if (!winners.length) return '';
+  return `<span class="star-award-icon" aria-hidden="true">🏆 ✦</span><h2>${ru ? 'Главный ловитель звёзд' : 'Star-catching champion'}</h2><p class="star-award-names">${winners.map(seat => escape(seat.name)).join(' · ')}</p><p>${best} ${ru ? 'пойманных звёзд · рекорд этой комнаты' : 'stars caught · this room’s record'}</p>${winners.length > 1 ? `<small>${ru ? 'Равный результат — награда каждому!' : 'A tie — everyone receives the award!'}</small>` : ''}`;
+}
+
+export function finaleMarkup({ ranking, rounds, roomId, roomCode, userId, language, story, isHost, starScores = {} }) {
   const ru = language === 'ru';
   const name = seat => escape(seat?.name || (ru ? 'Мечтатель' : 'Dreamer'));
   const places = [2, 1, 3];
@@ -22,6 +32,7 @@ export function finaleMarkup({ ranking, rounds, roomId, roomCode, userId, langua
       <p class="finale-tie-note">${ru ? 'При равных очках — общее место и одинаковая награда.' : 'Equal scores share a place and the same award.'}</p>
       <table><caption class="visually-hidden">${ru ? 'Итоговые очки и награды' : 'Final scores and awards'}</caption><thead><tr><th>${ru ? 'Место' : 'Place'}</th><th>${ru ? 'Игрок' : 'Player'}</th><th>${ru ? 'Награда' : 'Award'}</th><th>${ru ? 'Очки' : 'Points'}</th></tr></thead><tbody>${ranking.map(seat => `<tr class="${seat.user_id === userId ? 'finale-me' : ''}"><td>${seat.place}</td><th scope="row">${name(seat)}${seat.user_id === userId ? `<small>${ru ? 'это ты' : 'you'}</small>` : ''}</th><td>${awardFor(seat.place, language)}</td><td><b>${seat.score}</b></td></tr>`).join('')}</tbody></table>
     </section>
+    <section id="finaleStarAward" class="finale-star-award" aria-live="polite">${starAwardMarkup(ranking, starScores, language)}</section>
     <section class="finale-story"><span class="story-spark" aria-hidden="true">✧</span><p class="eyebrow">${ru ? 'Эпилог вашей партии' : 'Your game’s epilogue'}</p><h2>${ru ? 'Что осталось<br>между строк' : 'Between the lines'}</h2><p class="party-story" id="partyStory">${escape(story)}</p><p class="story-status" id="storyStatus" role="status">${ru ? 'Собираем образы всех ассоциаций в одну историю…' : 'Weaving every round’s imagery into one story…'}</p><div class="story-actions"><button type="button" class="text-button" id="copyPartyStory">${ru ? 'Скопировать историю' : 'Copy story'}</button><button type="button" class="text-button" id="retryPartyStory" hidden>${ru ? 'Попробовать ещё раз' : 'Try again'}</button></div></section>
     <details class="finale-history"><summary>${ru ? 'Все ассоциации партии' : 'Every clue from the game'} <span>${rounds.length}</span></summary><ol>${rounds.map(round => `<li><blockquote>${escape(round.clue)}</blockquote><small>${name(ranking.find(seat => seat.user_id === round.storyteller_id))}</small></li>`).join('')}</ol></details>
     <footer class="finale-actions">${isHost ? `<button class="primary-button" id="rematchButton">${ru ? 'Сыграть ещё раз' : 'Play again'} <b>→</b></button>` : `<p>${ru ? 'Создатель комнаты может начать новую партию для всех.' : 'The room host can start another game for everyone.'}</p>`}<a class="text-button" href="/">${ru ? 'На главную' : 'Back to home'}</a></footer>

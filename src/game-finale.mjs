@@ -13,7 +13,7 @@ export function awardFor(place, language = 'ru') {
   const awards = language === 'ru'
     ? ['Медаль', 'Грамота', 'Каска']
     : ['Medal', 'Certificate', 'Hard hat'];
-  return awards[place - 1] || (language === 'ru' ? 'Повезло быть счастливыми' : 'Lucky to be happy');
+  return awards[place - 1] || (language === 'ru' ? 'Не везёт в картах — повезёт в любви!' : 'Unlucky at cards — lucky in love!');
 }
 
 export function awardIcon(place) {
