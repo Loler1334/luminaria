@@ -45,7 +45,7 @@ const removedCards=new Set(['060-card.webp','063-card.webp']);
 const deckPool=archivedDeck.filter(card=>!removedCards.has(card));
 
 const popDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-pop.webp'));
-const availableCards=new Set([...archivedDeck,...popDeck]);
+const availableCards=new Set([...archivedDeck,...popDeck,'301-pop.webp']);
 const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'}};
 function selectedDeckId(){return liveGameContext?.room.deck_id==='pop-culture'?'pop':'moon'}
 function selectedDeckCards(){return decks[selectedDeckId()].cards}
