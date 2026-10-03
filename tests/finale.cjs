@@ -11,7 +11,7 @@ for(let count=3;count<=7;count++){
   for(const total of [1,12,Math.floor(86/count)]){
     const rounds=Array.from({length:total},(_,i)=>({id:`r${i}`,clue:`Тайна ${i}: забытый город за облаками`,storyteller_id:`p${i%count}`}));
     const story=fallbackStory(rounds);
-    assert([...story].length<=260);assert([...story].length>150);
+    assert([...story].length<=400);assert([...story].length>150);
     const markup=finaleMarkup({ranking:ranked,rounds,roomId:'room',roomCode:'ABCDEF',userId:'p0',language:'ru',story,isHost:true});
     assert(!markup.includes('nextLiveRound'));assert(!markup.includes('Следующий раунд'));
     assert(markup.includes(`Тайна ${total-1}`));assert.equal((markup.match(/<li>/g)||[]).length,total);
@@ -25,6 +25,6 @@ assert(!unsafe.includes('<script>'));assert(!unsafe.includes('<img onerror='));a
 assert.equal(starAwardMarkup([{user_id:'p',name:'P'}],{}),'');
 const stars=starAwardMarkup([{user_id:'a',name:'<A>'},{user_id:'b',name:'B'}],{a:{score:5},b:{score:5},outsider:{score:999}});
 assert(stars.includes('&lt;A&gt;'));assert(stars.includes('B'));assert(stars.includes('награда каждому'));assert(!stars.includes('999'));
-assert([...fitStory('😀'.repeat(300))].length<=260);
+assert([...fitStory('😀'.repeat(500))].length<=400);
 console.log('PASS: final rankings for 3–7 players, tied awards, all clues, bounded stories, escaped player content, no next-round button.');
 })().catch(error=>{console.error(error);process.exitCode=1});

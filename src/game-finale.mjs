@@ -35,7 +35,7 @@ export function storySeed(clues) {
   return (seed >>> 0) || 1;
 }
 
-export function fitStory(text, max = 260) {
+export function fitStory(text, max = 400) {
   const clean = String(text || '').replace(/\s+/g, ' ').trim();
   if ([...clean].length <= max) return clean;
   const excerpt = [...clean].slice(0, max - 1).join('');

@@ -63,3 +63,4 @@
 .art-card img{display:block;width:100%;height:169px;object-fit:cover;border-radius:6px}
 .card-four{right:25px;top:142px;transform:rotate(12deg)}
 .scene-caption{bottom:-12px;right:22px}
+.live-chat-toggle{position:relative}.chat-unread-badge{position:absolute;top:-7px;right:-7px;min-width:20px;height:20px;padding:0 5px;border:2px solid #171a35;border-radius:999px;background:#ef6f7d;color:#fff;font:700 11px/16px system-ui;text-align:center;box-shadow:0 0 14px #ef6f7d88}.chat-unread-badge[hidden]{display:none}.live-chat-toggle.has-unread{border-color:#ef6f7d;box-shadow:0 0 0 3px #ef6f7d33,0 0 22px #ef6f7d55;animation:chat-unread-pulse 1.6s ease-in-out infinite}@keyframes chat-unread-pulse{50%{box-shadow:0 0 0 6px #ef6f7d12,0 0 28px #ef6f7d77}}

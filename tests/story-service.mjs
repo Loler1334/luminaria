@@ -3,13 +3,15 @@ import { handleStory } from '../worker/story-service.mjs';
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
-let member=true,finished=true,aiCalls=0,providedClues;
-const fetcher=async(url)=>{
+let member=true,finished=true,aiCalls=0,providedClues,persistedStory=null;
+const fetcher=async(url,options={})=>{
   if(url.endsWith('/auth/v1/user'))return Response.json({id:'user'});
   if(url.includes('room_players?'))return Response.json(member?[{user_id:'user'}]:[]);
   if(url.includes('rooms?'))return Response.json([{status:finished?'finished':'playing'}]);
   if(url.includes('rounds?'))return Response.json(rounds);
   if(url.includes('luminaria_deck_state'))return Response.json([{remaining_cards:finished?0:10}]);
+  if(url.includes('/finale_stories?'))return Response.json(persistedStory?[{story:persistedStory}]:[]);
+  if(url.endsWith('/rpc/publish_luminaria_finale_story')){const body=JSON.parse(options.body);persistedStory ||= body.generated_story;return Response.json(persistedStory)}
   throw Error('Unexpected URL');
 };
 const store=new Map();
@@ -21,8 +23,9 @@ assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).stat
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length<=260);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length<=400);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
+store.clear();const anotherClient=await handleStory(request(),env,config,{fetcher,cache});assert.equal((await anotherClient.json()).story,first.story);assert.equal(aiCalls,1);
 member=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,403);
-member=true;store.clear();assert.equal((await handleStory(request(),{},config,{fetcher,cache})).status,503);
-console.log('PASS: story authorization, finished-game guard, all 28 clues sent, shared cache, concurrent requests deduplicated, unavailable AI fallback response.');
+member=true;store.clear();persistedStory=null;assert.equal((await handleStory(request(),{},config,{fetcher,cache})).status,503);
+console.log('PASS: story authorization, finished-game guard, all clues sent, canonical cross-client story, shared cache, concurrent requests deduplicated, unavailable AI fallback response.');
