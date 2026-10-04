@@ -1,6 +1,6 @@
 import { roundOptions, selectedRoundOption } from './round-options.mjs';
 import './lobby-settings.css';
-import { rankPlayers, fallbackStory, fitStory } from './game-finale.mjs';
+import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { votingOrder, serialRefresh } from './round-state.js';
 import './style.css';
@@ -684,7 +684,7 @@ async function showGameFinished(){
     if(liveGameContext?.room.id!==context.room.id)return;
     const ru=language==='ru',decode=document.createElement('textarea');
     const ranking=rankPlayers(roster).map(seat=>{decode.innerHTML=seat.profile?.nickname||'Dreamer';return {...seat,name:decode.value,avatarHtml:avatarMarkup(seat.profile?.avatar,'✦')}});
-    const history=rounds||[],story=fallbackStory(history,language);
+    const history=rounds||[],story=fallbackStory(history,storyLanguage(history));
     await syncStarParty();
     finaleStarRanking=ranking;
     document.body.innerHTML=finaleMarkup({starScores:liveStarScores,ranking,rounds:history,roomId:context.room.id,roomCode:context.room.code,userId:context.session.user.id,language,story,isHost:context.room.host_id===context.session.user.id});

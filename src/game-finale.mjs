@@ -29,6 +29,19 @@ export function cleanClues(rounds) {
   return rounds.map(round => String(round.clue || '').replace(/\s+/g, ' ').trim()).filter(Boolean);
 }
 
+// Count each clue once so a single long phrase cannot outweigh the whole party.
+// Ties use total letters, then English for emoji/numeric-only games.
+export function storyLanguage(rounds) {
+  let russian = 0, english = 0, cyrillic = 0, latin = 0;
+  for (const clue of cleanClues(rounds)) {
+    const ru = (clue.match(/[а-яё]/gi) || []).length;
+    const en = (clue.match(/[a-z]/gi) || []).length;
+    cyrillic += ru; latin += en;
+    if (ru > en) russian++; else if (en > ru) english++;
+  }
+  return russian === english ? (cyrillic > latin ? 'ru' : 'en') : russian > english ? 'ru' : 'en';
+}
+
 export function storySeed(clues) {
   let seed = 2166136261;
   for (const char of clues.join('\n')) seed = Math.imul(seed ^ char.codePointAt(0), 16777619);

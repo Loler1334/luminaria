@@ -1,5 +1,11 @@
 import assert from 'node:assert/strict';
 import { handleStory } from '../worker/story-service.mjs';
+import { storyLanguage } from '../src/game-finale.mjs';
+
+assert.equal(storyLanguage([{clue:'Moonlit forest'},{clue:'Sleeping dragon'}]),'en');
+assert.equal(storyLanguage([{clue:'Лунный лес'},{clue:'Спящий дракон'}]),'ru');
+assert.equal(storyLanguage([{clue:'Moon'},{clue:'Forest'},{clue:'Очень длинная русская ассоциация'}]),'en');
+assert.equal(storyLanguage([{clue:'123 ✨'}]),'en');
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
@@ -28,4 +34,9 @@ assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).js
 store.clear();const anotherClient=await handleStory(request(),env,config,{fetcher,cache});assert.equal((await anotherClient.json()).story,first.story);assert.equal(aiCalls,1);
 member=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,403);
 member=true;store.clear();persistedStory=null;assert.equal((await handleStory(request(),{},config,{fetcher,cache})).status,503);
+for(const round of rounds)round.clue='Moonlit forest';
+const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.includes('in English'));return {response:'Under the moon, the forest folded its branches into a door. We stepped through and found the stars asleep among the roots, each dreaming of a different world.'}}}};
+const englishResult=await handleStory(request(),englishEnv,config,{fetcher,cache});
+assert.equal(englishResult.status,200);
+assert((await englishResult.json()).story.startsWith('Under the moon'));
 console.log('PASS: story authorization, finished-game guard, all clues sent, canonical cross-client story, shared cache, concurrent requests deduplicated, unavailable AI fallback response.');

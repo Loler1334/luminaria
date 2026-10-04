@@ -1,4 +1,4 @@
-import { cleanClues, fitStory, storySeed } from '../src/game-finale.mjs';
+import { cleanClues, fitStory, storySeed, storyLanguage } from '../src/game-finale.mjs';
 
 const inFlight = new Map();
 const json = (body, status = 200) => Response.json(body, { status, headers: { 'Cache-Control': 'no-store' } });
@@ -14,7 +14,6 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
     body = JSON.parse(text);
   } catch { return json({ error: 'Invalid request' }, 400); }
   if (!/^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/i.test(body.roomId || '')) return json({ error: 'Invalid room' }, 400);
-  const language = body.language === 'en' ? 'en' : 'ru';
   const headers = { apikey: config.key, Authorization: token };
   const read = async path => {
     const response = await fetcher(`${config.url}/rest/v1/${path}`, { headers, signal: AbortSignal.timeout(10000) });
@@ -39,6 +38,7 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
       });
       if (!state.ok || (await state.json())[0]?.remaining_cards !== 0) return json({ error: 'Game not finished' }, 409);
     }
+    const language = storyLanguage(rounds);
     const saved = await fetcher(`${config.url}/rest/v1/finale_stories?room_id=eq.${body.roomId}&language=eq.${language}&select=story`, { headers, signal: AbortSignal.timeout(10000) });
     if (saved.ok) {
       const rows = await saved.json();
