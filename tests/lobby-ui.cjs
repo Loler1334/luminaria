@@ -24,7 +24,7 @@ try{
  },{helpers:fs.readFileSync('src/round-options.mjs','utf8'),settings:slice('let lobbyRoster=[];','const originalShowLobby='),waiting:slice('function showLiveRoundWaiting()','function bindWaitingMinigame')+slice('async function addWaitingScoreboard()','async function routeLiveRound()'),profile:slice('async function openProfileSetup(session)','const renderProfileSetup='),handlers:slice("document.addEventListener('change',async event=>{\n  const input=event.target;if(input?.id!=='profileAvatarUpload')",'function hydrateAvatarImages()')});
  await page.evaluate(()=>document.body.innerHTML='<main><section class="lobby-grid"></section><button id="startButton">Start</button></main>');
  await page.evaluate(()=>renderRoundSelector(roster));assert.equal(await page.locator('#roundCycles option').textContent(),'12 раундов · 2 круга');
- await page.evaluate(()=>{selectedDeckCards=()=>Array(108);renderRoundSelector(roster)});assert.equal(await page.locator('#roundCycles option').count(),2);
+ await page.evaluate(()=>{selectedDeckCards=()=>Array(108);renderRoundSelector(roster)});assert.equal(await page.locator('#roundCycles option').count(),1);
  await page.evaluate(()=>{liveGameContext.session.user.id='p1';renderRoundSelector(roster)});assert.ok(await page.locator('#roundCycles').isDisabled());
  await page.evaluate(()=>showLiveRoundWaiting());await page.waitForFunction(()=>document.querySelector('#waitingScore').textContent.includes('Player'));
  assert.match(await page.locator('#awaitedStoryteller').innerText(),/Player 0/);

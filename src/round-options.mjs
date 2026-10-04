@@ -1,7 +1,7 @@
 export function roundOptions(playerCount, cardCount) {
   if (!Number.isInteger(playerCount) || playerCount < 3 || playerCount > 10) return [];
-  const firstCycles = playerCount >= 8 ? 1 : 2;
-  const availableCards = playerCount >= 8 ? cardCount - playerCount : cardCount;
+  const firstCycles = playerCount >= 7 ? 1 : 2;
+  const availableCards = cardCount - playerCount;
   const maxCycles = Math.floor(availableCards / (playerCount * playerCount));
   return Array.from({length: Math.max(0, maxCycles - firstCycles + 1)}, (_, i) => ({
     cycles: i + firstCycles, rounds: (i + firstCycles) * playerCount, cards: (i + firstCycles) * playerCount * playerCount
