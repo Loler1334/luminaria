@@ -12,6 +12,7 @@ const source=fs.readFileSync('src/main.js','utf8');
 const fn=source.slice(source.indexOf('async function showLiveVoting(round)'),source.indexOf('\nrouteLiveRound=',source.indexOf('async function showLiveVoting(round)')));
 await page.evaluate(({fn,helper})=>{
  window.language='ru';window.$=s=>document.querySelector(s);
+ window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
  window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
  window.loadLiveRoster=async()=>[];window.updateLivePhaseProgress=async()=>{};
  window.openCardPreview=options=>{window.slides=options.items};
@@ -38,7 +39,7 @@ await page.evaluate(({fn,helper})=>{
 let scenarios=0;
 for(let count=3;count<=10;count++)for(const roundNumber of [1,2,7,12,20]){
  const host=roundNumber%count;
- const round={id:`round-${count}-${roundNumber}`,room_id:'room',storyteller_id:`player-${host}`,clue:'test'};
+const round={id:`round-${count}-${roundNumber}`,room_id:'room',storyteller_id:`player-${host}`,clue:'<img src=x onerror=alert(1)>'};
  await page.evaluate(count=>{
    window.playerCount=count;window.votes={};window.phase='voting';window.failNext=false;window.loseResponse=false;
    window.cards=Array.from({length:count},(_,i)=>({id:`submission-${i}`,player_id:`player-${i}`,card_id:'001-card.webp'}));
@@ -47,6 +48,8 @@ for(let count=3;count<=10;count++)for(const roundNumber of [1,2,7,12,20]){
  for(const [index,player] of players.entries()){
    await page.evaluate(async({round,player})=>{window.liveGameContext={session:{user:{id:`player-${player}`}}};await showLiveVoting(round)}, {round,player});
    assert.equal(await page.locator('.vote-card').count(),count-1);
+   assert.equal(await page.locator('.vote-header blockquote img').count(),0);
+   assert.match(await page.locator('.vote-header blockquote').innerText(),/<img src=x onerror=alert\(1\)>/);
    await page.locator('.vote-card').first().click();await page.evaluate(()=>slides[0].onToggle());
    if(index===players.length-1){
      // One vote is still missing: a failed write must stay retryable.

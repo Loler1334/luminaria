@@ -14,6 +14,7 @@ const results=source.slice(source.indexOf('async function showLiveResults(round)
 const observer=source.slice(source.indexOf('const liveResultsObserver='),source.indexOf('\nasync function createLiveRoom'));
 await page.evaluate(({finale,results,observer,helpers,view})=>{
  window.language='ru';window.$=selector=>document.querySelector(selector);
+ window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
  window.liveGameContext={room:{id:'room',code:'WYBTMN',host_id:'player-0'},session:{user:{id:'player-0'}}};
  window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
  window.avatarMarkup=()=> '✦';window.restartLiveRoom=async()=>{window.rematched=true};window.showInlineGameError=message=>{throw Error(message)};window.syncStarParty=async()=>{};window.liveStarScores={};
@@ -27,10 +28,12 @@ await page.evaluate(({finale,results,observer,helpers,view})=>{
 for(let count=3;count<=10;count++){
  await page.evaluate(async count=>{
    window.roster=Array.from({length:count},(_,i)=>({user_id:`player-${i}`,score:[41,40,30,30,30,27,20][i],profile:{nickname:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]}}));
-   window.rounds=Array.from({length:Math.floor(86/count)},(_,i)=>({id:`r${i}`,clue:i===Math.floor(86/count)-1?'ща приберусь тут':`Тайна ${i+1}: город, который умеет летать`,storyteller_id:`player-${i%count}`}));
+   window.rounds=Array.from({length:Math.floor(86/count)},(_,i)=>({id:`r${i}`,clue:i===Math.floor(86/count)-1?'<img src=x onerror=alert(1)>':`Тайна ${i+1}: город, который умеет летать`,storyteller_id:`player-${i%count}`}));
    document.body.innerHTML='<main class="results-page"><section class="scores"></section></main>';
-   await showLiveResults({room_id:'room',phase:'results'});
+   await showLiveResults({room_id:'room',phase:'results',clue:'<img src=x onerror=alert(1)>'});
  },count);
+ assert.equal(await page.locator('.result-clue img').count(),0);
+ assert.match(await page.locator('.result-clue').innerText(),/<img src=x onerror=alert\(1\)>/);
  await page.locator('#nextLiveRound').waitFor();
  assert.match(await page.locator('#nextLiveRound').innerText(),/Результаты игры|Final game results/);
  await page.locator('#nextLiveRound').evaluate(button=>button.click());
