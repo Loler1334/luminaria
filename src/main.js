@@ -4,6 +4,7 @@ import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-fina
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { votingOrder, serialRefresh } from './round-state.js';
 import './style.css';
+import './branding.css';
 import './finale.css';
 import { createClient } from '@supabase/supabase-js';
 

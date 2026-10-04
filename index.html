@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="theme-color" content="#11162d" />
+    <link rel="icon" type="image/png" sizes="64x64" href="/brand/favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/brand/apple-touch-icon.png" />
     <title>Luminaria — игра воображения</title>
     <meta name="description" content="Luminaria — онлайн-игра на ассоциации, тайные карты и воображение для 3–7 друзей." />
     <meta property="og:type" content="website" />
@@ -86,13 +88,13 @@
     </main>
 
     <dialog id="entryDialog">
-      <form method="dialog" class="modal" id="entryForm">
+      <form method="dialog" class="modal" id="entryForm" autocomplete="off">
         <button class="close" id="closeEntry" type="button" aria-label="Close">×</button>
         <span class="modal-star">✦</span>
         <h2 id="dialogTitle">Welcome to Luminaria</h2>
         <p id="dialogText">Pick a name and join the table.</p>
         <label for="nickname" id="nicknameLabel">Your nickname</label>
-        <input id="nickname" name="nickname" maxlength="20" autocomplete="nickname" placeholder="Moonwalker" required />
+        <input id="nickname" name="luminaria-player-alias" type="text" maxlength="20" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore placeholder="Moonwalker" required />
         <div class="avatar-row" id="avatarPicker" aria-label="Choose avatar"><button type="button" class="avatar-choice selected">✶</button><button type="button" class="avatar-choice">☽</button><button type="button" class="avatar-choice">♢</button><button type="button" class="avatar-choice">☼</button><button type="button" class="avatar-choice">✿</button><label class="avatar-upload" id="avatarUploadLabel" title="Upload avatar">↑<input id="avatarUpload" type="file" accept="image/png,image/jpeg,image/webp" /></label></div>
         <button class="primary-button full" id="entrySubmit" value="default" type="submit">Continue <b>→</b></button>
       </form>

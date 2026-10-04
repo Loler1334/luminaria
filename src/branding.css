@@ -1,0 +1,43 @@
+.brand-mark {
+  display: inline-block;
+  width: 32px;
+  height: 32px;
+  margin-right: 7px;
+  vertical-align: -8px;
+  background: url('/brand/logo-small.png') center / contain no-repeat;
+  font-size: 0;
+}
+
+/* Keep the same 52px hit area and movement on touch and desktop. */
+.star-arena > button {
+  border: 0;
+  background: transparent;
+  box-shadow: none;
+  font-size: 0;
+  overflow: visible;
+  animation: none;
+  filter: drop-shadow(0 0 9px #ffc26899);
+}
+.star-arena > button::before {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  background: conic-gradient(from 45deg, #fff9d4, #ffc56b, #df8fbc, #ffc56b, #fff9d4);
+  clip-path: polygon(50% 0, 61% 32%, 85% 15%, 68% 39%, 100% 50%, 68% 61%, 85% 85%, 61% 68%, 50% 100%, 39% 68%, 15% 85%, 32% 61%, 0 50%, 32% 39%, 15% 15%, 39% 32%);
+  animation: luminaria-spark-turn 8s linear infinite;
+  pointer-events: none;
+}
+.star-arena > button::after {
+  content: '';
+  position: absolute;
+  inset: 21px;
+  border-radius: 50%;
+  background: #fffce9;
+  box-shadow: 0 0 9px 4px #fff0c377;
+  pointer-events: none;
+}
+.star-arena > button:active { filter: drop-shadow(0 0 16px #fff4c4); }
+@keyframes luminaria-spark-turn { to { rotate: 360deg; } }
+@media (prefers-reduced-motion: reduce) {
+  .star-arena > button::before { animation: none; }
+}
