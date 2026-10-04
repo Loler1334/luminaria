@@ -21,12 +21,16 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         const button = document.querySelector('.star-arena button');
         const image = new Image(); image.src = '/brand/logo-small.png'; await image.decode();
         const rect = button.getBoundingClientRect();
+        const brand = document.querySelector('.brand').getBoundingClientRect();
+        const markRect = mark.getBoundingClientRect();
         return { logo: getComputedStyle(mark).backgroundImage, hiddenText: getComputedStyle(mark).fontSize,
+          logoCenterOffset: Math.abs((markRect.top + markRect.height / 2) - (brand.top + brand.height / 2)),
           width: rect.width, height: rect.height, crystal: getComputedStyle(button, '::before').clipPath,
           overflow: document.documentElement.scrollWidth > innerWidth, imageWidth: image.naturalWidth };
       });
       assert.match(state.logo, /logo-small\.png/);
       assert.equal(state.hiddenText, '0px');
+      assert.ok(state.logoCenterOffset <= 1, `logo is vertically centered (offset ${state.logoCenterOffset}px)`);
       assert.equal(state.width, 52); assert.equal(state.height, 52);
       assert.match(state.crystal, /^polygon/); assert.equal(state.overflow, false);
       assert.equal(state.imageWidth, 128);
