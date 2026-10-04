@@ -15,7 +15,7 @@ try{
   window.roster=Array.from({length:6},(_,i)=>({user_id:'p'+i,is_ready:true,score:i,profile:{nickname:'Player '+i}}));
   window.loadLiveRoster=async()=>roster;window.selectedDeckCards=()=>Array(100);window.selectedDeckId=()=> 'moon';window.decks={moon:{cards:Array(100)}};
   window.supabase={rpc:async(name,args)=>({data:name==='luminaria_round_waiting'?roster.map((p,i)=>({user_id:p.user_id,has_submitted:i<3,has_voted:i===1})):null}),auth:{getSession:async()=>({data:{session:liveGameContext.session}})},from:()=>({upsert:async value=>{window.saved=value;return {error:null}}})};
-  window.liveHandCache=[];window.liveStorytellerId='p0';window.liveRound=null;window.liveRoundNumber=1;
+  window.liveHandCache=[];window.liveStorytellerId='p0';window.liveRound=null;window.liveRoundNumber=1;window.applyLiveProfileUpdate=()=>{};window.liveChatChannel=null;
   window.bindWaitingMinigame=()=>{};window.ensureLiveChat=()=>{};window.addDeckSelector=()=>{};window.showInlineGameError=e=>{throw Error(e)};
   window.safeAvatar=p=>p.avatar;window.cachePlayer=()=>{};window.navProfileCache=null;window.liveProfileCache=new Map();window.addAuthButton=()=>{};
   window.compressAvatar=async()=>{window.crops++;return window.cancelCrop?null:'data:image/jpeg;base64,AAAA'};window.crops=0;
@@ -30,7 +30,7 @@ try{
  assert.match(await page.locator('#awaitedStoryteller').innerText(),/Player 0/);
  assert.ok(await page.evaluate(()=>Boolean(document.querySelector('#waitingScore').compareDocumentPosition(document.querySelector('.waiting-minigame'))&Node.DOCUMENT_POSITION_FOLLOWING)));
  await page.screenshot({path:'output/waiting-mobile.png',fullPage:true});
- for(let n=3;n<=7;n++){
+ for(let n=3;n<=10;n++){
   await page.evaluate(async n=>{roster=Array.from({length:n},(_,i)=>({user_id:'p'+i,profile:{nickname:'Player '+i}}));document.body.innerHTML='<main><section class="vote-header"></section></main>';liveRound={id:'r',phase:'voting',storyteller_id:'p0'};await updateLivePhaseProgress()},n);
   assert.equal(await page.locator('.phase-waiting span').count(),n-1);assert.equal(await page.locator('.phase-waiting .done').count(),1);
   assert.ok(!(await page.locator('.phase-waiting').innerText()).includes('Player 0'));
@@ -51,6 +51,6 @@ try{
  await page.evaluate(()=>cancelCrop=true);
  await page.locator('#profileAvatarUpload').setInputFiles({name:'same-avatar.png',mimeType:'image/png',buffer:Buffer.from('image')});
  await page.waitForFunction(()=>crops===7);assert.equal(await page.locator('#profileAvatarUpload').getAttribute('data-avatar'),'data:image/jpeg;base64,AAAA');
- assert.deepEqual(errors,[]);console.log('PASS: lobby capacity/host access, named waiting for 3–7 players, score above stars, five profile saves, same-file reselect and cancelled crop.');
+ assert.deepEqual(errors,[]);console.log('PASS: lobby capacity/host access, named waiting for 3–10 players, score above stars, five profile saves, same-file reselect and cancelled crop.');
 }finally{await browser.close()}
 })().catch(e=>{console.error(e);process.exitCode=1});
