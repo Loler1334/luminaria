@@ -133,8 +133,8 @@ begin
     return;
   end if;
   if target_room.status <> 'lobby' then raise exception 'This game has already started'; end if;
-  if (select count(*) from public.room_players where room_id = target_room.id) >= 7 then
-    raise exception 'This room already has the maximum of 7 players';
+  if (select count(*) from public.room_players where room_id = target_room.id) >= 10 then
+    raise exception 'This room already has the maximum of 10 players';
   end if;
 
   -- The existing seat trigger also enforces unique nicknames under concurrency.

@@ -7,7 +7,7 @@ const reset=extract('function resetLiveParty(){','async function loadLiveHand');
 const load=extract('async function loadLiveRound(){','function syncLiveRoundNumber');
 const prepare=extract('async function prepareNextLiveRound(){','async function addLiveScoreboard');
 (async()=>{
-  for(let players=3;players<=7;players++){
+  for(let players=3;players<=10;players++){
     const saved=new Map([['pending',JSON.stringify({completedRoundId:'old-round',storytellerId:'old-leader'})]]);
     const state={liveGameEpoch:0,liveGameContext:{room:{id:'room',host_id:'host',status:'playing'},session:{user:{id:'host'}}},liveRound:{id:'old-round'},liveStorytellerId:'old-leader',liveHandCache:['old-card'],liveRoundNumber:99,liveRoundNumberForId:'old-round',liveTotalRounds:99,liveHandVersion:99,activeRoundClue:'old',activeStorytellerCard:'old',activeMoonPhase:{},preparingNextRound:false,
       resetPartyStars:()=>{},nextRoundStorageKey:()=> 'pending',localStorage:{getItem:k=>saved.get(k),removeItem:k=>saved.delete(k),setItem:(k,v)=>saved.set(k,v)},escapeHtml:x=>x};
@@ -30,5 +30,5 @@ const prepare=extract('async function prepareNextLiveRound(){','async function a
       assert.equal(finished,1);assert.equal(rendered,0);assert.equal(state.preparingNextRound,false);
     }
   }
-  console.log('PASS: rematch reset, stale previous-party response, first host recovery, final-round cap with leftover cards for 3–7 players.');
+  console.log('PASS: rematch reset, stale previous-party response, first host recovery, final-round cap with leftover cards for 3–10 players.');
 })().catch(error=>{console.error(error);process.exitCode=1});

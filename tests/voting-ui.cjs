@@ -36,7 +36,7 @@ await page.evaluate(({fn,helper})=>{
  (0,eval)(helper.replace(/export /g,''));(0,eval)(fn);
 }, {fn,helper:fs.readFileSync('src/round-state.js','utf8')});
 let scenarios=0;
-for(let count=3;count<=7;count++)for(const roundNumber of [1,2,7,12,20]){
+for(let count=3;count<=10;count++)for(const roundNumber of [1,2,7,12,20]){
  const host=roundNumber%count;
  const round={id:`round-${count}-${roundNumber}`,room_id:'room',storyteller_id:`player-${host}`,clue:'test'};
  await page.evaluate(count=>{
@@ -69,6 +69,6 @@ for(let count=3;count<=7;count++)for(const roundNumber of [1,2,7,12,20]){
  assert.equal(await page.evaluate(()=>phase),'results');
  scenarios++;
 }
-console.log(`PASS: ${scenarios} voting scenarios, 3–7 players, rotating storytellers, failed final vote retry, lost response recovery, persisted votes after rerender. Uses a simulated server.`);
+console.log(`PASS: ${scenarios} voting scenarios, 3–10 players, rotating storytellers, failed final vote retry, lost response recovery, persisted votes after rerender. Uses a simulated server.`);
 }finally{await browser.close()}
 })().catch(error=>{console.error(error);process.exitCode=1});

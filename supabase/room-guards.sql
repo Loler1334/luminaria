@@ -17,8 +17,8 @@ begin
   if active_status <> 'lobby' then
     raise exception 'This game has already started';
   end if;
-  if (select count(*) from public.room_players where room_id = new.room_id) >= 7 then
-    raise exception 'This room already has the maximum of 7 players';
+  if (select count(*) from public.room_players where room_id = new.room_id) >= 10 then
+    raise exception 'This room already has the maximum of 10 players';
   end if;
 
   select nickname into requested_nickname from public.profiles where id = new.user_id;

@@ -1,12 +1,15 @@
 -- Run as one transaction. Existing games and scores are preserved.
 begin;
 alter table public.rooms add column if not exists round_cycles integer not null default 2 check (round_cycles >= 2);
+alter table public.rooms drop constraint if exists rooms_round_cycles_check;
+alter table public.rooms add constraint rooms_round_cycles_check check (round_cycles >= 1);
 
 create or replace function public.configure_luminaria_lobby(target_room_id uuid, chosen_deck text, chosen_cycles integer)
 returns jsonb language plpgsql security definer set search_path = public as $$
 declare configured public.rooms;
 begin
-  if chosen_deck is null or chosen_deck not in ('moonlit-archive','pop-culture') or chosen_cycles is null or chosen_cycles < 2 then
+  if chosen_deck is null or chosen_deck not in ('moonlit-archive','pop-culture') or chosen_cycles is null
+    or chosen_cycles < case when (select count(*) from public.room_players where room_id=target_room_id) >= 8 then 1 else 2 end then
     raise exception 'Invalid lobby settings';
   end if;
   update public.rooms set deck_id=chosen_deck, round_cycles=chosen_cycles
@@ -62,7 +65,7 @@ begin
   from public.room_players
   where room_id = target_room_id;
 
-  if player_count < 3 or player_count > 7 then
+  if player_count < 3 or player_count > 10 then
     raise exception 'At least three players are required';
   end if;
 
@@ -80,8 +83,8 @@ begin
 
   usable_cards := array_length(card_ids, 1);
   if usable_cards % (player_count * player_count) <> 0
-    or usable_cards < 2 * player_count * player_count then
-    raise exception 'Choose at least two complete storyteller cycles; refresh the lobby after player changes';
+    or usable_cards < (case when player_count >= 8 then 1 else 2 end) * player_count * player_count then
+    raise exception 'Choose enough cards for complete storyteller cycles; refresh the lobby after player changes';
   end if;
   if usable_cards = 0 then
     raise exception 'Not enough cards for this room';

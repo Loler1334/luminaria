@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 (async()=>{
 const {rankPlayers,awardFor,fallbackStory,fitStory}=await import('../src/game-finale.mjs');
 const {finaleMarkup,starAwardMarkup}=await import('../src/finale-view.mjs');
-for(let count=3;count<=7;count++){
+for(let count=3;count<=10;count++){
   const roster=Array.from({length:count},(_,index)=>({user_id:`p${index}`,score:100-index*7,name:`Player ${index}`}));
   const ranked=rankPlayers(roster.reverse());
   assert.equal(ranked[0].user_id,'p0');assert.equal(ranked.at(-1).place,count);
@@ -26,5 +26,5 @@ assert.equal(starAwardMarkup([{user_id:'p',name:'P'}],{}),'');
 const stars=starAwardMarkup([{user_id:'a',name:'<A>'},{user_id:'b',name:'B'}],{a:{score:5},b:{score:5},outsider:{score:999}});
 assert(stars.includes('&lt;A&gt;'));assert(stars.includes('B'));assert(stars.includes('награда каждому'));assert(!stars.includes('999'));
 assert([...fitStory('😀'.repeat(500))].length<=400);
-console.log('PASS: final rankings for 3–7 players, tied awards, all clues, bounded stories, escaped player content, no next-round button.');
+console.log('PASS: final rankings for 3–10 players, tied awards, all clues, bounded stories, escaped player content, no next-round button.');
 })().catch(error=>{console.error(error);process.exitCode=1});
