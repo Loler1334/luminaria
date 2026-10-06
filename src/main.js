@@ -27,8 +27,8 @@ Object.assign(copy.en,{rule3:'Guess the storyteller’s card, and choose yours t
 Object.assign(copy.ru,{rule3:'Угадай карту ведущего, а свою подбери так, чтобы за неё проголосовали другие.'});
 Object.assign(siteCopy.en,{ctaEyebrow:'The table is waiting',ctaTitle:'Bring a clue.<br /><em>Leave with a story.</em>',ctaText:'Create a private room in a moment. All your friends need is the invitation link.',ctaPlay:'Create a room',ctaJoin:'I have a room code',footerText:'A card game for curious minds',footerRules:'Rules'});
 Object.assign(siteCopy.ru,{ctaEyebrow:'Стол уже ждёт',ctaTitle:'Принеси подсказку.<br /><em>Унеси историю.</em>',ctaText:'Создай приватную комнату за мгновение. Друзьям понадобится только ссылка-приглашение.',ctaPlay:'Создать комнату',ctaJoin:'У меня есть код комнаты',footerText:'Карточная игра для любопытных умов',footerRules:'Правила'});
-Object.assign(siteCopy.en,{archiveEyebrow:'The Moonlit Archive',archiveTitle:'Three decks.<br /><em>Countless stories.</em>',archiveText:'Every card is a starting point for a strange, funny, or beautiful association.',archiveButton:'Explore all decks →',decksMenu:'Decks'});
-Object.assign(siteCopy.ru,{archiveEyebrow:'Лунный архив',archiveTitle:'Три колоды.<br /><em>Бесконечно историй.</em>',archiveText:'Каждая карта — начало странной, смешной или красивой ассоциации.',archiveButton:'Посмотреть все колоды →',decksMenu:'Колоды'});
+Object.assign(siteCopy.en,{archiveEyebrow:'The Moonlit Archive',archiveTitle:'Four decks.<br /><em>Countless stories.</em>',archiveText:'Every card is a starting point for a strange, funny, or beautiful association.',archiveButton:'Explore all decks →',decksMenu:'Decks'});
+Object.assign(siteCopy.ru,{archiveEyebrow:'Лунный архив',archiveTitle:'Четыре колоды.<br /><em>Бесконечно историй.</em>',archiveText:'Каждая карта — начало странной, смешной или красивой ассоциации.',archiveButton:'Посмотреть все колоды →',decksMenu:'Колоды'});
 Object.assign(siteCopy.en,{rulesScore:'The storyteller scores when at least one, but not every, player finds their card. Choose an unexpected clue.'});
 Object.assign(siteCopy.ru,{rulesScore:'Ведущий получает очки, если его карту угадал хотя бы один игрок, но не все. Выбирай неочевидную ассоциацию.'});
 Object.assign(copy.en,{feedback:'Help improve the game'});
@@ -56,10 +56,11 @@ const deckPool=archivedDeck.filter(card=>!removedCards.has(card));
 
 const popDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-pop.webp'));
 const absurdDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-abs.webp'));
+const memeDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-meme.webp'));
 const cardAssetVersion=card=>card==='420-pop.webp'?'?v=naked-gun-1':'';
 const availableCards=new Set(__LUMINARIA_AVAILABLE_CARDS__);
-const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'}};
-function selectedDeckId(){return {'pop-culture':'pop','everyday-absurdity':'abs'}[liveGameContext?.room.deck_id]||'moon'}
+const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'},meme:{ru:'Мемный хаос',en:'Meme Chaos',cards:memeDeck,icon:'✺'}};
+function selectedDeckId(){return {'pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme'}[liveGameContext?.room.deck_id]||'moon'}
 function selectedDeckCards(){return decks[selectedDeckId()].cards}
 
 function shuffleDeck(cards){
@@ -184,7 +185,7 @@ async function saveLobbySettings(deckId,cycles){
   const context=liveGameContext;savingLobbySettings=true;renderRoundSelector();
   try{
     const choice=selectedRoundOption(lobbyRoster.length,decks[deckId].cards.length,cycles);
-    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:{moon:'moonlit-archive',pop:'pop-culture',abs:'everyday-absurdity'}[deckId],chosen_cycles:choice?.cycles||2});
+    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:{moon:'moonlit-archive',pop:'pop-culture',abs:'everyday-absurdity',meme:'meme-chaos'}[deckId],chosen_cycles:choice?.cycles||2});
     if(error)throw error;
     if(liveGameContext===context)context.room={...context.room,...data};
   }catch(error){showInlineGameError(error.message)}finally{
