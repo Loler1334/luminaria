@@ -57,5 +57,3 @@ revoke all on function public.reroll_luminaria_card(uuid,uuid,text) from public,
 grant execute on function public.luminaria_reroll_status(uuid) to authenticated;
 grant execute on function public.reroll_luminaria_card(uuid,uuid,text) to authenticated;
 commit;
-
-
