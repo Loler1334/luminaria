@@ -1,0 +1,20 @@
+.open-rooms-panel{margin-top:2rem;padding:1.5rem;border:1px solid rgba(255,255,255,.13);border-radius:1.4rem;background:rgba(28,31,61,.67)}
+.open-rooms-heading{display:flex;align-items:end;justify-content:space-between;gap:1rem;margin-bottom:1rem}
+.open-rooms-heading h3{font-size:clamp(1.4rem,3vw,2rem);margin:.3rem 0 0}
+.open-rooms-empty{color:#c8c6da;line-height:1.5;margin:.5rem 0}
+.open-room-card{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:1rem 0;border-top:1px solid rgba(255,255,255,.11)}
+.open-room-card strong,.open-room-card small{display:block}
+.open-room-card strong{font-size:1.05rem;overflow-wrap:anywhere}
+.open-room-card small{color:#bdbbd0;margin-top:.35rem;line-height:1.5}
+.open-room-join{border:1px solid rgba(244,196,111,.6);border-radius:999px;padding:.7rem 1rem;background:rgba(244,196,111,.15);color:#ffdc9d;font:inherit;cursor:pointer;white-space:nowrap}
+.open-room-join:hover{background:rgba(244,196,111,.3)}
+.room-visibility-field{border:1px solid rgba(255,255,255,.18);border-radius:1rem;padding:.75rem 1rem;margin:1rem 0}
+.room-visibility-field[hidden]{display:none}
+.room-visibility-field legend{padding:0 .3rem;color:#f5cd86}
+.room-visibility-field label{display:flex;align-items:center;gap:.6rem;margin:.55rem 0;cursor:pointer}
+.room-visibility-field input{accent-color:#e9ae54}
+.room-visibility-controls{border:1px solid rgba(255,255,255,.17);border-radius:1rem;padding:1rem;margin:1rem 0}
+.room-visibility-controls strong{color:#f4ca82}
+.room-visibility-controls p{font-size:.9rem;line-height:1.5;margin:.5rem 0}
+.room-visibility-controls .text-button{padding:0;margin-top:.4rem}
+@media(max-width:600px){.open-rooms-panel{padding:1rem}.open-room-card{align-items:flex-start}.open-room-join{padding:.6rem .75rem}}
