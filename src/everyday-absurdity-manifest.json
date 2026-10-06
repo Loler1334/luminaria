@@ -1,0 +1,442 @@
+[
+  {
+    "card": "001-abs.webp",
+    "title": "Завтрак в холодильнике"
+  },
+  {
+    "card": "002-abs.webp",
+    "title": "Дождь на кассе"
+  },
+  {
+    "card": "003-abs.webp",
+    "title": "Автобус без конечной"
+  },
+  {
+    "card": "004-abs.webp",
+    "title": "Пробка на кактусе"
+  },
+  {
+    "card": "005-abs.webp",
+    "title": "Дедлайн на ножках"
+  },
+  {
+    "card": "006-abs.webp",
+    "title": "Прачечная с ужином"
+  },
+  {
+    "card": "007-abs.webp",
+    "title": "Тень на почте"
+  },
+  {
+    "card": "008-abs.webp",
+    "title": "Причёска из живой изгороди"
+  },
+  {
+    "card": "009-abs.webp",
+    "title": "Ключ от подъезда"
+  },
+  {
+    "card": "010-abs.webp",
+    "title": "Суп с целым городом"
+  },
+  {
+    "card": "011-abs.webp",
+    "title": "Elevator"
+  },
+  {
+    "card": "012-abs.webp",
+    "title": "Dentist"
+  },
+  {
+    "card": "013-abs.webp",
+    "title": "Library"
+  },
+  {
+    "card": "014-abs.webp",
+    "title": "Gym"
+  },
+  {
+    "card": "015-abs.webp",
+    "title": "Bakery"
+  },
+  {
+    "card": "016-abs.webp",
+    "title": "Crosswalk"
+  },
+  {
+    "card": "017-abs.webp",
+    "title": "Bank"
+  },
+  {
+    "card": "018-abs.webp",
+    "title": "Cinema"
+  },
+  {
+    "card": "019-abs.webp",
+    "title": "Flower shop"
+  },
+  {
+    "card": "020-abs.webp",
+    "title": "Shoe repair"
+  },
+  {
+    "card": "021-abs.webp",
+    "title": "Pharmacy"
+  },
+  {
+    "card": "022-abs.webp",
+    "title": "Swimming pool"
+  },
+  {
+    "card": "023-abs.webp",
+    "title": "Bookshop"
+  },
+  {
+    "card": "024-abs.webp",
+    "title": "Car wash"
+  },
+  {
+    "card": "025-abs.webp",
+    "title": "Farmers market"
+  },
+  {
+    "card": "026-abs.webp",
+    "title": "Train platform"
+  },
+  {
+    "card": "027-abs.webp",
+    "title": "Tailor's impossible zipper"
+  },
+  {
+    "card": "028-abs.webp",
+    "title": "Restaurant"
+  },
+  {
+    "card": "029-abs.webp",
+    "title": "Repair shop"
+  },
+  {
+    "card": "030-abs.webp",
+    "title": "Bus stop"
+  },
+  {
+    "card": "031-abs.webp",
+    "title": "Pet shop"
+  },
+  {
+    "card": "032-abs.webp",
+    "title": "School hallway"
+  },
+  {
+    "card": "033-abs.webp",
+    "title": "Coffee stand"
+  },
+  {
+    "card": "034-abs.webp",
+    "title": "Snail coronation"
+  },
+  {
+    "card": "035-abs.webp",
+    "title": "Hardware store"
+  },
+  {
+    "card": "036-abs.webp",
+    "title": "Taxi"
+  },
+  {
+    "card": "037-abs.webp",
+    "title": "Museum cloakroom"
+  },
+  {
+    "card": "038-abs.webp",
+    "title": "Picnic"
+  },
+  {
+    "card": "039-abs.webp",
+    "title": "Office copier"
+  },
+  {
+    "card": "040-abs.webp",
+    "title": "Ice cream cart"
+  },
+  {
+    "card": "041-abs.webp",
+    "title": "Apartment move"
+  },
+  {
+    "card": "042-abs.webp",
+    "title": "Seamstress"
+  },
+  {
+    "card": "043-abs.webp",
+    "title": "Fishmonger"
+  },
+  {
+    "card": "044-abs.webp",
+    "title": "Rooftop antennas"
+  },
+  {
+    "card": "045-abs.webp",
+    "title": "Bicycle shop"
+  },
+  {
+    "card": "046-abs.webp",
+    "title": "Clinic waiting room"
+  },
+  {
+    "card": "047-abs.webp",
+    "title": "Park fountain"
+  },
+  {
+    "card": "048-abs.webp",
+    "title": "Ticket booth"
+  },
+  {
+    "card": "049-abs.webp",
+    "title": "Pet veterinarian"
+  },
+  {
+    "card": "050-abs.webp",
+    "title": "Apartment bathroom"
+  },
+  {
+    "card": "051-abs.webp",
+    "title": "Rooftop laundry"
+  },
+  {
+    "card": "052-abs.webp",
+    "title": "Newsstand"
+  },
+  {
+    "card": "053-abs.webp",
+    "title": "Fast food kitchen"
+  },
+  {
+    "card": "054-abs.webp",
+    "title": "Storage locker"
+  },
+  {
+    "card": "055-abs.webp",
+    "title": "Flowering pothole"
+  },
+  {
+    "card": "056-abs.webp",
+    "title": "Ski shop"
+  },
+  {
+    "card": "057-abs.webp",
+    "title": "Pizza delivery"
+  },
+  {
+    "card": "058-abs.webp",
+    "title": "Telephone booth"
+  },
+  {
+    "card": "059-abs.webp",
+    "title": "Apartment mailboxes"
+  },
+  {
+    "card": "060-abs.webp",
+    "title": "Wedding planner"
+  },
+  {
+    "card": "061-abs.webp",
+    "title": "Public sauna"
+  },
+  {
+    "card": "062-abs.webp",
+    "title": "Elevator repair"
+  },
+  {
+    "card": "063-abs.webp",
+    "title": "Antique shop"
+  },
+  {
+    "card": "064-abs.webp",
+    "title": "Mailbox at night"
+  },
+  {
+    "card": "065-abs.webp",
+    "title": "Public chess table"
+  },
+  {
+    "card": "066-abs.webp",
+    "title": "Seaside kiosk"
+  },
+  {
+    "card": "067-abs.webp",
+    "title": "Child's homework"
+  },
+  {
+    "card": "068-abs.webp",
+    "title": "Sewing factory"
+  },
+  {
+    "card": "069-abs.webp",
+    "title": "Car dealership"
+  },
+  {
+    "card": "070-abs.webp",
+    "title": "Waiting at airport"
+  },
+  {
+    "card": "071-abs.webp",
+    "title": "Pumpkin patch"
+  },
+  {
+    "card": "072-abs.webp",
+    "title": "Municipal office"
+  },
+  {
+    "card": "073-abs.webp",
+    "title": "Window cleaner"
+  },
+  {
+    "card": "074-abs.webp",
+    "title": "Art class"
+  },
+  {
+    "card": "075-abs.webp",
+    "title": "Camping store"
+  },
+  {
+    "card": "076-abs.webp",
+    "title": "Foot massage"
+  },
+  {
+    "card": "077-abs.webp",
+    "title": "City gardener"
+  },
+  {
+    "card": "078-abs.webp",
+    "title": "Ferry"
+  },
+  {
+    "card": "079-abs.webp",
+    "title": "Office lunch"
+  },
+  {
+    "card": "080-abs.webp",
+    "title": "Second-hand shop"
+  },
+  {
+    "card": "081-abs.webp",
+    "title": "House painting"
+  },
+  {
+    "card": "082-abs.webp",
+    "title": "Tram stop"
+  },
+  {
+    "card": "083-abs.webp",
+    "title": "Maternity plant shop"
+  },
+  {
+    "card": "084-abs.webp",
+    "title": "Music lesson"
+  },
+  {
+    "card": "085-abs.webp",
+    "title": "Umbrella repair"
+  },
+  {
+    "card": "086-abs.webp",
+    "title": "Parking garage"
+  },
+  {
+    "card": "087-abs.webp",
+    "title": "House party"
+  },
+  {
+    "card": "088-abs.webp",
+    "title": "Street sweeper"
+  },
+  {
+    "card": "089-abs.webp",
+    "title": "Butcher shop"
+  },
+  {
+    "card": "090-abs.webp",
+    "title": "Aquarium maintenance"
+  },
+  {
+    "card": "091-abs.webp",
+    "title": "Laundry folding"
+  },
+  {
+    "card": "092-abs.webp",
+    "title": "Kitchen spice rack"
+  },
+  {
+    "card": "093-abs.webp",
+    "title": "Morning jog"
+  },
+  {
+    "card": "094-abs.webp",
+    "title": "Public restroom"
+  },
+  {
+    "card": "095-abs.webp",
+    "title": "Lost property desk"
+  },
+  {
+    "card": "096-abs.webp",
+    "title": "Dentist waiting room"
+  },
+  {
+    "card": "097-abs.webp",
+    "title": "Kite shop"
+  },
+  {
+    "card": "098-abs.webp",
+    "title": "Bike lane"
+  },
+  {
+    "card": "099-abs.webp",
+    "title": "Kitchen sink"
+  },
+  {
+    "card": "100-abs.webp",
+    "title": "Town laundromat roof"
+  },
+  {
+    "card": "101-abs.webp",
+    "title": "Office birthday"
+  },
+  {
+    "card": "102-abs.webp",
+    "title": "Supermarket freezer"
+  },
+  {
+    "card": "103-abs.webp",
+    "title": "Neighborhood playground"
+  },
+  {
+    "card": "104-abs.webp",
+    "title": "Office elevator"
+  },
+  {
+    "card": "105-abs.webp",
+    "title": "Bench committee of lost gloves"
+  },
+  {
+    "card": "106-abs.webp",
+    "title": "Vegetable stall"
+  },
+  {
+    "card": "107-abs.webp",
+    "title": "Car mechanic"
+  },
+  {
+    "card": "108-abs.webp",
+    "title": "Public fountain coin"
+  },
+  {
+    "card": "109-abs.webp",
+    "title": "Morning newspaper"
+  },
+  {
+    "card": "110-abs.webp",
+    "title": "Night bus depot"
+  }
+]

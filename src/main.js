@@ -25,8 +25,8 @@ Object.assign(copy.en,{rule3:'Guess the storyteller’s card, and choose yours t
 Object.assign(copy.ru,{rule3:'Угадай карту ведущего, а свою подбери так, чтобы за неё проголосовали другие.'});
 Object.assign(siteCopy.en,{ctaEyebrow:'The table is waiting',ctaTitle:'Bring a clue.<br /><em>Leave with a story.</em>',ctaText:'Create a private room in a moment. All your friends need is the invitation link.',ctaPlay:'Create a room',ctaJoin:'I have a room code',footerText:'A card game for curious minds',footerRules:'Rules'});
 Object.assign(siteCopy.ru,{ctaEyebrow:'Стол уже ждёт',ctaTitle:'Принеси подсказку.<br /><em>Унеси историю.</em>',ctaText:'Создай приватную комнату за мгновение. Друзьям понадобится только ссылка-приглашение.',ctaPlay:'Создать комнату',ctaJoin:'У меня есть код комнаты',footerText:'Карточная игра для любопытных умов',footerRules:'Правила'});
-Object.assign(siteCopy.en,{archiveEyebrow:'The Moonlit Archive',archiveTitle:'Two decks.<br /><em>Countless stories.</em>',archiveText:'Every card is a starting point for a strange, funny, or beautiful association.',archiveButton:'Explore both decks →',decksMenu:'Decks'});
-Object.assign(siteCopy.ru,{archiveEyebrow:'Лунный архив',archiveTitle:'Две колоды.<br /><em>Бесконечно историй.</em>',archiveText:'Каждая карта — начало странной, смешной или красивой ассоциации.',archiveButton:'Посмотреть обе колоды →',decksMenu:'Колоды'});
+Object.assign(siteCopy.en,{archiveEyebrow:'The Moonlit Archive',archiveTitle:'Three decks.<br /><em>Countless stories.</em>',archiveText:'Every card is a starting point for a strange, funny, or beautiful association.',archiveButton:'Explore all decks →',decksMenu:'Decks'});
+Object.assign(siteCopy.ru,{archiveEyebrow:'Лунный архив',archiveTitle:'Три колоды.<br /><em>Бесконечно историй.</em>',archiveText:'Каждая карта — начало странной, смешной или красивой ассоциации.',archiveButton:'Посмотреть все колоды →',decksMenu:'Колоды'});
 Object.assign(siteCopy.en,{rulesScore:'The storyteller scores when at least one, but not every, player finds their card. Choose an unexpected clue.'});
 Object.assign(siteCopy.ru,{rulesScore:'Ведущий получает очки, если его карту угадал хотя бы один игрок, но не все. Выбирай неочевидную ассоциацию.'});
 Object.assign(copy.en,{feedback:'Help improve the game'});
@@ -53,9 +53,10 @@ const removedCards=new Set(['060-card.webp','063-card.webp']);
 const deckPool=archivedDeck.filter(card=>!removedCards.has(card));
 
 const popDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-pop.webp'));
+const absurdDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-abs.webp'));
 const availableCards=new Set(__LUMINARIA_AVAILABLE_CARDS__);
-const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'}};
-function selectedDeckId(){return liveGameContext?.room.deck_id==='pop-culture'?'pop':'moon'}
+const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'}};
+function selectedDeckId(){return {'pop-culture':'pop','everyday-absurdity':'abs'}[liveGameContext?.room.deck_id]||'moon'}
 function selectedDeckCards(){return decks[selectedDeckId()].cards}
 
 function shuffleDeck(cards){
@@ -70,7 +71,7 @@ function deckCardInfo(card){const [number,...slugParts]=card.replace(/\.(png|web
 function openDeckGallery(deckId='moon'){
   const ru=language==='ru',deck=decks[deckId]||decks.moon;
   let dialog=$('#deckDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='deckDialog';document.body.append(dialog)}
-  dialog.innerHTML=`<section class="deck-gallery"><button class="close" id="closeDeck" aria-label="${ru?'Закрыть':'Close'}">×</button><header><p class="eyebrow">${ru?'Коллекция карт':'Card collection'}</p><h2>${deck[language]}</h2><p>${deck.cards.length} ${ru?'карт. Длительность партии выбирается в лобби.':'cards. Choose game length in the lobby.'}</p><div class="deck-tabs">${Object.entries(decks).map(([id,d])=>`<button type="button" data-gallery-deck="${id}" aria-pressed="${id===deckId}">${d.icon} ${d[language]}</button>`).join('')}</div></header><div class="deck-gallery-grid">${deck.cards.map((card,index)=>`<button class="deck-gallery-card" data-card="${card}" aria-label="${ru?'Карта':'Card'} ${index+1}"><img decoding="async" width="240" height="360" src="/deck-thumbs/${card}?v=2" data-full-src="/deck-preview/${card}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${index+1}</span></button>`).join('')}</div></section>`;
+  dialog.innerHTML=`<section class="deck-gallery"><button class="close" id="closeDeck" aria-label="${ru?'Закрыть':'Close'}">×</button><header><p class="eyebrow">${ru?'Коллекция карт':'Card collection'}</p><h2>${deck[language]}</h2><p>${deck.cards.length} ${ru?'карт. Длительность партии выбирается в лобби.':'cards. Choose game length in the lobby.'}</p><div class="deck-tabs">${Object.entries(decks).map(([id,d])=>`<button type="button" data-gallery-deck="${id}" aria-pressed="${id===deckId}">${d.icon} ${d[language]}</button>`).join('')}</div></header><div class="deck-gallery-grid">${deck.cards.map((card,index)=>`<button class="deck-gallery-card" data-card="${card}" aria-label="${ru?'Карта':'Card'} ${index+1}"><img loading="lazy" decoding="async" width="240" height="360" src="/deck-thumbs/${card}?v=2" data-full-src="/deck-preview/${card}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${index+1}</span></button>`).join('')}</div></section>`;
   dialog.querySelectorAll('.deck-gallery-card img').forEach(image=>{image.onerror=()=>{image.onerror=null;image.src=image.dataset.fullSrc}});
   if(!dialog.open)dialog.showModal();addDeckSearch();$('#closeDeck').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
   dialog.querySelectorAll('[data-gallery-deck]').forEach(button=>button.onclick=()=>openDeckGallery(button.dataset.galleryDeck));
@@ -157,7 +158,7 @@ $('#entryForm').addEventListener('submit',async event=>{event.preventDefault();e
 function addDeckSelector(){
   const ru=language==='ru',grid=$('.lobby-grid');if(!grid||grid.querySelector('.deck-panel'))return;
   const canChoose=!liveGameContext||liveGameContext.room.host_id===liveGameContext.session.user.id;
-  grid.insertAdjacentHTML('beforeend',`<article class="lobby-panel deck-panel"><div class="panel-title"><h2>${ru?'Колода для игры':'Game deck'}</h2></div><p>${canChoose?(ru?'Выбери колоду перед началом игры.':'Choose a deck before starting.'):(ru?'Колоду перед стартом выбирает создатель комнаты. Можно просмотреть обе коллекции.':'The host chooses the deck before starting. Explore both collections.')}</p><div class="deck-list">${Object.entries(decks).map(([id,deck])=>`<div class="deck-option"><button type="button" class="deck-choice ${selectedDeckId()===id?'selected':''}" data-select-deck="${id}" aria-pressed="${selectedDeckId()===id}" ${canChoose?'':'disabled'}><span class="deck-art ${id==='moon'?'moon-deck':'ember-deck'}">${deck.icon}</span><span><strong>${deck[language]}</strong><small>${deck.cards.length} ${ru?'карт':'cards'}</small></span></button><button type="button" class="text-button" data-browse-deck="${id}">${ru?'Посмотреть карты →':'Browse cards →'}</button></div>`).join('')}</div></article>`);
+  grid.insertAdjacentHTML('beforeend',`<article class="lobby-panel deck-panel"><div class="panel-title"><h2>${ru?'Колода для игры':'Game deck'}</h2></div><p>${canChoose?(ru?'Выбери колоду перед началом игры.':'Choose a deck before starting.'):(ru?'Колоду перед стартом выбирает создатель комнаты. Можно просмотреть все коллекции.':'The host chooses the deck before starting. Explore all collections.')}</p><div class="deck-list">${Object.entries(decks).map(([id,deck])=>`<div class="deck-option"><button type="button" class="deck-choice ${selectedDeckId()===id?'selected':''}" data-select-deck="${id}" aria-pressed="${selectedDeckId()===id}" ${canChoose?'':'disabled'}><span class="deck-art ${id==='moon'?'moon-deck':'ember-deck'}">${deck.icon}</span><span><strong>${deck[language]}</strong><small>${deck.cards.length} ${ru?'карт':'cards'}</small></span></button><button type="button" class="text-button" data-browse-deck="${id}">${ru?'Посмотреть карты →':'Browse cards →'}</button></div>`).join('')}</div></article>`);
   grid.querySelectorAll('[data-select-deck]').forEach(button=>button.onclick=()=>saveLobbySettings(button.dataset.selectDeck,liveGameContext.room.round_cycles||2));
   grid.querySelectorAll('[data-browse-deck]').forEach(button=>button.onclick=()=>openDeckGallery(button.dataset.browseDeck));
 }
@@ -179,7 +180,7 @@ async function saveLobbySettings(deckId,cycles){
   const context=liveGameContext;savingLobbySettings=true;renderRoundSelector();
   try{
     const choice=selectedRoundOption(lobbyRoster.length,decks[deckId].cards.length,cycles);
-    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:deckId==='pop'?'pop-culture':'moonlit-archive',chosen_cycles:choice?.cycles||2});
+    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:{moon:'moonlit-archive',pop:'pop-culture',abs:'everyday-absurdity'}[deckId],chosen_cycles:choice?.cycles||2});
     if(error)throw error;
     if(liveGameContext===context)context.room={...context.room,...data};
   }catch(error){showInlineGameError(error.message)}finally{
