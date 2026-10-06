@@ -1,6 +1,11 @@
--- Apply after expand-players-and-rerolls.sql to enable the 110-card deck.
+-- Safe to run whether or not expand-players-and-rerolls.sql created the catalog.
 begin;
 
+create table if not exists public.luminaria_deck_catalog (
+  deck_id text not null,
+  card_id text not null,
+  primary key (deck_id, card_id)
+);
 alter table public.luminaria_deck_catalog
   drop constraint if exists luminaria_deck_catalog_deck_id_check;
 alter table public.luminaria_deck_catalog
@@ -12,10 +17,24 @@ alter table public.luminaria_deck_catalog
   add constraint luminaria_deck_catalog_card_id_check
     check (card_id ~ '^[0-9]{3}-(card|pop|abs)\.webp$');
 
+-- Fill the reserve for all three decks. Only cards present in the site are listed.
 insert into public.luminaria_deck_catalog (deck_id, card_id)
+select 'moonlit-archive', lpad(number::text, 3, '0') || '-card.webp'
+from generate_series(1, 112) as number
+where number not in (60, 63)
+union all
+select 'pop-culture', lpad(number::text, 3, '0') || '-pop.webp'
+from generate_series(201, 300) as number
+union all
+select 'pop-culture', lpad(number::text, 3, '0') || '-pop.webp'
+from generate_series(401, 500) as number
+union all
 select 'everyday-absurdity', lpad(number::text, 3, '0') || '-abs.webp'
 from generate_series(1, 110) as number
 on conflict do nothing;
+
+alter table public.luminaria_deck_catalog enable row level security;
+revoke all on public.luminaria_deck_catalog from public, anon, authenticated;
 
 create or replace function public.configure_luminaria_lobby(
   target_room_id uuid, chosen_deck text, chosen_cycles integer
