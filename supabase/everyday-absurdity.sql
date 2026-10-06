@@ -45,7 +45,7 @@ begin
   if chosen_deck is null
     or chosen_deck not in ('moonlit-archive', 'pop-culture', 'everyday-absurdity')
     or chosen_cycles is null
-    or chosen_cycles < case when (select count(*) from public.room_players where room_id=target_room_id) >= 7 then 1 else 2 end then
+    or chosen_cycles < (case when (select count(*) from public.room_players where room_id=target_room_id) >= 7 then 1 else 2 end) then
     raise exception 'Invalid lobby settings';
   end if;
   update public.rooms set deck_id=chosen_deck, round_cycles=chosen_cycles
