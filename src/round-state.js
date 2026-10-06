@@ -25,3 +25,9 @@ export function serialRefresh(refresh) {
     return running;
   };
 }
+
+// A skipped legacy round can leave cards in players' hands after the last planned round.
+export function finalRoundReached(deckState, roundNumber, roomStatus) {
+  return roomStatus === 'finished' || deckState?.remaining_cards === 0 ||
+    (deckState?.cards_per_player > 0 && roundNumber >= deckState.cards_per_player);
+}

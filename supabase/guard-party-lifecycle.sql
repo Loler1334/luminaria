@@ -43,12 +43,12 @@ for each row execute function public.guard_luminaria_round_creation();
 
 create or replace function public.finish_luminaria_at_round_limit()
 returns trigger language plpgsql security definer set search_path=public as $$
-declare round_limit integer; completed_count integer;
+declare round_limit integer; round_number integer;
 begin
   if new.phase='results' and old.phase is distinct from 'results' then
     select coalesce(max(position),0) into round_limit from public.room_deck_cards where room_id=new.room_id;
-    select count(*) into completed_count from public.rounds where room_id=new.room_id and phase='results';
-    if round_limit>0 and completed_count>=round_limit then
+    select count(*) into round_number from public.rounds where room_id=new.room_id;
+    if round_limit>0 and round_number>=round_limit then
       update public.rooms set status='finished' where id=new.room_id and status='playing';
     end if;
   end if;

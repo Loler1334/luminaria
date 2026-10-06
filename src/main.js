@@ -2,7 +2,7 @@ import { roundOptions, selectedRoundOption } from './round-options.mjs';
 import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
-import { votingOrder, serialRefresh } from './round-state.js';
+import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
 import './style.css';
 import './branding.css';
 import { installRerolls } from './reroll.js';
@@ -564,7 +564,7 @@ async function showLiveResults(round){
   round={...round,clue:escapeHtml(round.clue)};
   const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:round.room_id}).single();
   if(deckError)throw deckError;
-  const isFinalRound=deckState.remaining_cards===0;
+  const isFinalRound=finalRoundReached(deckState,liveRoundNumber,liveGameContext?.room.status);
   const ru=language==='ru';
   const [{data:submissions,error:submissionError},{data:votes,error:voteError}]=await Promise.all([supabase.from('card_submissions').select('id,card_id,player_id').eq('round_id',round.id),supabase.from('votes').select('submission_id,voter_id').eq('round_id',round.id)]);
   if(submissionError||voteError)throw submissionError||voteError;
@@ -596,7 +596,7 @@ async function showLiveResults(round){
   document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="results-page" data-final-round="${isFinalRound}"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Результаты':'Results'}</div></nav><section class="result-head"><span class="result-star">✦</span><p class="eyebrow"><span></span><span>${ru?'Карты раскрыты':'Cards revealed'}</span></p><h1>${ru?'Вот что скрывалось<br>за <em>ассоциацией.</em>':'Here is what hid<br>behind the <em>clue.</em>'}</h1><p class="result-clue">“${round.clue}”</p></section><section class="reveal-grid">${submissions.map(submission=>`<article class="reveal-card ${submission.id===storytellerCard?.id?'correct':''}"><img src="/deck-preview/${submission.card_id}" alt="${ru?'Карта':'Card'}">${submission.id===storytellerCard?.id?`<span class="correct-tag">✓ ${ru?'Карта ведущего':'Storyteller’s card'}</span>`:''}<small>${name(submission.player_id)}</small></article>`).join('')}</section><section class="scores"><div class="panel-title"><h2>${ru?'Итог раунда':'Round result'}</h2><span class="count">${correctVotes} ${ru?'угадали':'guessed correctly'}</span></div>${roster.map((seat,index)=>`<div class="score-row ${seat.user_id===round.storyteller_id?'me':''}"><span class="score-avatar">${avatarMarkup(seat.profile?.avatar,['✦','☽','♢','☼'][index%4])}</span><strong>${name(seat.user_id)}</strong><em>${explanationFor(seat)}</em><b>+${pointsFor(seat)}</b></div>`).join('')}</section></main>`
   document.querySelectorAll('.reveal-card').forEach((card,index)=>{const submission=submissions[index];if(!submission)return;const nameNode=card.querySelector('small');if(nameNode){nameNode.dataset.liveProfileId=submission.player_id;nameNode.dataset.liveProfileField='nickname'}const voterNames=votes.filter(vote=>vote.submission_id===submission.id).map(vote=>name(vote.voter_id));const note=document.createElement('span');note.className='reveal-voters';note.textContent=voterNames.length?`${ru?'Голосовали:':'Voted by:'} ${voterNames.join(', ')}`:(ru?'Нет голосов':'No votes');card.append(note)});
   document.querySelectorAll('.scores .score-row').forEach((row,index)=>{const seat=roster[index];if(!seat)return;const avatar=row.querySelector('.score-avatar'),playerName=row.querySelector('strong');if(avatar){avatar.dataset.liveProfileId=seat.user_id;avatar.dataset.liveProfileField='avatar'}if(playerName){playerName.dataset.liveProfileId=seat.user_id;playerName.dataset.liveProfileField='nickname'}});
-  if(nextStoryteller){const notice=document.createElement('p');notice.className='next-storyteller';notice.textContent=ru?`Следующий ведущий — ${nextStoryteller.profile?.nickname||'Мечтатель'}`:`Next storyteller — ${nextStoryteller.profile?.nickname||'Dreamer'}`;$('.scores')?.append(notice)}
+  if(nextStoryteller&&!isFinalRound){const notice=document.createElement('p');notice.className='next-storyteller';notice.textContent=ru?`Следующий ведущий — ${nextStoryteller.profile?.nickname||'Мечтатель'}`:`Next storyteller — ${nextStoryteller.profile?.nickname||'Dreamer'}`;$('.scores')?.append(notice)}
 }
 routeLiveRound=serialRefresh(async function(){
   if(!liveGameContext||preparingNextRound||submittingLiveCard)return;
@@ -604,6 +604,7 @@ routeLiveRound=serialRefresh(async function(){
   const {data:roomState,error}=await supabase.from('rooms').select('status').eq('id',liveGameContext.room.id).maybeSingle();if(error)throw error;
   if(epoch!==liveGameEpoch)return;
   if(roomState?.status==='finished'){
+    liveGameContext.room.status='finished';
     const {data:finalRound,error:finalRoundError}=await supabase.from('rounds').select('*').eq('room_id',liveGameContext.room.id).eq('phase','results').order('created_at',{ascending:false}).order('id',{ascending:false}).limit(1).maybeSingle();
     if(finalRoundError)throw finalRoundError;
     if(finalRound){

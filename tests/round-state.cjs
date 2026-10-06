@@ -1,7 +1,11 @@
 const fs=require('node:fs');
 const assert=require('node:assert/strict');
 (async()=>{
-const {votingOrder,serialRefresh}=await import('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('src/round-state.js')).toString('base64'));
+const {votingOrder,serialRefresh,finalRoundReached}=await import('data:text/javascript;base64,'+Buffer.from(fs.readFileSync('src/round-state.js')).toString('base64'));
+assert.equal(finalRoundReached({remaining_cards:0,cards_per_player:18},18,'playing'),true);
+assert.equal(finalRoundReached({remaining_cards:5,cards_per_player:18},18,'playing'),true);
+assert.equal(finalRoundReached({remaining_cards:5,cards_per_player:18},17,'playing'),false);
+assert.equal(finalRoundReached({remaining_cards:5,cards_per_player:18},17,'finished'),true);
 for(let playerCount=3;playerCount<=10;playerCount++){
 const submissions=Array.from({length:playerCount},(_,i)=>({id:`submission-${i}`,player_id:`player-${i}`}));
 const positions=new Set();
