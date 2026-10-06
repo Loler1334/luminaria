@@ -9,6 +9,11 @@ if (popCards.length !== 200 || new Set(popCards).size !== 200 || popCards.some(c
   throw new Error('Pop culture must contain exactly 200 unique, available cards.');
 }
 const cards = [...assetCards.filter(card => card.endsWith('-card.webp')), ...popCards];
+const thumbnails = new Set(readdirSync(new URL('./public/deck-thumbs/', import.meta.url)));
+const missingThumbnails = cards.filter(card => !thumbnails.has(card));
+if (missingThumbnails.length) {
+  throw new Error(`Missing deck thumbnails: ${missingThumbnails.join(', ')}`);
+}
 
 export default defineConfig({
   define: {
