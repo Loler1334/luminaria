@@ -13,8 +13,10 @@
 .room-visibility-field legend{padding:0 .3rem;color:#f5cd86}
 .room-visibility-field label{display:flex;align-items:center;gap:.6rem;margin:.55rem 0;cursor:pointer}
 .room-visibility-field input{accent-color:#e9ae54}
+#entryDialog #nicknameLabel,#entryDialog #nickname,#entryDialog #avatarPicker{display:none}
 .room-visibility-controls{border:1px solid rgba(255,255,255,.17);border-radius:1rem;padding:1rem;margin:1rem 0}
 .room-visibility-controls strong{color:#f4ca82}
 .room-visibility-controls p{font-size:.9rem;line-height:1.5;margin:.5rem 0}
 .room-visibility-controls .text-button{padding:0;margin-top:.4rem}
+.close-lobby-button{display:block;margin:1rem auto 0;color:#f1b9b9}
 @media(max-width:600px){.open-rooms-panel{padding:1rem}.open-room-card{align-items:flex-start}.open-room-join{padding:.6rem .75rem}}
