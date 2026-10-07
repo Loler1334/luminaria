@@ -1,4 +1,4 @@
-import { roomInviteUrl } from './invite-url.js';
+import { roomInviteUrl, personalReturnUrl, parsePersonalReturnHash } from './invite-url.js';
 import { roundOptions, selectedRoundOption } from './round-options.mjs';
 import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
@@ -461,6 +461,32 @@ const demoShowGame=showGame,demoShowGuesser=showGuesser,renderLiveLobby=showLive
 function roomRecoveryToken(code){let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}return saved?.code===code&&saved.recoveryToken?saved.recoveryToken:`${crypto.randomUUID()}${crypto.randomUUID()}`}
 async function rememberLiveRoom(room,player){const recoveryToken=roomRecoveryToken(room.code);localStorage.setItem('luminaria-last-room',JSON.stringify({code:room.code,recoveryToken,player:{name:player.name,avatar:typeof player.avatar==='string'&&player.avatar.startsWith('data:image/')?'☽':safeAvatar(player)}}));const {error}=await supabase.rpc('set_luminaria_recovery_token',{target_room_id:room.id,recovery_token:recoveryToken});if(error)console.warn('Room recovery is not installed yet',error.message)}
 showLiveLobby=function(room,player,session){liveGameContext={room,player,session};if(room.status==='closed')return showClosedRoom();if(room.status==='lobby')resetLiveParty();rememberLiveRoom(room,player);setupLiveChat();if(room.status==='playing')return showGame();if(room.status==='finished'){watchLiveRound();return showGameFinished()}const rendered=renderLiveLobby(room,player,session);addDeckSelector();return rendered};
+async function copyPersonalReturnLink(button){
+  const context=liveGameContext;if(!context)return;
+  const token=roomRecoveryToken(context.room.code);
+  button.disabled=true;
+  const {error}=await supabase.rpc('set_luminaria_recovery_token',{target_room_id:context.room.id,recovery_token:token});
+  if(error){button.disabled=false;alert(error.message);return}
+  localStorage.setItem('luminaria-last-room',JSON.stringify({code:context.room.code,recoveryToken:token,player:{name:context.player.name,avatar:typeof context.player.avatar==='string'&&context.player.avatar.startsWith('data:image/')?'☽':safeAvatar(context.player)}}));
+  const url=personalReturnUrl(location.origin,context.room.code,token,context.player);
+  try{
+    await navigator.clipboard.writeText(url);
+    button.textContent=language==='ru'?'✓ Личная ссылка скопирована':'✓ Personal link copied';
+  }catch(error){
+    prompt(language==='ru'?'Скопируй личную ссылку и сохрани её у себя. Не отправляй другим игрокам.':'Copy this personal link and keep it private.',url);
+  }finally{button.disabled=false}
+}
+const personalReturnObserver=new MutationObserver(()=>{
+  const context=liveGameContext;
+  if(!context||!['lobby','playing','finished'].includes(context.room.status)){$('#personalReturnPanel')?.remove();return}
+  if($('#personalReturnPanel'))return;
+  const panel=document.createElement('aside');panel.id='personalReturnPanel';
+  const button=document.createElement('button');button.type='button';button.textContent=language==='ru'?'↺ Моя ссылка для возврата':'↺ My return link';
+  button.addEventListener('click',()=>copyPersonalReturnLink(button));
+  const hint=document.createElement('small');hint.textContent=language==='ru'?'Сохрани её для другого браузера. Не делись с другими.':'Save it for another browser. Keep it private.';
+  panel.append(button,hint);document.body.append(panel);
+});
+personalReturnObserver.observe(document.body,{childList:true,subtree:true});
 function showClosedRoom(){
   localStorage.removeItem('luminaria-last-room');
   const ru=language==='ru';
@@ -817,6 +843,16 @@ async function prepareNextLiveRound(){
 async function addLiveScoreboard(){if(!liveGameContext||!document.querySelector('.results-page')||$('#liveScoreboard'))return;const scores=$('.scores');if(!scores)return;const roster=await loadLiveRoster(liveGameContext.room.id);const ru=language==='ru';const board=document.createElement('section');board.id='liveScoreboard';board.className='live-scoreboard';board.innerHTML=`<div class="panel-title"><h2>${ru?'Общий счёт':'Total score'}</h2><span class="count">${ru?'Комната':'Room'} ${liveGameContext.room.code}</span></div>${[...roster].sort((a,b)=>b.score-a.score).map((seat,index)=>`<div class="score-row ${seat.user_id===liveGameContext.session.user.id?'me':''}"><span class="score-avatar">${index+1}</span><strong>${seat.profile?.nickname||'Dreamer'}</strong><em>${index===0?(ru?'Лидер':'Leading'):(ru?'За столом':'At the table')}</em><b>${seat.score}</b></div>`).join('')}`;scores.after(board)}
 const liveResultsObserver=new MutationObserver(()=>{if(!liveGameContext||document.querySelector('.game-finale')||!document.querySelector('.results-page')||$('#nextLiveRound'))return;const ru=language==='ru',scores=$('.scores');if(!scores)return;const isFinal=document.querySelector('.results-page')?.dataset.finalRound==='true';const button=document.createElement('button');button.id='nextLiveRound';button.className='primary-button next-round';button.innerHTML=isFinal?`${ru?'Результаты игры':'Final game results'} <b>→</b>`:`${ru?'Следующий раунд':'Next round'} <b>→</b>`;button.addEventListener('click',()=>{if(isFinal)showGameFinished().catch(error=>showInlineGameError(error.message));else prepareNextLiveRound().catch(console.error)});scores.append(button);if(!isFinal)addLiveScoreboard().catch(console.error)});liveResultsObserver.observe(document.body,{childList:true,subtree:true});
 async function createLiveRoom(player,session){for(let attempt=0;attempt<3;attempt++){const code=makeRoomCode();let room;const result=await supabase.rpc('create_luminaria_room',{room_code:code,public_room:pendingRoomIsPublic});if(!result.error){room=Array.isArray(result.data)?result.data[0]:result.data}else if(isMissingRpc(result.error)){if(pendingRoomIsPublic)throw new Error(language==='ru'?'Открытые комнаты ещё не подключены в базе данных.':'Public rooms are not enabled in the database yet.');const {data:legacyRoom,error}=await supabase.from('rooms').insert({code,host_id:session.user.id}).select().single();if(error?.code==='23505')continue;if(error)throw error;const {error:seatError}=await supabase.from('room_players').insert({room_id:legacyRoom.id,user_id:session.user.id});if(seatError)throw seatError;room=legacyRoom}else if(result.error.code==='23505')continue;else throw result.error;if(!room)throw new Error('Room creation returned no room.');return showLiveLobby(room,player,session)}throw new Error('Could not create a unique room code.')}
+async function showRecoveredLiveRoom(room,session,profile){
+  const requestedName=String(profile?.name||'Dreamer').replace(/[<>]/g,'').trim().slice(0,24);
+  const restored={name:requestedName.length>=2?requestedName:'Dreamer',avatar:safeAvatar({avatar:profile?.avatar})};
+  const {error}=await supabase.from('profiles').update({nickname:restored.name,avatar:restored.avatar}).eq('id',session.user.id);
+  if(error)console.warn('Could not restore display profile',error.message);
+  cachePlayer(restored,session.user.id);
+  navProfileCache={id:session.user.id,nickname:restored.name,avatar:restored.avatar};
+  addAuthButton();
+  showLiveLobby(room,restored,session);
+}
 async function joinLiveRoom(player,session,code){
   let room,secureJoin=false;
   const lookup=await supabase.rpc('lookup_luminaria_room',{room_code:code});
@@ -828,17 +864,26 @@ async function joinLiveRoom(player,session,code){
   const {data:existingSeat,error:seatLookupError}=await supabase.from('room_players').select('user_id').eq('room_id',room.id).eq('user_id',session.user.id).maybeSingle();
   if(seatLookupError)throw seatLookupError;
   if(!existingSeat){
+    const personalLink=parsePersonalReturnHash(location.hash);
+    if(personalLink){
+      const {error}=await supabase.rpc('reclaim_luminaria_seat',{room_code:room.code,recovery_token:personalLink.token});
+      if(error)throw new Error(language==='ru'?'Личная ссылка возвращения устарела. Открой новую ссылку из предыдущего браузера.':'This personal return link is no longer valid. Open a fresh link from your previous browser.');
+      history.replaceState(null,'',location.pathname+location.search);
+      const {data:recoveredRoom}=await supabase.from('rooms').select().eq('id',room.id).single();
+      return showRecoveredLiveRoom(recoveredRoom||room,session,{name:personalLink.name||player.name,avatar:personalLink.avatar||player.avatar});
+    }
     let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}
     if(room.status!=='lobby'&&saved?.code===room.code&&saved.recoveryToken){
       const {error:reclaimError}=await supabase.rpc('reclaim_luminaria_seat',{room_code:room.code,recovery_token:saved.recoveryToken});
-      if(reclaimError)throw new Error(language==='ru'?'Не удалось восстановить место в комнате. Открой ссылку в том же браузере, где ты играл.':'Could not recover your seat. Open the link in the same browser you played in.');
+      if(reclaimError)throw new Error(language==='ru'?'Не удалось восстановить место. Открой личную ссылку возвращения из прежнего браузера.':'Could not recover your seat. Open your personal return link from the previous browser.');
       const {data:recoveredRoom}=await supabase.from('rooms').select().eq('id',room.id).single();
-      return showLiveLobby(recoveredRoom||room,player,session);
+      return showRecoveredLiveRoom(recoveredRoom||room,session,saved.player||player);
     }
-    if(room.status!=='lobby')throw new Error(language==='ru'?'Игра уже началась. Вернуться может только игрок, который уже был за этим столом.':'The game has already started. Only a player who was already seated can return.');
+    if(room.status!=='lobby')throw new Error(language==='ru'?'Игра уже началась. Открой личную ссылку возвращения из прежнего браузера. Обычная ссылка комнаты не подтверждает твоё место.':'The game has started. Open your personal return link from the previous browser. The regular room link cannot identify your seat.');
     if(secureJoin){const joined=await supabase.rpc('join_luminaria_room',{target_room_id:room.id});if(joined.error)throw joined.error;room=Array.isArray(joined.data)?joined.data[0]:joined.data||room}
     else{const roster=await loadLiveRoster(room.id);if(roster.length>=10)throw new Error(language==='ru'?'В комнате уже максимум 10 игроков.':'This room already has the maximum of 10 players.');if(roster.some(seat=>seat.profile?.nickname?.trim().toLocaleLowerCase()===player.name.trim().toLocaleLowerCase()))throw new Error(language==='ru'?'Этот ник уже занят в комнате. Выбери другой.':'This nickname is already used in the room.');const {error:seatError}=await supabase.from('room_players').insert({room_id:room.id,user_id:session.user.id});if(seatError)throw seatError}
   }
+  if(parsePersonalReturnHash(location.hash))history.replaceState(null,'',location.pathname+location.search);
   showLiveLobby(room,player,session)
 }
 const liveProfileCache=new Map();

@@ -119,3 +119,8 @@
 .kick-player-button{flex:none;width:30px;height:30px;border:1px solid #efb97077;border-radius:9px;background:#efb97014;color:#f1c17d;font-size:21px;line-height:1;cursor:pointer;transition:background .2s,border-color .2s}
 .kick-player-button:hover,.kick-player-button:focus-visible{background:#efb97032;border-color:#efb970;outline:none}
 .kick-player-button:disabled{opacity:.5;cursor:wait}
+#personalReturnPanel{position:fixed;left:16px;bottom:16px;z-index:85;display:grid;gap:4px;max-width:210px;padding:8px 10px;border:1px solid #f0c47c55;border-radius:13px;background:#1b2142e8;box-shadow:0 8px 25px #04071799;backdrop-filter:blur(8px)}
+#personalReturnPanel button{border:0;background:transparent;color:#ffdaa0;padding:2px;font:700 12px 'DM Sans',sans-serif;text-align:left;cursor:pointer}
+#personalReturnPanel button:disabled{opacity:.55;cursor:wait}
+#personalReturnPanel small{font-size:10px;line-height:1.25;color:#bdc4db}
+@media(max-width:480px){#personalReturnPanel{left:9px;bottom:9px;max-width:162px;padding:7px}#personalReturnPanel button{font-size:10px}#personalReturnPanel small{font-size:9px}}
