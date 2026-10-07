@@ -5,8 +5,8 @@ export function roomInviteUrl(origin, code) {
   return url.href;
 }
 
-export function personalReturnUrl(origin, code, token, player) {
-  const url = new URL(roomInviteUrl(origin, code));
+export function personalReturnUrl(code, token, player) {
+  const url = new URL(roomInviteUrl('https://luminaria.cc', code));
   const fragment = new URLSearchParams({ return: token, name: player.name });
   if (player.avatar && !player.avatar.startsWith('data:')) fragment.set('avatar', player.avatar);
   url.hash = fragment.toString();

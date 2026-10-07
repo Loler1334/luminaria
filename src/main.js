@@ -472,7 +472,7 @@ async function copyPersonalReturnLink(button){
   const {error}=await supabase.rpc('set_luminaria_recovery_token',{target_room_id:context.room.id,recovery_token:token});
   if(error){button.disabled=false;alert(error.message);return}
   localStorage.setItem('luminaria-last-room',JSON.stringify({code:context.room.code,recoveryToken:token,player:{name:context.player.name,avatar:typeof context.player.avatar==='string'&&context.player.avatar.startsWith('data:image/')?'☽':safeAvatar(context.player)}}));
-  const url=personalReturnUrl(location.origin,context.room.code,token,context.player);
+  const url=personalReturnUrl(context.room.code,token,context.player);
   try{
     await navigator.clipboard.writeText(url);
     button.textContent=language==='ru'?'✓ Личная ссылка скопирована':'✓ Personal link copied';
