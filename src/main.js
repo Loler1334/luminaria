@@ -201,10 +201,15 @@ $('#entryForm').addEventListener('submit',async event=>{
   entryDialog.close();await startRoomFlow();
 },true);
 
+function lobbySettingsColumn(grid){
+  let column=grid.querySelector('.lobby-settings-column');
+  if(!column){column=document.createElement('div');column.className='lobby-settings-column';grid.append(column)}
+  return column;
+}
 function addDeckSelector(){
   const ru=language==='ru',grid=$('.lobby-grid');if(!grid||grid.querySelector('.deck-panel'))return;
   const canChoose=!liveGameContext||liveGameContext.room.host_id===liveGameContext.session.user.id;
-  grid.insertAdjacentHTML('beforeend',`<article class="lobby-panel deck-panel"><div class="panel-title"><h2>${ru?'Колода для игры':'Game deck'}</h2></div><p>${canChoose?(ru?'Выбери колоду перед началом игры.':'Choose a deck before starting.'):(ru?'Колоду перед стартом выбирает создатель комнаты. Можно просмотреть все коллекции.':'The host chooses the deck before starting. Explore all collections.')}</p><div class="deck-list">${Object.entries(decks).map(([id,deck])=>`<div class="deck-option"><button type="button" class="deck-choice ${selectedDeckId()===id?'selected':''}" data-select-deck="${id}" aria-pressed="${selectedDeckId()===id}" ${canChoose?'':'disabled'}><span class="deck-art ${id==='moon'?'moon-deck':'ember-deck'}">${deck.icon}</span><span><strong>${deck[language]}</strong><small>${deck.cards.length} ${ru?'карт':'cards'}</small></span></button><button type="button" class="text-button" data-browse-deck="${id}">${ru?'Посмотреть карты →':'Browse cards →'}</button></div>`).join('')}</div></article>`);
+  lobbySettingsColumn(grid).insertAdjacentHTML('beforeend',`<article class="lobby-panel deck-panel"><div class="panel-title"><h2>${ru?'Колода для игры':'Game deck'}</h2></div><p>${canChoose?(ru?'Выбери колоду перед началом игры.':'Choose a deck before starting.'):(ru?'Колоду перед стартом выбирает создатель комнаты. Можно просмотреть все коллекции.':'The host chooses the deck before starting. Explore all collections.')}</p><div class="deck-list">${Object.entries(decks).map(([id,deck])=>`<div class="deck-option"><button type="button" class="deck-choice ${selectedDeckId()===id?'selected':''}" data-select-deck="${id}" aria-pressed="${selectedDeckId()===id}" ${canChoose?'':'disabled'}><span class="deck-art ${id==='moon'?'moon-deck':'ember-deck'}">${deck.icon}</span><span><strong>${deck[language]}</strong><small>${deck.cards.length} ${ru?'карт':'cards'}</small></span></button><button type="button" class="text-button" data-browse-deck="${id}">${ru?'Посмотреть карты →':'Browse cards →'}</button></div>`).join('')}</div></article>`);
   grid.querySelectorAll('[data-select-deck]').forEach(button=>button.onclick=()=>saveLobbySettings(button.dataset.selectDeck,liveGameContext.room.round_cycles||2));
   grid.querySelectorAll('[data-browse-deck]').forEach(button=>button.onclick=()=>openDeckGallery(button.dataset.browseDeck));
 }
@@ -215,7 +220,7 @@ function renderRoundSelector(roster=lobbyRoster){
   const grid=$('.lobby-grid'),context=liveGameContext;if(!grid||!context)return;
   const ru=language==='ru',n=roster.length,cards=selectedDeckCards().length;
   const options=roundOptions(n,cards),chosen=selectedRoundOption(n,cards,context.room.round_cycles||2);
-  let panel=$('#roundSettings');if(!panel){panel=document.createElement('article');panel.id='roundSettings';panel.className='lobby-panel';grid.append(panel)}
+  let panel=$('#roundSettings');if(!panel){panel=document.createElement('article');panel.id='roundSettings';panel.className='lobby-panel';lobbySettingsColumn(grid).append(panel)}
   const host=context.room.host_id===context.session.user.id;
   panel.innerHTML=`<h2>${ru?'Длительность партии':'Game length'}</h2><p>${ru?'Полный круг — каждый игрок становится ведущим один раз. Для стола от 7 игроков можно сыграть один круг, чтобы оставить карты на обмен.':'In a full cycle everyone tells a clue once. Tables of 7+ can play one cycle to keep cards in reserve for swaps.'}</p><label for="roundCycles">${ru?'Количество раундов':'Number of rounds'}</label><select id="roundCycles" ${!host||!chosen||savingLobbySettings?'disabled':''}>${options.map(o=>`<option value="${o.cycles}" ${o.cycles===chosen?.cycles?'selected':''}>${o.rounds} ${ru?'раундов':'rounds'} · ${o.cycles} ${ru?'круга':'cycles'}</option>`).join('')}</select><p class="round-capacity">${n<3?(ru?'Варианты появятся, когда соберутся хотя бы 3 игрока.':'Options appear when at least 3 players join.'):chosen?(ru?`${n} игроков · ${chosen.cards} из ${cards} карт. Каждый загадает ${chosen.cycles} раз. Следующий круг потребует ${(options.at(-1).cycles+1)*n*n} карт.`:`${n} players · ${chosen.cards} of ${cards} cards. Everyone tells ${chosen.cycles} clues. Another cycle needs ${(options.at(-1).cycles+1)*n*n} cards.`):(ru?'Не хватает карт для выбранного числа игроков и запаса на обмен.':'Not enough cards for this player count plus the swap reserve.')}</p>`;
   $('#roundCycles').onchange=event=>saveLobbySettings(selectedDeckId(),Number(event.target.value));
