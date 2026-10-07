@@ -63,3 +63,27 @@
 }
 @media(max-width:700px){.lobby-settings-column{grid-column:auto;display:flex;flex-direction:column}.lobby-settings-column .lobby-panel{width:100%}}
 @media(max-width:420px){.lobby-settings-column .deck-list{grid-template-columns:1fr}}
+
+/* Give discovery half of the room section, with a clear invitation to join. */
+#rooms{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px 36px;align-items:center}
+#rooms>div:first-child{grid-column:1;align-self:end}
+#rooms .room-actions{grid-column:1;align-self:start;display:grid;grid-template-columns:1fr 1fr;margin:0}
+#rooms .room-card{min-width:0;padding:20px 14px}
+#rooms .open-rooms-panel{grid-column:2;grid-row:1 / 3;align-self:stretch;margin:0;padding:30px;border:1px solid #e9b96e66;border-radius:24px;background:radial-gradient(ellipse at top right,#a5783a26,transparent 65%),linear-gradient(135deg,#2b3158,#1c223f);box-shadow:0 18px 60px #080b2440,inset 0 1px 0 #ffe6b522;min-width:0}
+.open-rooms-heading{align-items:center;margin-bottom:12px}
+.open-rooms-heading h3{font-size:clamp(28px,2.5vw,38px);letter-spacing:-1px;line-height:1.1}
+.open-rooms-heading .eyebrow>span:first-child{width:7px;height:7px;border-radius:50%;background:#83d5b0;box-shadow:0 0 12px #83d5b077}
+.open-rooms-heading .text-button{font-size:12px;color:#d1c7ba;padding:8px;flex:none}
+.open-rooms-intro{color:#c5c9df;font-size:14px;line-height:1.6;margin:0 0 22px;max-width:430px}
+#openRoomsList{display:grid;gap:12px}
+.open-room-card{border:1px solid #ffffff20;border-radius:16px;background:#11162d80;padding:20px;transition:border-color .2s,background .2s}
+.open-room-card:hover{border-color:#e9b96e88;background:#252a48}
+.open-room-card>div{min-width:0}
+.open-room-card strong{font-size:19px}
+.open-room-card small{font-size:12px}
+.open-room-join{background:#e9b566;color:#211c30;border-color:#e9b566;border-radius:12px;padding:13px 19px;font-weight:700;box-shadow:0 5px 20px #e9b56620}
+.open-room-join:hover{background:#ffd18c;transform:translateY(-1px)}
+.open-room-join:focus-visible,#refreshOpenRooms:focus-visible{outline:2px solid #ffe4b0;outline-offset:4px}
+.open-rooms-empty{padding:22px;border:1px dashed #d8be8850;border-radius:16px;background:#11162d40;margin:0;font-size:14px}
+@media(max-width:900px){#rooms{grid-template-columns:1fr;gap:24px}#rooms .open-rooms-panel{grid-column:1;grid-row:auto}#rooms .room-actions{grid-column:1}}
+@media(max-width:480px){#rooms .open-rooms-panel{padding:20px}#rooms .room-actions{grid-template-columns:1fr}.open-room-card{padding:16px;flex-wrap:wrap}.open-room-join{width:100%}.open-rooms-heading{gap:8px}.open-rooms-heading h3{font-size:28px}}

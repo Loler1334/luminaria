@@ -65,6 +65,8 @@ const cardAssetVersion=card=>card==='420-pop.webp'?'?v=naked-gun-1':'';
 const availableCards=new Set(__LUMINARIA_AVAILABLE_CARDS__);
 const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'},meme:{ru:'Мемный хаос',en:'Meme Chaos',cards:memeDeck,icon:'✺'}};
 const deckKeyByDatabaseId={'moonlit-archive':'moon','pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme'};
+copy.ru.openRoomsIntro='Новая история начинается с новых знакомых. Выбирай комнату и присоединяйся к игре.';
+copy.en.openRoomsIntro='A new story starts with new people. Pick a table and join in.';
 let openRoomsLoading=false;
 async function renderOpenRooms(){
   const list=$('#openRoomsList');if(!list||openRoomsLoading)return;
