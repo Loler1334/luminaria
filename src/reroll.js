@@ -10,6 +10,8 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     used: text('Обмен в этом блоке раундов уже использован.', 'You have used this block’s swap.'),
     wait: text('Обменять карту можно до отправки карты в раунд.', 'Swap before submitting your card for the round.'),
     finished: text('Партия уже закончилась.', 'The game has finished.'),
+    stale: text('Раунд уже изменился. Закрой окно и открой обмен снова.', 'The round has changed. Close this window and reopen the swap.'),
+    not_in_hand: text('Этой карты уже нет в руке. Открой обмен снова.', 'That card is no longer in your hand. Reopen the swap.'),
   }[reason] || text('Обмен сейчас недоступен. Обнови страницу.', 'The swap is unavailable. Refresh the page.'));
 
   async function openPicker(status, root, context) {
@@ -27,16 +29,19 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     async function submit(card) {
       if (saving || !root.isConnected || getContext()?.room.id !== context.room.id) return close();
       saving = true; confirm.disabled = true; skip.disabled = true;
-      notice.textContent = text('Меняем судьбу карты…', 'Changing the card’s fate…');
+      notice.textContent = card ? text('Обмениваем карту…', 'Swapping your card…') : text('Пропускаем обмен…', 'Skipping the swap…');
       try {
         const { data, error } = await supabase.rpc('reroll_luminaria_card', { target_room_id: context.room.id, milestone_round_id: status.milestone, chosen_card_id: card });
         if (error) throw error;
         if (!data?.ok) throw new Error(reasonText(data?.reason));
         // The server returns the original result for a retried request.
-        await onChanged();
         saving = false; close();
+        await onChanged();
       } catch (error) {
-        notice.textContent = error.message || text('Не удалось обменять карту. Попробуй снова.', 'Could not swap the card. Please retry.');
+        if (!dialog.isConnected) { console.error('Could not refresh after swap', error); return; }
+        notice.textContent = error.code === '42702'
+          ? text('Ошибка обмена на сервере. Можно закрыть окно и продолжить игру.', 'Server swap error. You can close this window and keep playing.')
+          : error.message || text('Не удалось обменять карту. Попробуй снова.', 'Could not swap the card. Please retry.');
         saving = false; confirm.disabled = !selected; skip.disabled = false;
       }
     }
