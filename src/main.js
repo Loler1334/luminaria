@@ -1,4 +1,5 @@
 import { roomInviteUrl, personalReturnUrl, parsePersonalReturnHash } from './invite-url.js';
+import { savedLiveRoom as readSavedLiveRoom, savedGuestProfile as readSavedGuestProfile, canReclaimSavedSeat } from './guest-recovery.js';
 import { roundOptions, selectedRoundOption } from './round-options.mjs';
 import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
@@ -304,7 +305,7 @@ async function openAuth(){
     $('#signOut').addEventListener('click',async()=>{
       if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты: выход из аккаунта прервёт твои действия в этой партии.':'Leave the current room first. Signing out now would interrupt your actions in this game.');return}
       const {error}=await supabase.auth.signOut();if(error)return alert(error.message);
-      localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');
+      localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');localStorage.removeItem('luminaria-last-room');
       navProfileCache=null;
       sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);
       uploadedAvatar=null;
@@ -343,7 +344,7 @@ openProfileSetup=async function(session,profile=null){
     signInButton.addEventListener('click',async()=>{
       if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты.':'Leave the current room first.');return}
       const {error}=await supabase.auth.signOut();if(error){alert(error.message);return}
-      localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');
+      localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');localStorage.removeItem('luminaria-last-room');
       sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);navProfileCache=null;uploadedAvatar=null;
       $('#profileSetupDialog')?.close();$('#profileSetupDialog')?.remove();$('#authEntry')?.remove();addAuthButton();openAuth();
     });
@@ -415,17 +416,20 @@ async function compressAvatar(file){
   return new Promise(resolve=>{const finish=value=>{dialog.close();dialog.remove();resolve(value)};$('#cancelAvatarCrop').addEventListener('click',()=>finish(null));dialog.addEventListener('cancel',event=>{event.preventDefault();finish(null)});$('#saveAvatarCrop').addEventListener('click',()=>{const output=document.createElement('canvas');output.width=160;output.height=160;const outputContext=output.getContext('2d');outputContext.drawImage(canvas,0,0,size,size,0,0,160,160);let result=output.toDataURL('image/jpeg',.75);if(result.length>60000)result=output.toDataURL('image/jpeg',.58);finish(result.length<=60000?result:null)})})
 }
 async function ensureLivePlayer(player){player.name=String(player.name||'Dreamer').replace(/[<>]/g,'').trim().slice(0,24)||'Dreamer';player.avatar=safeAvatar(player);let {data:{session}}=await supabase.auth.getSession();if(!session){const {data,error}=await supabase.auth.signInAnonymously();if(error)throw error;session=data.session}const {error}=await supabase.from('profiles').upsert({id:session.user.id,nickname:player.name,avatar:player.avatar},{onConflict:'id'});if(error)throw error;cachePlayer(player,session.user.id);navProfileCache={id:session.user.id,nickname:player.name,avatar:player.avatar};addAuthButton();return session}
-async function ensureRoomIdentity(){
+function savedLiveRoom(code){return readSavedLiveRoom(localStorage,code)}
+function savedGuestProfile(){return readSavedGuestProfile(localStorage)}
+async function ensureRoomIdentity(code){
   let session=(await supabase.auth.getSession()).data.session;
   if(!session){const result=await supabase.auth.signInAnonymously();if(result.error)throw result.error;session=result.data.session}
   const saved=await loadSavedProfile(session);
-  const player=saved?.nickname?{name:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})}:{name:`${language==='ru'?'Игрок':'Guest'} ${session.user.id.slice(0,5).toUpperCase()}`,avatar:'mage-male'};
+  const previous=savedLiveRoom(code)?.player||savedGuestProfile();
+  const player=saved?.nickname?{name:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})}:previous?.name?{name:previous.name,avatar:safeAvatar(previous)}:{name:`${language==='ru'?'Игрок':'Guest'} ${session.user.id.slice(0,5).toUpperCase()}`,avatar:'mage-male'};
   return {player,session:await ensureLivePlayer(player)};
 }
 async function startRoomFlow(){
   const mode=entryMode,code=$('#roomCodeInput')?.value.trim().toUpperCase();
   try{
-    const {player,session}=await ensureRoomIdentity();
+    const {player,session}=await ensureRoomIdentity(mode==='join'?code:null);
     if(mode==='join')return await joinLiveRoom(player,session,code);
     return await createLiveRoom(player,session);
   }catch(error){
@@ -458,7 +462,7 @@ async function loadLiveDeckProgress(){
   return liveTotalRounds;
 }
 const demoShowGame=showGame,demoShowGuesser=showGuesser,renderLiveLobby=showLiveLobby;
-function roomRecoveryToken(code){let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}return saved?.code===code&&saved.recoveryToken?saved.recoveryToken:`${crypto.randomUUID()}${crypto.randomUUID()}`}
+function roomRecoveryToken(code){return savedLiveRoom(code)?.recoveryToken||`${crypto.randomUUID()}${crypto.randomUUID()}`}
 async function rememberLiveRoom(room,player){const recoveryToken=roomRecoveryToken(room.code);localStorage.setItem('luminaria-last-room',JSON.stringify({code:room.code,recoveryToken,player:{name:player.name,avatar:typeof player.avatar==='string'&&player.avatar.startsWith('data:image/')?'☽':safeAvatar(player)}}));const {error}=await supabase.rpc('set_luminaria_recovery_token',{target_room_id:room.id,recovery_token:recoveryToken});if(error)console.warn('Room recovery is not installed yet',error.message)}
 showLiveLobby=function(room,player,session){liveGameContext={room,player,session};if(room.status==='closed')return showClosedRoom();if(room.status==='lobby')resetLiveParty();rememberLiveRoom(room,player);setupLiveChat();if(room.status==='playing')return showGame();if(room.status==='finished'){watchLiveRound();return showGameFinished()}const rendered=renderLiveLobby(room,player,session);addDeckSelector();return rendered};
 async function copyPersonalReturnLink(button){
@@ -872,8 +876,8 @@ async function joinLiveRoom(player,session,code){
       const {data:recoveredRoom}=await supabase.from('rooms').select().eq('id',room.id).single();
       return showRecoveredLiveRoom(recoveredRoom||room,session,{name:personalLink.name||player.name,avatar:personalLink.avatar||player.avatar});
     }
-    let saved=null;try{saved=JSON.parse(localStorage.getItem('luminaria-last-room')||'null')}catch{}
-    if(room.status!=='lobby'&&saved?.code===room.code&&saved.recoveryToken){
+    const saved=savedLiveRoom(room.code);
+    if(canReclaimSavedSeat(saved,room)){
       const {error:reclaimError}=await supabase.rpc('reclaim_luminaria_seat',{room_code:room.code,recovery_token:saved.recoveryToken});
       if(reclaimError)throw new Error(language==='ru'?'Не удалось восстановить место. Открой личную ссылку возвращения из прежнего браузера.':'Could not recover your seat. Open your personal return link from the previous browser.');
       const {data:recoveredRoom}=await supabase.from('rooms').select().eq('id',room.id).single();
@@ -1086,11 +1090,10 @@ document.addEventListener('visibilitychange',async()=>{
 function clearLiveRoomNavigation(){
   liveRoomChannel?.unsubscribe();liveRoundChannel?.unsubscribe();liveChatChannel?.unsubscribe();
   liveRoomChannel=null;liveRoundChannel=null;liveChatChannel=null;liveChatRoomId=null;liveChatMessages=[];liveGameContext=null;liveRound=null;liveHandCache=[];
-  localStorage.removeItem('luminaria-last-room');
   history.replaceState({},'',`${location.pathname}${location.hash}`);
 }
-// Brand links and browser Back both leave the room cleanly instead of leaving a
-// stale invitation code in the address bar.
+// Brand links and browser Back leave the view, but preserve the guest's seat
+// so an accidental navigation can be reversed with the same room link.
 document.addEventListener('click',event=>{
   if(!event.target.closest('a.brand'))return;
   if(liveGameContext)clearLiveRoomNavigation();
