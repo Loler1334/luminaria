@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { roomInviteUrl, personalReturnUrl, parsePersonalReturnHash } from '../src/invite-url.js';
+import { CANONICAL_SITE_URL, roomInviteUrl, personalReturnUrl, parsePersonalReturnHash } from '../src/invite-url.js';
 
 const token = '12345678-1234-1234-1234-123456789abc12345678-1234-1234-1234-123456789abc';
 const invite = roomInviteUrl('https://luminaria.cc.', 'G5YC9C');
@@ -7,6 +7,7 @@ const personal = personalReturnUrl('G5YC9C', token, { name: 'Друг', avatar: 
 const parsed = new URL(personal);
 
 assert.equal(invite, 'https://luminaria.cc/?room=G5YC9C');
+assert.equal(CANONICAL_SITE_URL, 'https://luminaria.cc/');
 assert.equal(parsed.origin, 'https://luminaria.cc');
 assert.equal(parsed.searchParams.get('room'), 'G5YC9C');
 assert.equal(parsed.searchParams.has('return'), false);

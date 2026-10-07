@@ -1,3 +1,5 @@
+export const CANONICAL_SITE_URL = 'https://luminaria.cc/';
+
 export function roomInviteUrl(origin, code) {
   const url = new URL('/', origin);
   url.hostname = url.hostname.replace(/\.+$/, '');
@@ -6,7 +8,7 @@ export function roomInviteUrl(origin, code) {
 }
 
 export function personalReturnUrl(code, token, player) {
-  const url = new URL(roomInviteUrl('https://luminaria.cc', code));
+  const url = new URL(roomInviteUrl(CANONICAL_SITE_URL, code));
   const fragment = new URLSearchParams({ return: token, name: player.name });
   if (player.avatar && !player.avatar.startsWith('data:')) fragment.set('avatar', player.avatar);
   url.hash = fragment.toString();
