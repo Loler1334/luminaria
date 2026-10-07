@@ -116,3 +116,6 @@
 .lobby-page .deck-choice.selected{border:2px solid #f6c878;box-shadow:0 0 13px #f6c87828}
 .lobby-page .deck-choice:disabled{opacity:1}
 @media(max-width:480px){.room-rules-button{font-size:11px;padding:9px}.nav-tools{gap:6px}.lobby-page .deck-choice{min-height:100px}}
+.kick-player-button{flex:none;width:30px;height:30px;border:1px solid #efb97077;border-radius:9px;background:#efb97014;color:#f1c17d;font-size:21px;line-height:1;cursor:pointer;transition:background .2s,border-color .2s}
+.kick-player-button:hover,.kick-player-button:focus-visible{background:#efb97032;border-color:#efb970;outline:none}
+.kick-player-button:disabled{opacity:.5;cursor:wait}
