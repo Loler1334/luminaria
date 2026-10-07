@@ -247,7 +247,6 @@ async function addAuthButton(){
   const session=(await supabase.auth.getSession()).data.session;
   let button=$('#authEntry');
   if(!button){button=document.createElement('button');button.type='button';button.id='authEntry'}
-  button.replaceChildren();
   if(session){
     const profile=navProfileCache?.id===session.user.id?navProfileCache:null;
     let localAvatar='☽';try{localAvatar=JSON.parse(localStorage.getItem('luminaria-player')||'{}').avatar||'☽'}catch{}
@@ -255,11 +254,17 @@ async function addAuthButton(){
     button.className='profile-entry';
     button.setAttribute('aria-label',language==='ru'?`Профиль: ${profile?.nickname||'гость'}`:`Profile: ${profile?.nickname||'guest'}`);
     button.title=profile?.nickname|| (session.user.is_anonymous?(language==='ru'?'Гостевой профиль':'Guest profile'):(session.user.email||'Profile'));
-    if(typeof avatar==='string'&&avatar.startsWith('data:image/')){const image=document.createElement('img');image.src=avatar;image.alt='';image.className='avatar-photo';button.append(image)}else button.innerHTML=avatarPortraitMarkup(avatar);
+    if(button._renderedAvatar!==avatar){
+      button.replaceChildren();
+      if(typeof avatar==='string'&&avatar.startsWith('data:image/')){const image=document.createElement('img');image.src=avatar;image.alt='';image.className='avatar-photo';button.append(image)}else button.innerHTML=avatarPortraitMarkup(avatar);
+      button._renderedAvatar=avatar;
+    }
     button.onclick=()=>session.user.is_anonymous?openProfileSetup(session,profile):openAuth();
   }else{
     button.className='ghost-button auth-entry';
-    button.textContent=language==='ru'?'Авторизоваться':'Sign in';
+    delete button._renderedAvatar;
+    const signInLabel=language==='ru'?'Авторизоваться':'Sign in';
+    if(button.textContent!==signInLabel)button.textContent=signInLabel;
     button.setAttribute('aria-label',button.textContent);button.title=button.textContent;
     button.onclick=()=>openAuth();
   }
