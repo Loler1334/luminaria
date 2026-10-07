@@ -87,3 +87,20 @@
 .open-rooms-empty{padding:22px;border:1px dashed #d8be8850;border-radius:16px;background:#11162d40;margin:0;font-size:14px}
 @media(max-width:900px){#rooms{grid-template-columns:1fr;gap:24px}#rooms .open-rooms-panel{grid-column:1;grid-row:auto}#rooms .room-actions{grid-column:1}}
 @media(max-width:480px){#rooms .open-rooms-panel{padding:20px}#rooms .room-actions{grid-template-columns:1fr}.open-room-card{padding:16px;flex-wrap:wrap}.open-room-join{width:100%}.open-rooms-heading{gap:8px}.open-rooms-heading h3{font-size:28px}}
+
+#entryDialog .modal{width:480px;max-width:100%;padding:32px;background:radial-gradient(circle at 50% 0,#51446c44,transparent 55%),#1b2142;border-color:#e9b56633;border-radius:24px}
+#entryDialog .room-visibility-field{border:0;padding:0;margin:24px 0;text-align:left;min-width:0}
+#entryDialog .room-visibility-field[hidden]{display:none}
+#entryDialog .room-visibility-field legend{font-size:12px;letter-spacing:.5px;color:#bfc4db;padding:0;margin-bottom:12px}
+#entryDialog .access-option{position:relative;display:flex;align-items:center;gap:14px;padding:18px;margin:0 0 12px;border:1px solid #ffffff24;border-radius:15px;background:#11162d55;cursor:pointer;transition:background .2s,border-color .2s}
+#entryDialog .access-option:has(input:checked){border-color:#e9b566;background:linear-gradient(110deg,#e9b5661c,#e9b56608);box-shadow:0 0 0 1px #e9b56625}
+#entryDialog .access-option:hover{background:#ffffff0b}
+#entryDialog .access-option:has(input:focus-visible){outline:2px solid #ffe3b0;outline-offset:3px}
+#entryDialog .access-option input{width:18px;height:18px;flex:0 0 18px;margin:0;order:3;accent-color:#e9b566}
+#entryDialog .access-icon{display:grid;place-items:center;width:42px;height:42px;flex:0 0 42px;border-radius:12px;background:#a99ae91c;color:#bdb1ec;font-size:25px}
+#entryDialog .access-option:has(input:checked) .access-icon{background:#e9b56626;color:#f4c780}
+#entryDialog .access-copy{flex:1;min-width:0}
+#entryDialog .access-copy strong{display:block;font-size:16px;color:#fff4df;margin-bottom:5px}
+#entryDialog .access-copy small{display:block;color:#b9bfd5;font-size:12px;font-weight:400;line-height:1.5}
+#entryDialog .primary-button{border-radius:12px;padding:17px}
+@media(max-width:480px){#entryDialog .modal{padding:28px 20px}#entryDialog .access-option{padding:14px;gap:10px}#entryDialog .access-icon{width:34px;height:34px;flex-basis:34px}}
