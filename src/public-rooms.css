@@ -19,4 +19,6 @@
 .room-visibility-controls p{font-size:.9rem;line-height:1.5;margin:.5rem 0}
 .room-visibility-controls .text-button{padding:0;margin-top:.4rem}
 .close-lobby-button{display:block;margin:1rem auto 0;color:#f1b9b9}
+.lobby-page{max-width:1680px;padding-inline:clamp(24px,4vw,72px)}
+.lobby-page .nav .language{margin-left:auto;margin-right:12px}
 @media(max-width:600px){.open-rooms-panel{padding:1rem}.open-room-card{align-items:flex-start}.open-room-join{padding:.6rem .75rem}}

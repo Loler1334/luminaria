@@ -814,7 +814,7 @@ function applyLiveProfileUpdate(userId,nickname,avatar){
     if(node.dataset.liveProfileField==='nickname'){const current=node.textContent||'',prefix=previousName&&current.endsWith(previousName)?current.slice(0,-previousName.length):'',badge=node.querySelector(':scope > small');node.replaceChildren(document.createTextNode(`${prefix}${safeName}`),...(badge?[badge]:[]))}
     else if(node.dataset.liveProfileField==='avatar'){
       node.replaceChildren();
-      if(safeImage.startsWith('data:image/')){const image=document.createElement('img');image.src=safeImage;image.alt='';node.append(image)}else node.textContent=safeImage;
+      if(safeImage.startsWith('data:image/')){const image=document.createElement('img');image.src=safeImage;image.alt='';node.append(image)}else node.innerHTML=avatarPortraitMarkup(safeImage);
     }
   });
   if(liveStarScores[userId]){liveStarScores[userId]={...liveStarScores[userId],name:safeName};const key=starStorageKey();if(key)localStorage.setItem(key,JSON.stringify(liveStarScores));renderStarScores()}

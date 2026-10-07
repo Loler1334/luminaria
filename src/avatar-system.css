@@ -102,6 +102,12 @@
   border-radius: inherit;
 }
 
+.profile-entry .fantasy-avatar {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+}
+
 .profile-upload { align-self: start; margin-top: 1px; }
 
 @media (max-width: 420px) {
