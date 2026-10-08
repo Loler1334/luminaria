@@ -1109,9 +1109,9 @@ installRerolls({
   getContext: () => liveGameContext,
   getLanguage: () => language,
   cardInfo: deckCardInfo,
-  onChanged: async () => {
+  onChanged: async ({ changed }) => {
+    if (!changed) return;
     const clue = $('#clueInput')?.value || '';
-    await loadLiveHand();
     await showGame();
     if ($('#clueInput')) $('#clueInput').value = clue;
   },

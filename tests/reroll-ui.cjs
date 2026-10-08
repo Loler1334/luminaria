@@ -25,11 +25,12 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
         window.expectedChanged = 1;
         window.cardInfo = id => ({ title: id });
         (0, eval)(source);
-        installRerolls({ supabase, getContext: () => context, getLanguage: () => 'en', cardInfo, onChanged: async () => { changed++; } });
+        installRerolls({ supabase, getContext: () => context, getLanguage: () => 'en', cardInfo, onChanged: async result => { window.lastChange = result; changed++; } });
       }, { source, action });
       await page.locator('.reroll-offer button').waitFor();
       await page.locator('.reroll-offer button').click();
       assert.equal(await page.locator('.reroll-card').count(), 6);
+      assert.equal(await page.locator('.reroll-card img').first().getAttribute('src'), '/deck-thumbs/001-card.webp');
       if (action === 'exchange') {
         await page.locator('.reroll-card').nth(1).click();
         await page.locator('#confirmReroll').click();
@@ -42,7 +43,9 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       assert.equal(call.args.target_room_id, 'room-1');
       assert.equal(call.args.milestone_round_id, 'milestone-5');
       assert.equal(call.args.chosen_card_id, action === 'exchange' ? '002-card.webp' : null);
+      assert.equal(await page.evaluate(() => lastChange.changed), action === 'exchange');
       assert.deepEqual(errors, []);
+      assert.equal(await page.evaluate(() => calls.filter(call => call.name === 'luminaria_hand').length), 1);
       await page.close();
     }
     console.log('PASS: reroll offer, six-card picker, exchange request, and optional decline on mobile viewport. Uses a simulated server.');

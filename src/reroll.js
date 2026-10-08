@@ -5,6 +5,8 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
   const ru = () => getLanguage() === 'ru';
   const text = (russian, english) => ru() ? russian : english;
   const missing = error => ['PGRST202', '42883'].includes(error?.code);
+  const bounded = query => typeof query.abortSignal === 'function' && typeof AbortSignal.timeout === 'function'
+    ? query.abortSignal(AbortSignal.timeout(15000)) : query;
   const reasonText = reason => ({
         empty_reserve: text('Новых карт в запасе не осталось.', 'No reserve cards are available right now.'),
     used: text('Обмен в этом блоке раундов уже использован.', 'You have used this block’s swap.'),
@@ -31,12 +33,12 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
       saving = true; confirm.disabled = true; skip.disabled = true;
       notice.textContent = card ? text('Обмениваем карту…', 'Swapping your card…') : text('Пропускаем обмен…', 'Skipping the swap…');
       try {
-        const { data, error } = await supabase.rpc('reroll_luminaria_card', { target_room_id: context.room.id, milestone_round_id: status.milestone, chosen_card_id: card });
+        const { data, error } = await bounded(supabase.rpc('reroll_luminaria_card', { target_room_id: context.room.id, milestone_round_id: status.milestone, chosen_card_id: card }));
         if (error) throw error;
         if (!data?.ok) throw new Error(reasonText(data?.reason));
         // The server returns the original result for a retried request.
         saving = false; close();
-        await onChanged();
+        await onChanged({ changed: Boolean(card) });
       } catch (error) {
         if (!dialog.isConnected) { console.error('Could not refresh after swap', error); return; }
         notice.textContent = error.code === '42702'
@@ -48,13 +50,14 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     confirm.addEventListener('click', () => { if (selected) void submit(selected); });
     skip.addEventListener('click', () => void submit(null));
     try {
-      const { data, error } = await supabase.rpc('luminaria_hand', { target_room_id: context.room.id });
+      const { data, error } = await bounded(supabase.rpc('luminaria_hand', { target_room_id: context.room.id }));
       if (error) throw error;
       if (!root.isConnected || getContext()?.room.id !== context.room.id) return close();
       for (const row of data || []) {
         const button = document.createElement('button'), image = document.createElement('img');
         button.type = 'button'; button.className = 'reroll-card'; button.setAttribute('aria-pressed', 'false');
-        image.src = `/deck-preview/${encodeURIComponent(row.card_id)}`;
+        image.src = `/deck-thumbs/${encodeURIComponent(row.card_id)}`;
+        image.decoding = 'async';
         image.alt = cardInfo(row.card_id)?.title || text('Карта', 'Card');
         button.append(image);
         button.addEventListener('click', () => {
@@ -73,7 +76,7 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     scheduled = false;
     const context = getContext(), root = document.querySelector('main');
     if (busy || !context || context.room.status !== 'playing' || !root || root.matches('.lobby-page,.game-finale')) return;
-    const { data, error } = await supabase.rpc('luminaria_reroll_status', { target_room_id: context.room.id });
+    const { data, error } = await bounded(supabase.rpc('luminaria_reroll_status', { target_room_id: context.room.id }));
     if (!root.isConnected || getContext()?.room.id !== context.room.id || busy) return;
     if (error) { if (!missing(error)) console.warn('Could not refresh card swap', error.message); return; }
     root.querySelector('.reroll-offer')?.remove();
@@ -92,6 +95,7 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     if (hand) hand.prepend(offer); else (root.querySelector('.scores') || root).append(offer);
   }
   function schedule() { if (scheduled || busy) return; scheduled = true; queueMicrotask(() => void refresh().catch(console.error)); }
+  // Game transitions replace <main>; do not observe our own offer updates.
   new MutationObserver(schedule).observe(document.body, { childList: true });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) schedule(); });
   schedule();
