@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import worker from '../worker/index.mjs';
 
-for (const page of ['privacy', 'terms']) {
+for (const page of ['privacy', 'terms', 'ru']) {
   for (const suffix of ['', '/']) {
     let assetPath;
     const response = await worker.fetch(new Request(`https://luminaria.cc/${page}${suffix}`), {
@@ -20,4 +20,4 @@ for (const page of ['privacy', 'terms']) {
     assert.match(await response.text(), /Legal page/);
   }
 }
-console.log('PASS: legal URLs serve HTML through non-redirecting asset paths.');
+console.log('PASS: legal and Russian landing URLs serve HTML through non-redirecting asset paths.');

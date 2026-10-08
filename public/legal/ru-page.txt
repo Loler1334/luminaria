@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#11162d">
+  <title>Luminaria — бесплатная карточная онлайн-игра для друзей</title>
+  <meta name="description" content="Бесплатная карточная онлайн-игра для друзей: придумывайте ассоциации, угадывайте скрытые карты и создавайте общую историю. Играйте компанией от 3 до 10 человек.">
+  <link rel="canonical" href="https://luminaria.cc/ru">
+  <link rel="alternate" hreflang="ru" href="https://luminaria.cc/ru">
+  <link rel="alternate" hreflang="en" href="https://luminaria.cc/">
+  <link rel="icon" href="/brand/favicon.png">
+  <link rel="stylesheet" href="/ru-landing.css">
+</head>
+<body>
+  <div class="wrap">
+    <header class="top"><a class="brand" href="/ru">✦ Luminaria</a><nav aria-label="Навигация"><a href="#how">Как играть</a><a href="#decks">Колоды</a><a href="/">English</a></nav></header>
+    <main>
+      <section class="hero">
+        <div class="hero-copy"><p class="eyebrow">ИГРА НА АССОЦИАЦИИ · 3–10 ИГРОКОВ</p><h1>Карты, друзья<br>и <em>неожиданные истории.</em></h1><p class="lead">Luminaria — бесплатная карточная онлайн-игра для компании. Придумывайте ассоциации, угадывайте скрытую карту ведущего и создавайте общую историю из подсказок всей партии.</p><div class="actions"><a class="primary" href="/?lang=ru#rooms">Играть бесплатно <span aria-hidden="true">→</span></a><a class="secondary" href="#how">Узнать правила</a></div><p class="note">Играйте прямо в браузере. Для гостевой игры регистрация не нужна.</p></div>
+        <div class="card-scene" aria-label="Примеры иллюстрированных карт Luminaria"><img class="card back" src="/deck-preview/027-card.webp" alt="Иллюстрированная карта с фантастической сценой" width="240" height="360"><img class="card front" src="/deck-preview/011-card.webp" alt="Иллюстрированная карта для игры на ассоциации" width="240" height="360"></div>
+      </section>
+      <section class="section" id="how"><p class="eyebrow">ПРАВИЛА</p><h2>Как проходит раунд</h2><div class="grid"><article><b>01</b><h3>Загадай ассоциацию</h3><p>Ведущий выбирает карту и описывает её короткой подсказкой. Слишком очевидная подсказка может не принести очков.</p></article><article><b>02</b><h3>Подбери карту</h3><p>Остальные игроки тайно выбирают по одной карте, которая тоже подходит к ассоциации. Все выбранные карты перемешиваются.</p></article><article><b>03</b><h3>Угадай и голосуй</h3><p>Найди карту ведущего среди остальных. Очки получают ведущий и игроки, чьи карты смогли запутать других.</p></article></div><p class="section-note">После партии игра объединит ваши ассоциации в короткую загадочную историю и покажет итоговые места.</p></section>
+      <section class="section" id="decks"><p class="eyebrow">ВЫБИРАЙ ТЕМУ</p><h2>Четыре колоды — разные поводы для фантазии</h2><div class="decks"><article><img loading="lazy" src="/deck-preview/011-card.webp" alt="Пример карты колоды Лунный архив" width="160" height="240"><div><h3>Лунный архив</h3><p>Сказочные и загадочные образы.</p></div></article><article><img loading="lazy" src="/deck-preview/201-pop.webp" alt="Пример карты колоды Поп-культура" width="160" height="240"><div><h3>Поп-культура</h3><p>Отсылки к фильмам, сериалам и аниме.</p></div></article><article><img loading="lazy" src="/deck-preview/001-abs.webp" alt="Пример карты колоды Бытовой абсурд" width="160" height="240"><div><h3>Бытовой абсурд</h3><p>Знакомые ситуации в сюрреалистичном виде.</p></div></article><article><img loading="lazy" src="/deck-preview/001-meme.webp" alt="Пример карты колоды Мемный хаос" width="160" height="240"><div><h3>Мемный хаос</h3><p>Узнаваемые мемы с новым неожиданным поворотом.</p></div></article></div></section>
+      <section class="section join"><div><p class="eyebrow">СОБЕРИ КОМПАНИЮ</p><h2>Создай комнату или присоединяйся к открытой</h2><p>Можно играть с друзьями по ссылке или встретить новых игроков в открытом лобби. Перед началом выберите колоду и доступную длительность партии.</p></div><a class="primary" href="/?lang=ru#rooms">Перейти к игре <span aria-hidden="true">→</span></a></section>
+    </main>
+    <footer><span>© 2026 Luminaria</span><nav aria-label="Дополнительная информация"><a href="/">Играть</a><a href="/privacy">Конфиденциальность</a><a href="/terms">Условия</a></nav></footer>
+  </div>
+</body>
+</html>
