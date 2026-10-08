@@ -7,6 +7,10 @@ export default {
     const path = new URL(request.url).pathname;
     if (path === '/api/finale-story') return handleStory(request, env, supabaseConfig);
     if (path === '/api/feedback') return handleFeedback(request, env);
+    if (path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
+      const page = path.startsWith('/privacy') ? 'privacy' : 'terms';
+      return env.ASSETS.fetch(new Request(new URL(`/${page}/index.html`, request.url), request));
+    }
     return env.ASSETS.fetch(request);
   }
 };
