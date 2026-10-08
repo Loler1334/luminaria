@@ -170,7 +170,7 @@ document.addEventListener('submit',async event=>{
 $('#finalPlay')?.addEventListener('click',()=>openEntry('create'));$('#finalJoin')?.addEventListener('click',()=>openEntry('join'));
 $('#archiveDeck')?.addEventListener('click',openDeckGallery);
 function offerRoomJoinFromLink(){const code=new URLSearchParams(location.search).get('room');if(!code||$('#joinLinkedRoom'))return;const button=document.createElement('button');button.id='joinLinkedRoom';button.type='button';button.className='text-button';button.textContent=language==='ru'?`Войти в комнату ${code.toUpperCase()}`:`Join room ${code.toUpperCase()}`;button.addEventListener('click',()=>openEntry('join'));document.querySelector('.hero-actions')?.append(button)}
-if(new URLSearchParams(location.search).get('room')){offerRoomJoinFromLink();setTimeout(()=>openEntry('join'),300)}
+if(new URLSearchParams(location.search).get('room')){offerRoomJoinFromLink();setTimeout(()=>startInvitationFromLink(),300)}
 document.addEventListener('click',(event)=>{const button=event.target.closest('#readyButton');if(!button||liveGameContext||!button.classList.contains('is-ready'))return;event.stopImmediatePropagation();const t=copy[language];$('#readyCheck').classList.remove('is-ready');$('#readyLabel').textContent=t.notReady;button.classList.remove('is-ready');button.innerHTML=`${t.ready} <b>→</b>`;$('#startButton').disabled=true},true);
 function legacyShowGame(){const player=JSON.parse(localStorage.getItem('luminaria-player')||'{"name":"Dreamer","avatar":"✦"}');const ru=language==='ru';const cards=randomDeckHand();document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="game-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Твой ход':'Your turn'}</div><button class="language" id="gameLanguage">${ru?'EN':'RU'}</button></nav><section class="game-stage"><div class="storyteller"><span class="lobby-avatar">${player.avatar}</span><div><strong>${player.name}</strong><small>${ru?'Ведущий':'Storyteller'}</small></div></div><p class="eyebrow"><span></span><span>${ru?'Твоя тайная карта':'Your secret card'}</span></p><article class="secret-card"><img src="/deck-preview/04-teapot-city.png" alt="Secret story card"><span>✦</span></article><div class="clue-box"><label for="clueInput">${ru?'Придумай ассоциацию':'Give a clue'}</label><input id="clueInput" maxlength="70" placeholder="${ru?'Например: «Мир внутри мира»':'For example: “A world within a world”'}"><button class="primary-button" id="revealButton">${ru?'Открыть выбор карт':'Reveal card choices'} <b>→</b></button></div></section><section class="hand-area"><div class="hand-heading"><div><p class="eyebrow"><span></span><span>${ru?'Выбери карту из руки':'Choose a card from your hand'}</span></p><h2>${ru?'Какая подходит к подсказке?':'Which card fits the clue?'}</h2></div><span class="hand-count">5</span></div><div class="game-hand">${cards.map((card,index)=>`<button class="hand-card" data-card="${index}" aria-label="${ru?'Выбрать карту':'Choose card'} ${index+1}"><img src="/deck-preview/${card}${cardAssetVersion(card)}" alt="Game card ${index+1}"></button>`).join('')}</div></section></main>`;let selected=null;document.querySelectorAll('.hand-card').forEach(card=>card.addEventListener('click',()=>{if(card.classList.contains('selected')){card.classList.remove('selected');selected=null;return}document.querySelector('.hand-card.selected')?.classList.remove('selected');card.classList.add('selected');selected=card.dataset.card}));$('#revealButton').addEventListener('click',()=>{const clue=$('#clueInput').value.trim();if(!clue||selected===null){$('#clueInput').focus();return}$('#revealButton').innerHTML=ru?'Карты открыты ✓':'Cards revealed ✓';$('#revealButton').classList.add('is-ready');$('#clueInput').disabled=true;document.querySelectorAll('.hand-card').forEach(c=>c.disabled=true)});$('#gameLanguage').addEventListener('click',()=>{language=language==='en'?'ru':'en';localStorage.setItem('luminaria-language',language);showGame()})}
 document.addEventListener('click',(event)=>{const button=event.target.closest('#startButton');if(!button||button.disabled||liveGameContext)return;event.stopImmediatePropagation();showGame()},true);
@@ -331,7 +331,7 @@ async function openAuth(){
   $('#googleSignIn').addEventListener('click',async()=>{const {error}=await supabase.auth.signInWithOAuth({provider:'google',options:{redirectTo:CANONICAL_SITE_URL}});if(error)alert(error.message)});
   $('#emailSignIn').addEventListener('click',async()=>{const email=$('#authEmail').value.trim();if(!email)return $('#authEmail').focus();const {error}=await supabase.auth.signInWithOtp({email,options:{emailRedirectTo:CANONICAL_SITE_URL}});if(error){alert(error.message);return}$('#emailSignIn').innerHTML=ru?'Проверь почту ✓':'Check your inbox ✓';$('#emailSignIn').classList.add('is-ready')});
 }
-async function openProfileSetup(session){const previous=$('#profileSetupDialog');if(previous?.open)return;previous?.remove();const ru=language==='ru';const dialog=document.createElement('dialog');dialog.id='profileSetupDialog';const suggested=(session.user.user_metadata?.full_name||session.user.user_metadata?.name||'').split(' ')[0];dialog.innerHTML=`<form class="modal auth-modal profile-setup" id="profileSetupForm" autocomplete="off"><button type="button" class="close" id="closeProfileSetup" aria-label="${ru?'Закрыть':'Close'}">×</button><span class="modal-star">✦</span><h2>${ru?'Создай свой профиль':'Create your profile'}</h2><p>${ru?'Придумай ник и выбери аватар — они будут видны игрокам за столом.':'Choose a nickname and avatar — other players will see them at the table.'}</p><label class="auth-label" for="profileNickname">${ru?'Никнейм':'Nickname'}</label><input id="profileNickname" name="luminaria-profile-nickname" type="text" maxlength="24" value="${suggested}" placeholder="${ru?'Лунный странник':'Moonwalker'}" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore required><p class="avatar-title">${ru?'Аватар':'Avatar'}</p><div class="profile-avatar-grid">${avatarChoicesMarkup('profile-avatar','mage-female',language)}<label class="profile-upload" id="profileUploadLabel" title="${ru?'Загрузить фото':'Upload photo'}"><input id="profileAvatarUpload" type="file" accept="image/*" hidden>＋</label></div><button class="primary-button full" type="submit">${ru?'Сохранить профиль':'Save profile'} <b>→</b></button><small class="auth-note">${ru?'Фото или аватар сохраняются в твоём профиле.':'Your photo or avatar is saved in your profile.'}</small></form>`;document.body.append(dialog);dialog.showModal();const dismiss=()=>{sessionStorage.setItem(`luminaria-profile-dismissed-${session.user.id}`,'1');dialog.close();dialog.remove()};$('#closeProfileSetup').addEventListener('click',dismiss);dialog.addEventListener('cancel',event=>{event.preventDefault();dismiss()});dialog.querySelectorAll('.profile-avatar').forEach(button=>button.addEventListener('click',()=>{dialog.querySelector('.profile-avatar.selected')?.classList.remove('selected');button.classList.add('selected');const label=$('#profileUploadLabel');label.style.backgroundImage='';label.classList.remove('has-image')}))}
+ async function openProfileSetup(session){const previous=$('#profileSetupDialog');if(previous?.open)return;previous?.remove();const ru=language==='ru';const dialog=document.createElement('dialog');dialog.id='profileSetupDialog';const suggested=(session.user.user_metadata?.full_name||session.user.user_metadata?.name||'').split(' ')[0];dialog.innerHTML=`<form class="modal auth-modal profile-setup" id="profileSetupForm" autocomplete="off"><button type="button" class="close" id="closeProfileSetup" aria-label="${ru?'Закрыть':'Close'}">×</button><span class="modal-star">✦</span><h2>${ru?'Создай свой профиль':'Create your profile'}</h2><p>${ru?'Придумай ник и выбери аватар — они будут видны игрокам за столом.':'Choose a nickname and avatar — other players will see them at the table.'}</p><label class="auth-label" for="profileNickname">${ru?'Никнейм':'Nickname'}</label><input id="profileNickname" name="luminaria-profile-nickname" type="text" maxlength="24" value="${suggested}" placeholder="${ru?'Лунный странник':'Moonwalker'}" autocomplete="off" autocapitalize="none" spellcheck="false" data-lpignore="true" data-1p-ignore data-bwignore required><p class="avatar-title">${ru?'Аватар':'Avatar'}</p><div class="profile-avatar-grid">${avatarChoicesMarkup('profile-avatar','mage-female',language)}<label class="profile-upload" id="profileUploadLabel" title="${ru?'Загрузить фото':'Upload photo'}"><input id="profileAvatarUpload" type="file" accept="image/*" hidden>＋</label></div><button class="primary-button full" type="submit">${ru?'Сохранить профиль':'Save profile'} <b>→</b></button><small class="auth-note">${ru?'Фото или аватар сохраняются в твоём профиле.':'Your photo or avatar is saved in your profile.'}</small></form>`;document.body.append(dialog);dialog.showModal();const dismiss=()=>{pendingProfileJoinCode=null;sessionStorage.setItem(`luminaria-profile-dismissed-${session.user.id}`,'1');dialog.close();dialog.remove()};$('#closeProfileSetup').addEventListener('click',dismiss);dialog.addEventListener('cancel',event=>{event.preventDefault();dismiss()});dialog.querySelectorAll('.profile-avatar').forEach(button=>button.addEventListener('click',()=>{dialog.querySelector('.profile-avatar.selected')?.classList.remove('selected');button.classList.add('selected');const label=$('#profileUploadLabel');label.style.backgroundImage='';label.classList.remove('has-image')}))}
 const renderProfileSetup=openProfileSetup;
 openProfileSetup=async function(session,profile=null){
   if($('#profileSetupDialog')?.open)return;
@@ -348,7 +348,7 @@ openProfileSetup=async function(session,profile=null){
       if(liveGameContext){alert(ru?'Сначала выйди из текущей комнаты.':'Leave the current room first.');return}
       const {error}=await supabase.auth.signOut();if(error){alert(error.message);return}
       localStorage.removeItem('luminaria-player');localStorage.removeItem('luminaria-player-user');localStorage.removeItem('luminaria-last-room');
-      sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);navProfileCache=null;uploadedAvatar=null;
+       sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);pendingProfileJoinCode=null;navProfileCache=null;uploadedAvatar=null;
       $('#profileSetupDialog')?.close();$('#profileSetupDialog')?.remove();$('#authEntry')?.remove();addAuthButton();openAuth();
     });
   }
@@ -429,16 +429,33 @@ async function ensureRoomIdentity(code){
   const player=saved?.nickname?{name:saved.nickname,avatar:safeAvatar({avatar:saved.avatar})}:previous?.name?{name:previous.name,avatar:safeAvatar(previous)}:{name:`${language==='ru'?'Игрок':'Guest'} ${session.user.id.slice(0,5).toUpperCase()}`,avatar:'mage-male'};
   return {player,session:await ensureLivePlayer(player)};
 }
-async function startRoomFlow(){
-  const mode=entryMode,code=$('#roomCodeInput')?.value.trim().toUpperCase();
+let pendingProfileJoinCode=null;
+async function startRoomFlow(inviteCode=null){
+  const mode=inviteCode?'join':entryMode,code=inviteCode||$('#roomCodeInput')?.value.trim().toUpperCase();
   try{
+    if(mode==='join'){
+      let session=(await supabase.auth.getSession()).data.session;
+      if(!session){const result=await supabase.auth.signInAnonymously();if(result.error)throw result.error;session=result.data.session}
+      const profile=await loadSavedProfile(session);
+      if(!profile?.nickname){
+        pendingProfileJoinCode=code;
+        entryDialog.close();
+        await openProfileSetup(session);
+        return;
+      }
+    }
     const {player,session}=await ensureRoomIdentity(mode==='join'?code:null);
     if(mode==='join')return await joinLiveRoom(player,session,code);
     return await createLiveRoom(player,session);
   }catch(error){
     console.error(error);alert(error.message||'Could not connect to Luminaria.');
-    if(!entryDialog.open)entryDialog.showModal();
+    if(!entryDialog.open){if(inviteCode)openEntry('join');else entryDialog.showModal()}
   }
+}
+function startInvitationFromLink(){
+  const code=new URLSearchParams(location.search).get('room')?.toUpperCase();
+  if(!/^[A-Z0-9]{6}$/.test(code||'')){openEntry('join');return}
+  startRoomFlow(code);
 }
 
 
@@ -1058,6 +1075,10 @@ document.addEventListener('submit',async event=>{
     liveChatChannel?.send({type:'broadcast',event:'profile_update',payload:{userId:session.user.id,nickname:name,avatar}});
     sessionStorage.removeItem(`luminaria-profile-dismissed-${session.user.id}`);
     dialog?.close();dialog?.remove();$('#authEntry')?.remove();addAuthButton();
+    if(pendingProfileJoinCode){
+      const code=pendingProfileJoinCode;pendingProfileJoinCode=null;
+      try{await joinLiveRoom({name,avatar},session,code)}catch(joinError){console.error(joinError);alert(joinError.message||'Could not join the room.');openEntry('join')}
+    }
   }catch(error){alert(error.message)}finally{delete form.dataset.saving;if(submit)submit.disabled=false}
 },true);
 
