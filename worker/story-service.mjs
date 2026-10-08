@@ -39,13 +39,14 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
       if (!state.ok || (await state.json())[0]?.remaining_cards !== 0) return json({ error: 'Game not finished' }, 409);
     }
     const language = storyLanguage(rounds);
-    const saved = await fetcher(`${config.url}/rest/v1/finale_stories?room_id=eq.${body.roomId}&language=eq.${language}&select=story`, { headers, signal: AbortSignal.timeout(10000) });
+    const finalRoundId = rounds.at(-1).id;
+    const saved = await fetcher(`${config.url}/rest/v1/finale_stories?room_id=eq.${body.roomId}&language=eq.${language}&final_round_id=eq.${encodeURIComponent(finalRoundId)}&select=story`, { headers, signal: AbortSignal.timeout(10000) });
     if (saved.ok) {
       const rows = await saved.json();
       if (rows[0]?.story) return json({ story: rows[0].story, clueCount: rounds.length });
     } else if (saved.status !== 404) throw new Error('Saved story unavailable');
     const clues = cleanClues(rounds), seed = storySeed(clues);
-    const key = new Request(`${new URL(request.url).origin}/__story-cache/v1/${body.roomId}/${rounds.at(-1).id}/${language}/${seed}`);
+    const key = new Request(`${new URL(request.url).origin}/__story-cache/v1/${body.roomId}/${finalRoundId}/${language}/${seed}`);
     const cached = await cache?.match(key);
     if (cached) return json(await cached.json());
     if (!env.AI) return json({ error: 'Story service unavailable' }, 503);
@@ -61,7 +62,7 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
         if ([...story].length < 100) throw new Error('Story generation failed');
         const publish = await fetcher(`${config.url}/rest/v1/rpc/publish_luminaria_finale_story`, {
           method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },
-          body: JSON.stringify({ target_room_id: body.roomId, story_language: language, generated_story: story }),
+          body: JSON.stringify({ target_room_id: body.roomId, story_language: language, generated_story: story, expected_final_round_id: finalRoundId }),
           signal: AbortSignal.timeout(10000)
         });
         if (!publish.ok) throw new Error('Could not save canonical story');

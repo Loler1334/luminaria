@@ -16,13 +16,13 @@ const fetcher=async(url,options={})=>{
   if(url.includes('rooms?'))return Response.json([{status:finished?'finished':'playing'}]);
   if(url.includes('rounds?'))return Response.json(rounds);
   if(url.includes('luminaria_deck_state'))return Response.json([{remaining_cards:finished?0:10}]);
-  if(url.includes('/finale_stories?'))return Response.json(persistedStory?[{story:persistedStory}]:[]);
-  if(url.endsWith('/rpc/publish_luminaria_finale_story')){const body=JSON.parse(options.body);persistedStory ||= body.generated_story;return Response.json(persistedStory)}
+  if(url.includes('/finale_stories?'))return Response.json(persistedStory?.finalRoundId===rounds.at(-1).id?[{story:persistedStory.story}]:[]);
+  if(url.endsWith('/rpc/publish_luminaria_finale_story')){const body=JSON.parse(options.body);assert.equal(body.expected_final_round_id,rounds.at(-1).id);if(persistedStory?.finalRoundId!==body.expected_final_round_id)persistedStory={finalRoundId:body.expected_final_round_id,story:body.generated_story};return Response.json(persistedStory.story)}
   throw Error('Unexpected URL');
 };
 const store=new Map();
 const cache={async match(key){return store.get(key.url)?.clone()},async put(key,response){store.set(key.url,response.clone())}};
-const env={AI:{async run(model,{messages}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;return {response:'Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, хотя никто туда не входил. Мы узнали свои голоса в шелесте звёзд и поняли: пока кто-то помнит дорогу, история не заканчивается.'}}}};
+const env={AI:{async run(model,{messages}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':'Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, хотя никто туда не входил. Мы узнали свои голоса в шелесте звёзд и поняли: пока кто-то помнит дорогу, история не заканчивается.'}}}};
 const config={url:'https://example.supabase.co',key:'public-key'};
 const request=(auth=true)=>new Request('https://luminaria.test/api/finale-story',{method:'POST',headers:auth?{Authorization:'Bearer token'}:{},body:JSON.stringify({roomId,language:'ru'})});
 assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).status,401);
@@ -31,7 +31,16 @@ finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
 const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length<=400);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
-store.clear();const anotherClient=await handleStory(request(),env,config,{fetcher,cache});assert.equal((await anotherClient.json()).story,first.story);assert.equal(aiCalls,1);
+assert.equal(persistedStory.finalRoundId,'round-27');
+const oldStory=persistedStory.story;
+rounds.splice(0,rounds.length,...Array.from({length:18},(_,i)=>({id:`rematch-${i}`,clue:`Новая ассоциация ${i}`,phase:'results'})));
+const second=await (await handleStory(request(),env,config,{fetcher,cache})).json();
+assert.equal(second.clueCount,18);assert.equal(providedClues.at(-1),'Новая ассоциация 17');
+assert.notEqual(second.story,oldStory);
+assert.equal(persistedStory.finalRoundId,'rematch-17');assert.equal(aiCalls,2);
+assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,second.story);
+assert.equal(aiCalls,2);assert.equal(oldStory,first.story);
+store.clear();const anotherClient=await handleStory(request(),env,config,{fetcher,cache});assert.equal((await anotherClient.json()).story,second.story);assert.equal(aiCalls,2);
 member=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,403);
 member=true;store.clear();persistedStory=null;assert.equal((await handleStory(request(),{},config,{fetcher,cache})).status,503);
 for(const round of rounds)round.clue='Moonlit forest';
