@@ -9,7 +9,10 @@ export default {
     if (path === '/api/feedback') return handleFeedback(request, env);
     if (path === '/privacy' || path === '/privacy/' || path === '/terms' || path === '/terms/') {
       const page = path.startsWith('/privacy') ? 'privacy' : 'terms';
-      return env.ASSETS.fetch(new Request(new URL(`/${page}/index.html`, request.url), request));
+      const asset = await env.ASSETS.fetch(new Request(new URL(`/legal/${page}-page.txt`, request.url), request));
+      const headers = new Headers(asset.headers);
+      headers.set('content-type', 'text/html; charset=utf-8');
+      return new Response(asset.body, { status: asset.status, headers });
     }
     return env.ASSETS.fetch(request);
   }
