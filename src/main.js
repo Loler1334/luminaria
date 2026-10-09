@@ -13,6 +13,7 @@ import './avatar-system.css';
 import { installRerolls } from './reroll.js';
 import './finale.css';
 import { createClient } from '@supabase/supabase-js';
+import cosmicManifest from './cosmic-absurdity-manifest.json';
 
 const supabaseUrl=import.meta.env.VITE_SUPABASE_URL;
 const supabaseKey=import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
@@ -68,11 +69,13 @@ const deckPool=archivedDeck.filter(card=>!removedCards.has(card));
 const popDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-pop.webp'));
 const absurdDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-abs.webp'));
 const memeDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-meme.webp'));
+const cosmicDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-cos.webp'));
+const cosmicCardTitles=new Map(cosmicManifest.map(card=>[card.card,card.title]));
 const cardAssetVersion=card=>card==='420-pop.webp'?'?v=naked-gun-1':'';
 const availableCards=new Set(__LUMINARIA_AVAILABLE_CARDS__);
-const deckCovers={moon:'005-card.webp',pop:'206-pop.webp',abs:'001-abs.webp',meme:'007-meme.webp'};
-const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'},meme:{ru:'Мемный хаос',en:'Meme Chaos',cards:memeDeck,icon:'✺'}};
-const deckKeyByDatabaseId={'moonlit-archive':'moon','pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme'};
+const deckCovers={moon:'005-card.webp',pop:'206-pop.webp',abs:'001-abs.webp',meme:'007-meme.webp',cosmic:'001-cos.webp'};
+const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'},meme:{ru:'Мемный хаос',en:'Meme Chaos',cards:memeDeck,icon:'✺'},cosmic:{ru:'Космос и НЛО',en:'Cosmos & UFOs',cards:cosmicDeck,icon:'🛸'}};
+const deckKeyByDatabaseId={'moonlit-archive':'moon','pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme','cosmos-ufo':'cosmic'};
 copy.ru.openRoomsIntro='Новая история начинается с новых знакомых. Выбирай комнату и присоединяйся к игре.';
 copy.en.openRoomsIntro='A new story starts with new people. Pick a table and join in.';
 let openRoomsLoading=false;
@@ -102,7 +105,7 @@ $('#openRoomsList')?.addEventListener('click',async event=>{
 });
 renderOpenRooms();
 setInterval(()=>{if(!document.hidden)renderOpenRooms()},15000);
-function selectedDeckId(){return {'pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme'}[liveGameContext?.room.deck_id]||'moon'}
+function selectedDeckId(){return {'pop-culture':'pop','everyday-absurdity':'abs','meme-chaos':'meme','cosmos-ufo':'cosmic'}[liveGameContext?.room.deck_id]||'moon'}
 function selectedDeckCards(){return decks[selectedDeckId()].cards}
 
 function shuffleDeck(cards){
@@ -117,7 +120,7 @@ function deckCardInfo(card){const [number,...slugParts]=card.replace(/\.(png|web
 function openDeckGallery(deckId='moon'){
   const ru=language==='ru',deck=decks[deckId]||decks.moon;
   let dialog=$('#deckDialog');if(!dialog){dialog=document.createElement('dialog');dialog.id='deckDialog';document.body.append(dialog)}
-  dialog.innerHTML=`<section class="deck-gallery"><button class="close" id="closeDeck" aria-label="${ru?'Закрыть':'Close'}">×</button><header><p class="eyebrow">${ru?'Коллекция карт':'Card collection'}</p><h2>${deck[language]}</h2><p>${deck.cards.length} ${ru?'карт. Длительность партии выбирается в лобби.':'cards. Choose game length in the lobby.'}</p><div class="deck-tabs">${Object.entries(decks).map(([id,d])=>`<button type="button" data-gallery-deck="${id}" aria-pressed="${id===deckId}">${d.icon} ${d[language]}</button>`).join('')}</div></header><div class="deck-gallery-grid">${deck.cards.map((card,index)=>`<button class="deck-gallery-card" data-card="${card}" aria-label="${ru?'Карта':'Card'} ${index+1}"><img loading="lazy" decoding="async" width="240" height="360" src="/deck-thumbs/${card}${cardAssetVersion(card)||'?v=2'}" data-full-src="/deck-preview/${card}${cardAssetVersion(card)}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${index+1}</span></button>`).join('')}</div></section>`;
+  dialog.innerHTML=`<section class="deck-gallery"><button class="close" id="closeDeck" aria-label="${ru?'Закрыть':'Close'}">×</button><header><p class="eyebrow">${ru?'Коллекция карт':'Card collection'}</p><h2>${deck[language]}</h2><p>${deck.cards.length} ${ru?'карт. Длительность партии выбирается в лобби.':'cards. Choose game length in the lobby.'}</p><div class="deck-tabs">${Object.entries(decks).map(([id,d])=>`<button type="button" data-gallery-deck="${id}" aria-pressed="${id===deckId}">${d.icon} ${d[language]}</button>`).join('')}</div></header><div class="deck-gallery-grid">${deck.cards.map((card,index)=>{const title=cosmicCardTitles.get(card);return `<button class="deck-gallery-card" data-card="${card}" aria-label="${ru?'Карта':'Card'} ${index+1}${title?`: ${escapeHtml(title)}`:''}"><img loading="lazy" decoding="async" width="240" height="360" src="/deck-thumbs/${card}${cardAssetVersion(card)||'?v=2'}" data-full-src="/deck-preview/${card}${cardAssetVersion(card)}" alt="${ru?'Карта':'Card'} ${index+1}${title?`: ${escapeHtml(title)}`:''}"><span>${index+1}</span>${title?`<strong>${escapeHtml(title)}</strong>`:''}</button>`}).join('')}</div></section>`;
   dialog.querySelectorAll('.deck-gallery-card img').forEach(image=>{image.onerror=()=>{image.onerror=null;image.src=image.dataset.fullSrc}});
   if(!dialog.open)dialog.showModal();addDeckSearch();$('#closeDeck').onclick=()=>dialog.close();dialog.onclick=event=>{if(event.target===dialog)dialog.close()};
   dialog.querySelectorAll('[data-gallery-deck]').forEach(button=>button.onclick=()=>openDeckGallery(button.dataset.galleryDeck));
@@ -256,7 +259,7 @@ async function saveLobbySettings(deckId,cycles){
   const context=liveGameContext;savingLobbySettings=true;renderRoundSelector();
   try{
     const choice=lobbyRoster.length<3?{cycles}:selectedRoundOption(lobbyRoster.length,decks[deckId].cards.length,cycles);
-    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:{moon:'moonlit-archive',pop:'pop-culture',abs:'everyday-absurdity',meme:'meme-chaos'}[deckId],chosen_cycles:choice?.cycles||2});
+    const {data,error}=await supabase.rpc('configure_luminaria_lobby',{target_room_id:context.room.id,chosen_deck:{moon:'moonlit-archive',pop:'pop-culture',abs:'everyday-absurdity',meme:'meme-chaos',cosmic:'cosmos-ufo'}[deckId],chosen_cycles:choice?.cycles||2});
     if(error)throw error;
     if(liveGameContext===context)context.room={...context.room,...data};
   }catch(error){showInlineGameError(error.message)}finally{

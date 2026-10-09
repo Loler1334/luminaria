@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.1.0",
   "scripts": {
-    "test": "node tests/round-state.cjs && node tests/party-lifecycle.cjs && node tests/party-stars.cjs && node tests/round-options.cjs && node tests/finale.cjs && node tests/story-service.mjs && node tests/feedback-service.mjs && node tests/avatar-system.cjs && node tests/personal-return.mjs && node tests/guest-recovery.mjs && node tests/legal-pages.mjs",
+    "test": "node tests/round-state.cjs && node tests/party-lifecycle.cjs && node tests/party-stars.cjs && node tests/round-options.cjs && node tests/finale.cjs && node tests/story-service.mjs && node tests/feedback-service.mjs && node tests/avatar-system.cjs && node tests/personal-return.mjs && node tests/guest-recovery.mjs && node tests/legal-pages.mjs && node tests/cosmic-deck.cjs",
     "dev": "vite",
     "build": "vite build && node scripts/build-worker.mjs",
     "preview": "vite preview"
