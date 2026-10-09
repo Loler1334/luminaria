@@ -128,3 +128,18 @@
 .deck-selected-check{position:absolute!important;z-index:2!important;top:8px;right:8px;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#ffd47c;color:#201a30;font-weight:900;opacity:0;transform:scale(.7);transition:opacity .16s,transform .16s;text-shadow:none!important}
 .lobby-page .deck-choice.selected .deck-selected-check{opacity:1;transform:scale(1)}
 @media(min-width:1450px){.lobby-page .lobby-grid{align-items:start}.lobby-page .players-panel,.lobby-page .invite-panel{align-self:start}.lobby-page .player-row,.lobby-page .empty-seat{padding:7px 0}.lobby-page .lobby-panel{padding-block:16px}}
+.open-rooms-empty p{margin:0 0 16px;color:#d0d2e2;line-height:1.55}
+.empty-room-create{display:inline-flex;align-items:center;gap:14px;border:1px solid #efbd6f;border-radius:12px;background:#e9b566;color:#211c30;padding:12px 16px;font:700 13px 'DM Sans',sans-serif;cursor:pointer;box-shadow:0 6px 20px #e9b56620;transition:transform .18s,background .18s}
+.empty-room-create:hover{background:#ffd18c;transform:translateY(-1px)}
+.empty-room-create:focus-visible{outline:2px solid #ffe4b0;outline-offset:4px}
+@media(min-width:781px){
+  .landing-guide{margin-top:64px;padding-top:48px}
+  .guide-steps{margin-top:26px}
+  .guide-steps article{min-height:158px;padding:21px}
+  .guide-steps h3{margin-top:21px}
+  .archive-teaser{margin-top:62px;padding-block:46px}
+  .faq{margin-top:62px;padding-top:46px;gap:40px}
+  .faq details{padding:14px 0}
+  .faq details p{margin-top:9px}
+  .final-cta{margin-top:64px}
+}

@@ -35,8 +35,8 @@ Object.assign(siteCopy.en,{archiveEyebrow:'The Moonlit Archive',archiveTitle:'Fo
 Object.assign(siteCopy.ru,{archiveEyebrow:'Лунный архив',archiveTitle:'Четыре колоды.<br /><em>Бесконечно историй.</em>',archiveText:'Каждая карта — начало странной, смешной или красивой ассоциации.',archiveButton:'Посмотреть все колоды →',decksMenu:'Колоды'});
 Object.assign(siteCopy.en,{rulesScore:'The storyteller scores when at least one, but not every, player finds their card. Choose an unexpected clue.'});
 Object.assign(siteCopy.ru,{rulesScore:'Ведущий получает очки, если его карту угадал хотя бы один игрок, но не все. Выбирай неочевидную ассоциацию.'});
-Object.assign(copy.en,{feedback:'Help improve the game'});
-Object.assign(copy.ru,{feedback:'Помочь улучшить игру'});
+Object.assign(copy.en,{playNow:'Create a room',feedback:'Help improve the game'});
+Object.assign(copy.ru,{playNow:'Создать комнату',feedback:'Помочь улучшить игру'});
 Object.assign(copy.ru,{openRoomsEyebrow:'Играйте вместе',openRoomsTitle:'Открытые комнаты',refreshRooms:'Обновить ↻',roomAccess:'Кто может войти?',privateRoom:'Закрытое лобби',publicRoom:'Открытое лобби',publicRoomHint:'Видно всем. Знакомься с новыми игроками.',privateRoomHint:'Вход только по твоей ссылке или коду.'});
 Object.assign(copy.en,{openRoomsEyebrow:'Meet new players',openRoomsTitle:'Open rooms',refreshRooms:'Refresh ↻',roomAccess:'Who can join?',privateRoom:'Private lobby',publicRoom:'Open lobby',publicRoomHint:'Visible to everyone. Meet new players.',privateRoomHint:'Only through your invitation link or code.'});
 Object.assign(siteCopy.ru,{faqTitle:'Перед первой<br /><em>игрой.</em>',faqOneAnswer:'От 3 до 10 человек. Можно пригласить друзей по ссылке или присоединиться к открытой комнате.',faqTwoAnswer:'Число раундов выбирает создатель комнаты перед стартом. Каждый по очереди будет ведущим; доступные варианты зависят от количества игроков и карт в колоде.',faqThreeAnswer:'Регистрация не обязательна — можно играть гостем. Ник и аватар меняются в профиле. Вход в аккаунт позволит использовать профиль на других устройствах.'});
@@ -87,7 +87,7 @@ async function renderOpenRooms(){
     list.innerHTML=data?.length?data.map(room=>{
       const deck=decks[deckKeyByDatabaseId[room.deck_id]||'moon'];
       return `<article class="open-room-card"><div><strong>${escapeHtml(room.host_name)}</strong><small>${escapeHtml(deck[language])} · ${Number(room.player_count)||0}/10 ${ru?'игроков':'players'} · ${Number(room.round_cycles)||2} ${ru?'круга':'cycles'}</small></div><button type="button" class="open-room-join" data-open-room="${escapeHtml(room.code)}">${ru?'Войти':'Join'} →</button></article>`;
-    }).join(''):`<p class="open-rooms-empty">${ru?'Пока нет открытых комнат. Создай свою — и другие смогут присоединиться.':'No open rooms yet. Create one so others can join.'}</p>`;
+    }).join(''):`<div class="open-rooms-empty"><p>${ru?'Пока нет открытых комнат. Создай свою — и другие смогут присоединиться.':'No open rooms yet. Create one so others can join.'}</p><button type="button" class="empty-room-create" data-create-open-room>${ru?'Создать открытую комнату':'Create an open room'} <span aria-hidden="true">→</span></button></div>`;
   }catch(error){
     if($('#openRoomsList'))list.innerHTML=`<p class="open-rooms-empty">${language==='ru'?'Не удалось загрузить комнаты. Попробуй обновить список.':'Could not load rooms. Try refreshing.'}</p>`;
     console.error('Open rooms:',error);
@@ -95,6 +95,7 @@ async function renderOpenRooms(){
 }
 $('#refreshOpenRooms')?.addEventListener('click',renderOpenRooms);
 $('#openRoomsList')?.addEventListener('click',async event=>{
+  if(event.target.closest('[data-create-open-room]')){$('[name=roomVisibility][value=public]').checked=true;await openEntry('create');return}
   const button=event.target.closest('[data-open-room]');if(!button)return;
   await openEntry('join');
   const input=$('#roomCodeInput');if(input)input.value=button.dataset.openRoom;
