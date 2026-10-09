@@ -1,12 +1,8 @@
--- Tie the canonical epilogue to the completed party, not just its room.
--- Apply after finale-stories.sql. Existing stories remain stored but cannot
--- be mistaken for a later party because their final_round_id is null.
+-- Apply after finale-story-per-party.sql to remove the deployed 400-character cap.
 begin;
 
 alter table public.finale_stories
-  add column if not exists final_round_id uuid;
-
-drop function if exists public.publish_luminaria_finale_story(uuid, text, text);
+  drop constraint if exists finale_stories_story_check;
 
 create or replace function public.publish_luminaria_finale_story(
   target_room_id uuid,
@@ -28,7 +24,8 @@ begin
   if auth.uid() is null or not private.is_luminaria_room_member(target_room_id) then
     raise exception 'Room members only';
   end if;
-  if story_language not in ('ru', 'en') or char_length(generated_story) < 100 then
+  if story_language not in ('ru', 'en') or generated_story is null
+    or char_length(generated_story) < 100 then
     raise exception 'Invalid finale story';
   end if;
 

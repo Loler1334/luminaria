@@ -4,7 +4,7 @@
 create table if not exists public.finale_stories (
   room_id uuid not null references public.rooms(id) on delete cascade,
   language text not null check (language in ('ru', 'en')),
-  story text not null check (char_length(story) between 100 and 400),
+  story text not null check (char_length(story) >= 100),
   created_at timestamptz not null default now(),
   primary key (room_id, language)
 );
@@ -36,7 +36,7 @@ begin
   if auth.uid() is null or not private.is_luminaria_room_member(target_room_id) then
     raise exception 'Room members only';
   end if;
-  if story_language not in ('ru', 'en') or char_length(generated_story) not between 100 and 400 then
+  if story_language not in ('ru', 'en') or char_length(generated_story) < 100 then
     raise exception 'Invalid finale story';
   end if;
   select status into room_status from public.rooms where id = target_room_id;

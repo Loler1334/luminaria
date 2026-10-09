@@ -9,7 +9,7 @@ assert.equal(storyLanguage([{clue:'123 ✨'}]),'en');
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
-let member=true,finished=true,aiCalls=0,providedClues,persistedStory=null;
+let member=true,finished=true,aiCalls=0,providedClues,persistedStory=null,providedTokenLimit=0,providedPrompt='';
 const fetcher=async(url,options={})=>{
   if(url.endsWith('/auth/v1/user'))return Response.json({id:'user'});
   if(url.includes('room_players?'))return Response.json(member?[{user_id:'user'}]:[]);
@@ -22,14 +22,14 @@ const fetcher=async(url,options={})=>{
 };
 const store=new Map();
 const cache={async match(key){return store.get(key.url)?.clone()},async put(key,response){store.set(key.url,response.clone())}};
-const env={AI:{async run(model,{messages}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':'Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, хотя никто туда не входил. Мы узнали свои голоса в шелесте звёзд и поняли: пока кто-то помнит дорогу, история не заканчивается.'}}}};
+const env={AI:{async run(model,{messages,max_tokens}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;providedTokenLimit=max_tokens;providedPrompt=messages[0].content;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':('Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, пока звёзды рассказывали свою историю. ').repeat(10)}}}};
 const config={url:'https://example.supabase.co',key:'public-key'};
 const request=(auth=true)=>new Request('https://luminaria.test/api/finale-story',{method:'POST',headers:auth?{Authorization:'Bearer token'}:{},body:JSON.stringify({roomId,language:'ru'})});
 assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).status,401);
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length<=400);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('approximately 84 words'));assert(providedPrompt.includes('no character limit'));assert(providedTokenLimit>=672);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
 assert.equal(persistedStory.finalRoundId,'round-27');
 const oldStory=persistedStory.story;
@@ -48,4 +48,4 @@ const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.inc
 const englishResult=await handleStory(request(),englishEnv,config,{fetcher,cache});
 assert.equal(englishResult.status,200);
 assert((await englishResult.json()).story.startsWith('Under the moon'));
-console.log('PASS: story authorization, finished-game guard, all clues sent, canonical cross-client story, shared cache, concurrent requests deduplicated, unavailable AI fallback response.');
+console.log('PASS: story authorization, adaptive uncapped length, all clues sent, canonical cross-client story, shared cache, concurrency and fallback handling.');

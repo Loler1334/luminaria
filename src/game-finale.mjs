@@ -48,8 +48,9 @@ export function storySeed(clues) {
   return (seed >>> 0) || 1;
 }
 
-export function fitStory(text, max = 400) {
+export function fitStory(text, max = Infinity) {
   const clean = String(text || '').replace(/\s+/g, ' ').trim();
+  if (!Number.isFinite(max) || max < 0) return clean;
   if ([...clean].length <= max) return clean;
   const excerpt = [...clean].slice(0, max - 1).join('');
   const sentence = Math.max(excerpt.lastIndexOf('.'), excerpt.lastIndexOf('!'), excerpt.lastIndexOf('?'));
@@ -65,7 +66,13 @@ export function fallbackStory(rounds, language = 'ru') {
     ? 'Ночью за пустым столом зажглась звезда. Никто не помнил, кто её загадал. К рассвету все карты исчезли, а на последней осталась дверь. За ней кто-то тихо произнёс наши имена. Кажется, история только начинается.'
     : 'At midnight a star appeared above the empty table. Nobody remembered naming it. By dawn the cards had vanished, leaving a door. From the other side, someone whispered our names. Perhaps the story was only beginning.';
   const seed = storySeed(clues);
-  const positions = [...new Set([seed % clues.length, Math.floor(clues.length / 2), clues.length - 1])];
+  const fragmentCount = Math.min(clues.length, Math.max(3, Math.ceil(clues.length / 2)));
+  const positions = fragmentCount === 1
+    ? [0]
+    : Array.from({ length: fragmentCount }, (_, i) => Math.round(i * (clues.length - 1) / (fragmentCount - 1)));
+  // Use the seed to vary which clues anchor short stories while retaining the
+  // beginning-to-end arc for longer parties.
+  if (positions.length > 3 && seed % 2) positions.splice(1, 1, Math.min(clues.length - 2, positions[1] + 1));
   const fragments = positions.map(index => fitStory(clues[index], 28));
   const words = fragments.map(fragment => language === 'ru' ? `«${fragment}»` : `“${fragment}”`).join(', ');
   return fitStory(language === 'ru'

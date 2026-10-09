@@ -817,17 +817,21 @@ async function showGameFinished(){
     let illustrationLoading=false;
     const illustrationStatus=root.querySelector('#illustrationStatus'),illustrationRetry=root.querySelector('#retryFinaleIllustration'),shareCardStory=root.querySelector('#shareCardStory'),shareCardImage=root.querySelector('#partyIllustration');
     const makeShareCard=storyText=>{
-      const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+      const canvas=document.createElement('canvas');canvas.width=1080;const ctx=canvas.getContext('2d');
       const image=new Image();image.src=shareCardImage.src;
       return image.decode().then(()=>{
-        ctx.drawImage(image,0,0,1080,810);const gradient=ctx.createLinearGradient(0,760,0,1350);gradient.addColorStop(0,'#20213a');gradient.addColorStop(1,'#101326');ctx.fillStyle=gradient;ctx.fillRect(0,760,1080,590);
-        ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,865);
-        ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(ru?'Наша общая история':'Our shared story',72,940);
-        const story=[...storyText].slice(0,210).join('');ctx.fillStyle='#e2d8ee';ctx.font='italic 34px Georgia,serif';const words=story.split(/\s+/),lines=[];let line='';
-        for(const word of words){const next=line?`${line} ${word}`:word;if(ctx.measureText(next).width>930&&line){lines.push(line);line=word}else line=next}if(line)lines.push(line);lines.slice(0,4).forEach((value,index)=>ctx.fillText(value,72,1010+index*48));
-        ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(ru?'УЧАСТНИКИ':'PLAYERS',72,1240);
-        ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';let players=ranking.map(seat=>seat.name).join(' · ');while(ctx.measureText(players).width>930&&players.length>10)players=players.slice(0,-2)+'…';ctx.fillText(players,72,1284);
-        ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,1325);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+        const wrap=(value,font)=>{ctx.font=font;const lines=[];let line='';for(const word of value.split(/\s+/)){const next=line?`${line} ${word}`:word;if(ctx.measureText(next).width>930&&line){lines.push(line);line=word}else line=next}if(line)lines.push(line);return lines};
+        const storyLines=wrap(storyText,'italic 34px Georgia,serif');
+        const playerLines=wrap(ranking.map(seat=>seat.name).join(' · '),'24px Arial,sans-serif');
+        const imageHeight=720,storyStart=imageHeight+290,storyLineHeight=46,playersLabelY=storyStart+storyLines.length*storyLineHeight+44,playersStart=playersLabelY+42,footerY=playersStart+playerLines.length*34+44;
+        canvas.height=footerY+48;
+        ctx.drawImage(image,0,0,1080,imageHeight);const gradient=ctx.createLinearGradient(0,imageHeight-40,0,canvas.height);gradient.addColorStop(0,'#20213a');gradient.addColorStop(1,'#101326');ctx.fillStyle=gradient;ctx.fillRect(0,imageHeight-40,1080,canvas.height-imageHeight+40);
+        ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,imageHeight+74);
+        ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(ru?'Наша общая история':'Our shared story',72,imageHeight+150);
+        ctx.fillStyle='#e2d8ee';ctx.font='italic 34px Georgia,serif';storyLines.forEach((value,index)=>ctx.fillText(value,72,storyStart+index*storyLineHeight));
+        ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(ru?'УЧАСТНИКИ':'PLAYERS',72,playersLabelY);
+        ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';playerLines.forEach((value,index)=>ctx.fillText(value,72,playersStart+index*34));
+        ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,footerY);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
       });
     };
     const loadIllustration=async storyText=>{
@@ -837,7 +841,7 @@ async function showGameFinished(){
         const until=Date.now()+150000;let result;
         do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
         if(!result?.image)throw new Error('Illustration timed out');if(!root.isConnected)return;
-        shareCardImage.src=result.image;shareCardImage.onload=()=>{};await shareCardImage.decode();shareCardStory.textContent=[...storyText].slice(0,220).join('')+([...storyText].length>220?'…':'');shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
+        shareCardImage.src=result.image;shareCardImage.onload=()=>{};await shareCardImage.decode();shareCardStory.textContent=storyText;shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
       }catch{if(root.isConnected){illustrationStatus.textContent=ru?'Не удалось создать иллюстрацию. История сохранена — попробуй ещё раз.':'Could not create the illustration. Your story is saved — please try again.';illustrationRetry.hidden=false}}
       finally{illustrationLoading=false}
     };
