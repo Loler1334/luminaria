@@ -811,6 +811,42 @@ async function showGameFinished(){
     const root=document.querySelector('.game-finale');
     $('#rematchButton')?.addEventListener('click',async event=>{const button=event.currentTarget;button.disabled=true;try{await restartLiveRoom()}catch(error){if(button.isConnected){button.disabled=false;showInlineGameError(error.message)}}});
     $('#copyPartyStory').addEventListener('click',async event=>{try{await navigator.clipboard.writeText($('#partyStory').textContent);event.target.textContent=ru?'Скопировано ✓':'Copied ✓'}catch{$('#storyStatus').textContent=ru?'Выдели текст истории, чтобы скопировать её.':'Select the story text to copy it.'}});
+    let illustrationLoading=false;
+    const illustrationStatus=root.querySelector('#illustrationStatus'),illustrationRetry=root.querySelector('#retryFinaleIllustration'),shareCardStory=root.querySelector('#shareCardStory'),shareCardImage=root.querySelector('#partyIllustration');
+    const makeShareCard=storyText=>{
+      const canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1350;const ctx=canvas.getContext('2d');
+      const image=new Image();image.src=shareCardImage.src;
+      return image.decode().then(()=>{
+        ctx.drawImage(image,0,0,1080,810);const gradient=ctx.createLinearGradient(0,760,0,1350);gradient.addColorStop(0,'#20213a');gradient.addColorStop(1,'#101326');ctx.fillStyle=gradient;ctx.fillRect(0,760,1080,590);
+        ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,865);
+        ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(ru?'Наша общая история':'Our shared story',72,940);
+        const story=[...storyText].slice(0,210).join('');ctx.fillStyle='#e2d8ee';ctx.font='italic 34px Georgia,serif';const words=story.split(/\s+/),lines=[];let line='';
+        for(const word of words){const next=line?`${line} ${word}`:word;if(ctx.measureText(next).width>930&&line){lines.push(line);line=word}else line=next}if(line)lines.push(line);lines.slice(0,4).forEach((value,index)=>ctx.fillText(value,72,1010+index*48));
+        ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(ru?'УЧАСТНИКИ':'PLAYERS',72,1240);
+        ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';let players=ranking.map(seat=>seat.name).join(' · ');while(ctx.measureText(players).width>930&&players.length>10)players=players.slice(0,-2)+'…';ctx.fillText(players,72,1284);
+        ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,1325);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+      });
+    };
+    const loadIllustration=async storyText=>{
+      if(illustrationLoading||!root.isConnected)return;illustrationLoading=true;illustrationRetry.hidden=true;illustrationStatus.textContent=ru?'Рисуем абсурдную иллюстрацию к истории…':'Painting an absurd illustration for the story…';
+      try{
+        const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('Session unavailable');
+        const until=Date.now()+150000;let result;
+        do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
+        if(!result?.image)throw new Error('Illustration timed out');if(!root.isConnected)return;
+        shareCardImage.src=result.image;shareCardImage.onload=()=>{};await shareCardImage.decode();shareCardStory.textContent=[...storyText].slice(0,220).join('')+([...storyText].length>220?'…':'');shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
+      }catch{if(root.isConnected){illustrationStatus.textContent=ru?'Не удалось создать иллюстрацию. История сохранена — попробуй ещё раз.':'Could not create the illustration. Your story is saved — please try again.';illustrationRetry.hidden=false}}
+      finally{illustrationLoading=false}
+    };
+    illustrationRetry.addEventListener('click',()=>loadIllustration($('#partyStory').textContent));
+    root.querySelector('#shareFinaleCard').addEventListener('click',async event=>{
+      const button=event.currentTarget;button.disabled=true;
+      const caption=`${ru?'Наша общая история в Luminaria':'Our shared story in Luminaria'}\n\n${$('#partyStory').textContent}\n\n${ru?'Игроки':'Players'}: ${ranking.map(seat=>seat.name).join(', ')}\n\n${ru?'Сыграть с друзьями':'Play with friends'}: https://luminaria.cc`;
+      try{const blob=await makeShareCard($('#partyStory').textContent);if(!blob)throw new Error('Could not create story card');const file=new File([blob],'luminaria-story.png',{type:'image/png'});const payload={title:ru?'История нашей партии в Luminaria':'Our Luminaria story',text:caption,url:'https://luminaria.cc',files:[file]};
+        if(navigator.canShare?.({files:[file]})){await navigator.share(payload);illustrationStatus.textContent=ru?'Карточкой поделились!':'Story card shared!'}
+        else{const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='luminaria-story.png';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);try{await navigator.clipboard.writeText(caption);illustrationStatus.textContent=ru?'Карточка скачана, история и ссылка скопированы. Прикрепи картинку к сообщению.':'Card downloaded; story and link copied. Attach the image to your message.'}catch{illustrationStatus.textContent=ru?'Карточка скачана. Прикрепи её к сообщению и добавь ссылку luminaria.cc.':'Card downloaded. Attach it to your message and add luminaria.cc.'}};
+      }catch(error){if(error?.name!=='AbortError')illustrationStatus.textContent=ru?'Не удалось поделиться карточкой. Попробуй ещё раз.':'Could not share the card. Please try again.'}finally{button.disabled=false}
+    });
     let storyLoading=false;
     const loadStory=async()=>{
       if(storyLoading||!root.isConnected)return;storyLoading=true;
@@ -823,9 +859,9 @@ async function showGameFinished(){
         if(!response.ok)throw new Error('Story unavailable');
         const result=await response.json();if(typeof result.story!=='string'||!result.story.trim())throw new Error('Empty story');
         if(!root.isConnected)return;
-        text.textContent=fitStory(result.story);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';
+        text.textContent=fitStory(result.story);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';void loadIllustration(text.textContent);
       }catch{
-        if(root.isConnected){status.textContent=ru?'Пока — эпилог из отдельных фраз. История по всей партии временно недоступна; все ассоциации сохранены ниже.':'For now, a vignette from a few clues. The full story is temporarily unavailable; every clue is listed below.';retry.hidden=false}
+        if(root.isConnected){status.textContent=ru?'Пока — эпилог из отдельных фраз. История по всей партии временно недоступна; все ассоциации сохранены ниже.':'For now, a vignette from a few clues. The full story is temporarily unavailable; every clue is listed below.';illustrationStatus.textContent=ru?'Сначала загрузим полную историю, затем нарисуем к ней карточку.':'The full story must load before its illustrated card can be created.';retry.hidden=false}
       }finally{storyLoading=false}
     };
     $('#retryPartyStory').addEventListener('click',loadStory);void loadStory();

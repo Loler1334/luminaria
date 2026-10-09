@@ -44,6 +44,12 @@
 .story-status{font-size:12px;line-height:1.6;color:#969fbe;max-width:480px;margin:0 auto}
 .story-actions{display:flex;justify-content:center;flex-wrap:wrap;gap:12px;margin-top:18px}
 .story-actions button{color:#ebc686;font-size:12px;padding:8px}.story-actions [hidden]{display:none}
+.finale-share-card{max-width:440px;aspect-ratio:4/5;margin:28px auto 12px;border-radius:18px;overflow:hidden;position:relative;background:#171a32;box-shadow:0 20px 50px #0005;text-align:left}
+.finale-share-card[hidden]{display:none}.finale-share-card>img{display:block;width:100%;height:59%;object-fit:cover;background:radial-gradient(circle at 40% 30%,#c17d9b,#29304f 68%,#13162c)}
+.share-card-copy{position:absolute;inset:auto 0 0;padding:24px 26px 22px;background:linear-gradient(180deg,#181a30f0,#111428)}
+.share-card-brand{font-size:12px;font-weight:700;letter-spacing:.08em;color:#edbd71}.share-card-copy h3{font:600 25px/1.1 Fraunces,serif;letter-spacing:-.5px;color:#fff2dc;margin:11px 0}
+.share-card-copy>p{font:400 15px/1.45 Fraunces,serif;color:#e2d8ee;margin:0 0 14px;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;overflow:hidden;overflow-wrap:anywhere}
+.share-card-copy small{font-size:10px;line-height:1.5;color:#e6b56e}.share-card-copy small span{color:#b9bfd3}
 .finale-history{padding:0;overflow:hidden}.finale-history summary{display:flex;justify-content:space-between;align-items:center;padding:22px 28px;cursor:pointer;color:#d4d8e8;list-style:none;font-size:14px}
 .finale-history summary::after{content:"+";margin-left:16px;font-size:22px;color:#e9c587}.finale-history[open] summary::after{content:"−"}
 .finale-history summary span{margin-left:auto;color:#a8a3c9;font-size:12px}
