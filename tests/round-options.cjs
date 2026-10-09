@@ -1,6 +1,6 @@
 const assert=require('node:assert/strict');
 (async()=>{
- const {roundOptions,selectedRoundOption}=await import('../src/round-options.mjs');
+ const {roundOptions,selectedRoundOption,lobbyRoundChoices}=await import('../src/round-options.mjs');
  const expected={3:[6,9,12,15,18,21,24,27,30],4:[8,12,16,20,24],5:[10,15],6:[12],7:[7]};
  for(let n=3;n<=7;n++){
   assert.deepEqual(roundOptions(n,100).map(o=>o.rounds),expected[n]);
@@ -23,10 +23,13 @@ const assert=require('node:assert/strict');
    assert.ok(option.cards<=cards);assert.equal(option.rounds,10*option.cycles);
  }
  assert.deepEqual(roundOptions(2,100),[]);assert.equal(roundOptions(8,100)[0].rounds,8);
+ assert.deepEqual(lobbyRoundChoices(1,110,2).map(o=>o.cycles),[2,3,4,5,6]);
+ assert.deepEqual(lobbyRoundChoices(2,110,2).map(o=>o.cycles),[2,3,4,5,6]);
+ assert.deepEqual(lobbyRoundChoices(3,100,2).map(o=>o.cycles),roundOptions(3,100).map(o=>o.cycles));
  assert.equal(roundOptions(7,97)[0].rounds,7);assert.equal(roundOptions(7,110).at(-1).rounds,14);
  assert.equal(roundOptions(7,110).at(-1).cards,98);assert.equal(roundOptions(7,110).at(-1).cards+12,110);
  assert.equal(roundOptions(6,107).at(-1).rounds,12);assert.equal(roundOptions(6,108).at(-1).rounds,12);
  assert.equal(selectedRoundOption(7,110,11).rounds,14);
  assert.equal(selectedRoundOption(3,100,2).rounds,6);
- console.log('PASS: fair cycles and one-card-per-player reroll reserve for 3–10 players.');
+ console.log('PASS: fair cycles, early host round choices, and one-card-per-player reroll reserve for 3–10 players.');
 })();

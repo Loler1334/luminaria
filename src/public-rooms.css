@@ -124,3 +124,7 @@
 #personalReturnPanel button:disabled{opacity:.55;cursor:wait}
 #personalReturnPanel small{font-size:10px;line-height:1.25;color:#bdc4db}
 @media(max-width:480px){#personalReturnPanel{left:9px;bottom:9px;max-width:162px;padding:7px}#personalReturnPanel button{font-size:10px}#personalReturnPanel small{font-size:9px}}
+.lobby-page .deck-choice.selected{position:relative;border:2px solid #ffd47c;box-shadow:0 0 0 2px #ffd47c40,0 0 24px #ffd47c55,inset 0 0 24px #ffd47c16}
+.deck-selected-check{position:absolute!important;z-index:2!important;top:8px;right:8px;display:grid;place-items:center;width:25px;height:25px;border-radius:50%;background:#ffd47c;color:#201a30;font-weight:900;opacity:0;transform:scale(.7);transition:opacity .16s,transform .16s;text-shadow:none!important}
+.lobby-page .deck-choice.selected .deck-selected-check{opacity:1;transform:scale(1)}
+@media(min-width:1450px){.lobby-page .lobby-grid{align-items:start}.lobby-page .players-panel,.lobby-page .invite-panel{align-self:start}.lobby-page .player-row,.lobby-page .empty-seat{padding:7px 0}.lobby-page .lobby-panel{padding-block:16px}}
