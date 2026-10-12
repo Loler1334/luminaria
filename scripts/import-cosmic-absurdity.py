@@ -1,13 +1,17 @@
-"""Import the 110 reviewed Cosmos & UFOs card illustrations into the game."""
+"""Import the 110 reviewed Space Journeys card illustrations into the game."""
 
 import hashlib
 import json
+import argparse
 from pathlib import Path
 
 from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
-SOURCE = ROOT / "output" / "cosmic-absurdity" / "source"
+parser = argparse.ArgumentParser(description=__doc__)
+parser.add_argument("--styled", action="store_true", help="Import the reviewed painterly redraws")
+args = parser.parse_args()
+SOURCE = ROOT / "output" / "cosmic-absurdity" / ("styled" if args.styled else "source")
 CARDS = json.loads((ROOT / "docs" / "cosmic-absurdity-110.json").read_text(encoding="utf-8"))[:110]
 assert len(CARDS) == 110
 assert len({card["title"] for card in CARDS}) == 110
@@ -46,4 +50,4 @@ for number, card in enumerate(CARDS, 1):
 (ROOT / "src" / "cosmic-absurdity-manifest.json").write_text(
     json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
 )
-print(f"Imported {len(manifest)} unique illustrations for Cosmos & UFOs.")
+print(f"Imported {len(manifest)} unique illustrations for Space Journeys.")

@@ -1,4 +1,4 @@
--- Add the 110-card Cosmos & UFOs deck after meme-chaos.sql.
+-- Add the 110-card Space Journeys deck after meme-chaos.sql.
 begin;
 
 alter table public.luminaria_deck_catalog

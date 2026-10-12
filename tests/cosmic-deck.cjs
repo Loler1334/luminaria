@@ -17,4 +17,4 @@ for (const [index, card] of manifest.entries()) {
   assert(fs.existsSync(path.join(root, 'public/deck-preview', card.card)), `missing preview: ${card.card}`);
   assert(fs.existsSync(path.join(root, 'public/deck-thumbs', card.card)), `missing thumbnail: ${card.card}`);
 }
-console.log('PASS: Cosmos & UFOs has 110 unique scenes with a preview and thumbnail for each card.');
+console.log('PASS: Space Journeys has 110 unique scenes with a preview and thumbnail for each card.');
