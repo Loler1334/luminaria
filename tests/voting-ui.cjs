@@ -13,7 +13,7 @@ const fn=source.slice(source.indexOf('async function showLiveVoting(round)'),sou
 await page.evaluate(({fn,helper})=>{
  window.language='ru';window.$=s=>document.querySelector(s);
  window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
- window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
+ window.cardAssetVersion=()=>'';window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
  window.loadLiveRoster=async()=>[];window.updateLivePhaseProgress=async()=>{};
  window.openCardPreview=options=>{window.slides=options.items};
  window.showInlineGameError=message=>{window.lastError=message};

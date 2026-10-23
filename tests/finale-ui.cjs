@@ -17,7 +17,7 @@ await page.evaluate(({finale,results,observer,helpers,view,roundState})=>{
  window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
  window.liveGameContext={room:{id:'room',code:'WYBTMN',host_id:'player-0'},session:{user:{id:'player-0'}}};
  window.liveRoundNumber=18;
- window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
+ window.cardAssetVersion=()=>'';window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
  window.avatarMarkup=()=> '✦';window.restartLiveRoom=async()=>{window.rematched=true};window.showInlineGameError=message=>{throw Error(message)};window.syncStarParty=async()=>{};window.liveStarScores={};
  window.loadLiveRoster=async()=>window.roster;
  window.addLiveScoreboard=async()=>{};window.prepareNextLiveRound=async()=>{};
@@ -51,9 +51,9 @@ for(let count=3;count<=10;count++){
  assert.equal(await page.locator('.game-finale').innerHTML(),snapshot);
  const overflow=await page.evaluate(()=>({width:innerWidth,scroll:document.documentElement.scrollWidth,elements:[...document.querySelectorAll('*')].filter(e=>e.getBoundingClientRect().right>390).map(e=>({tag:e.tagName,cls:e.className,right:e.getBoundingClientRect().right})).slice(0,10)}));if(overflow.scroll>390)console.log(overflow);assert(overflow.scroll<=390);
 }
-await page.screenshot({path:'output/finale-mobile.png',fullPage:true});
+await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','finale-mobile.png'),fullPage:true});
 await page.setViewportSize({width:1280,height:1000});
-await page.screenshot({path:'output/finale-desktop.png',fullPage:true});
+await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','finale-desktop.png'),fullPage:true});
 await page.locator('#rematchButton').click();assert(await page.evaluate(()=>rematched));
 assert.deepEqual(errors,[]);
 console.log('PASS: actual final-round renderer for 3–10 players, no winner error or next-round action, tie podium, full history, idempotent concurrent finale, mobile width, rematch.');

@@ -17,11 +17,11 @@ try{
   window.supabase={rpc:async(name,args)=>({data:name==='luminaria_round_waiting'?roster.map((p,i)=>({user_id:p.user_id,has_submitted:i<3,has_voted:i===1})):null}),auth:{getSession:async()=>({data:{session:liveGameContext.session}})},from:()=>({upsert:async value=>{window.saved=value;return {error:null}}})};
   window.liveHandCache=[];window.liveStorytellerId='p0';window.liveRound=null;window.liveRoundNumber=1;window.applyLiveProfileUpdate=()=>{};window.liveChatChannel=null;
   window.bindWaitingMinigame=()=>{};window.ensureLiveChat=()=>{};window.addDeckSelector=()=>{};window.showInlineGameError=e=>{throw Error(e)};
-  window.safeAvatar=p=>p.avatar;window.cachePlayer=()=>{};window.navProfileCache=null;window.liveProfileCache=new Map();window.addAuthButton=()=>{};
+  window.avatarChoicesMarkup=()=>'<button type="button" class="profile-avatar selected" data-avatar-id="mage-female">✦</button>';window.pendingProfileJoinCode=null;window.safeAvatar=p=>p.avatar;window.cachePlayer=()=>{};window.navProfileCache=null;window.liveProfileCache=new Map();window.addAuthButton=()=>{};
   window.compressAvatar=async()=>{window.crops++;return window.cancelCrop?null:'data:image/jpeg;base64,AAAA'};window.crops=0;
   window.alert=e=>{throw Error(e)};
   for(const code of [helpers.replace(/export /g,''),settings,waiting,profile,handlers])(0,eval)(code);
- },{helpers:fs.readFileSync('src/round-options.mjs','utf8'),settings:slice('let lobbyRoster=[];','const originalShowLobby='),waiting:slice('function showLiveRoundWaiting()','function bindWaitingMinigame')+slice('async function addWaitingScoreboard()','async function routeLiveRound()'),profile:slice('async function openProfileSetup(session)','const renderProfileSetup='),handlers:slice("document.addEventListener('change',async event=>{\n  const input=event.target;if(input?.id!=='profileAvatarUpload')",'function hydrateAvatarImages()')});
+ },{helpers:fs.readFileSync('src/round-options.mjs','utf8'),settings:slice('function lobbySettingsColumn(grid)','function addDeckSelector()')+slice('let lobbyRoster=[];','const originalShowLobby='),waiting:slice('function showLiveRoundWaiting()','function bindWaitingMinigame')+slice('async function addWaitingScoreboard()','async function routeLiveRound()'),profile:slice('async function openProfileSetup(session)','const renderProfileSetup='),handlers:slice("document.addEventListener('change',async event=>{\n  const input=event.target;if(input?.id!=='profileAvatarUpload')",'function hydrateAvatarImages()')});
  await page.evaluate(()=>document.body.innerHTML='<main><section class="lobby-grid"></section><button id="startButton">Start</button></main>');
  await page.evaluate(()=>renderRoundSelector(roster));assert.equal(await page.locator('#roundCycles option').textContent(),'12 раундов · 2 круга');
  await page.evaluate(()=>{selectedDeckCards=()=>Array(108);renderRoundSelector(roster)});assert.equal(await page.locator('#roundCycles option').count(),1);
@@ -29,7 +29,7 @@ try{
  await page.evaluate(()=>showLiveRoundWaiting());await page.waitForFunction(()=>document.querySelector('#waitingScore').textContent.includes('Player'));
  assert.match(await page.locator('#awaitedStoryteller').innerText(),/Player 0/);
  assert.ok(await page.evaluate(()=>Boolean(document.querySelector('#waitingScore').compareDocumentPosition(document.querySelector('.waiting-minigame'))&Node.DOCUMENT_POSITION_FOLLOWING)));
- await page.screenshot({path:'output/waiting-mobile.png',fullPage:true});
+ await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','waiting-mobile.png'),fullPage:true});
  for(let n=3;n<=10;n++){
   await page.evaluate(async n=>{roster=Array.from({length:n},(_,i)=>({user_id:'p'+i,profile:{nickname:'Player '+i}}));document.body.innerHTML='<main><section class="vote-header"></section></main>';liveRound={id:'r',phase:'voting',storyteller_id:'p0'};await updateLivePhaseProgress()},n);
   assert.equal(await page.locator('.phase-waiting span').count(),n-1);assert.equal(await page.locator('.phase-waiting .done').count(),1);

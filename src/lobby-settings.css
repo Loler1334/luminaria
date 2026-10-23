@@ -10,3 +10,5 @@
 #awaitedStoryteller{margin:18px 0}
 #awaitedStoryteller small{font-size:15px;line-height:1.5}
 #awaitedStoryteller>div{max-width:100%;width:auto}
+.manual-invitation{display:grid;gap:10px;margin-top:16px;line-height:1.5}
+.manual-invitation input{box-sizing:border-box;width:100%;min-width:0;padding:12px;border:1px solid #ffffff35;border-radius:8px;background:#242442;color:#fff;font:inherit}

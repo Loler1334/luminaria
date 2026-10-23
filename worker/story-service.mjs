@@ -13,6 +13,7 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
     if (text.length > 512) return json({ error: 'Request too large' }, 413);
     body = JSON.parse(text);
   } catch { return json({ error: 'Invalid request' }, 400); }
+  if (!body || typeof body !== 'object' || Array.isArray(body)) return json({ error: 'Invalid request' }, 400);
   if (!/^[\da-f]{8}(-[\da-f]{4}){3}-[\da-f]{12}$/i.test(body.roomId || '')) return json({ error: 'Invalid room' }, 400);
   const headers = { apikey: config.key, Authorization: token };
   const read = async path => {
