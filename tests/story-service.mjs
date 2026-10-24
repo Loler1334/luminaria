@@ -22,14 +22,14 @@ const fetcher=async(url,options={})=>{
 };
 const store=new Map();
 const cache={async match(key){return store.get(key.url)?.clone()},async put(key,response){store.set(key.url,response.clone())}};
-const env={AI:{async run(model,{messages,max_tokens}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;providedTokenLimit=max_tokens;providedPrompt=messages[0].content;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':('Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, пока звёзды рассказывали свою историю. ').repeat(10)}}}};
+const env={AI:{async run(model,{messages,max_tokens}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;providedTokenLimit=max_tokens;providedPrompt=messages[0].content;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':('Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, пока звёзды рассказывали свою историю. ').repeat(4)}}}};
 const config={url:'https://example.supabase.co',key:'public-key'};
 const request=(auth=true)=>new Request('https://luminaria.test/api/finale-story',{method:'POST',headers:auth?{Authorization:'Bearer token'}:{},body:JSON.stringify({roomId,language:'ru'})});
 assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).status,401);
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('at least 140 words'));assert(providedPrompt.includes('five words per round'));assert(providedPrompt.includes('no character limit'));assert(providedPrompt.includes('satisfying absurd, funny, eerie, or wondrous payoff'));assert(providedTokenLimit>=1120);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('Aim for 98 words'));assert(providedPrompt.includes('never more than 118'));assert(providedPrompt.includes('Be much crazier'));assert(providedTokenLimit>=1176);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
 assert.equal(persistedStory.finalRoundId,'round-27');
 const oldStory=persistedStory.story;
@@ -48,4 +48,22 @@ const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.inc
 const englishResult=await handleStory(request(),englishEnv,config,{fetcher,cache});
 assert.equal(englishResult.status,200);
 assert((await englishResult.json()).story.startsWith('Under the moon'));
-console.log('PASS: story authorization, adaptive uncapped length, all clues sent, canonical cross-client story, shared cache, concurrency and fallback handling.');
+console.log('PASS: story authorization, compact adaptive length, all clues sent, canonical cross-client story, shared cache, concurrency and fallback handling.');
+
+// A cut-off or oversized draft must be rewritten, never persisted as-is.
+for (const badDraft of [
+  {response:'The king summoned a flying kettle and then'},
+  {response:'A finished sentence. '.repeat(100)},
+  {response:'A sentence ending in punctuation.',finish_reason:'length'},
+  {response:'The king was just about to explain everything…'}
+]) {
+  store.clear();persistedStory=null;let attempts=0;
+  const repaired='The kettle swallowed the royal palace and demanded a refund. The king crowned a teaspoon, which abolished gravity, folded the kingdom into a napkin and finally paid the bill.';
+  const repairEnv={AI:{async run(model,{messages}){attempts++;if(attempts===1)return badDraft;assert(messages.at(-1).content.includes('not a continuation'));return {response:repaired}}}};
+  const response=await handleStory(request(),repairEnv,config,{fetcher,cache});
+  assert.equal(response.status,200);assert.equal(attempts,2);assert.equal(persistedStory.story,repaired);
+}
+store.clear();persistedStory=null;
+const failed=await handleStory(request(),{AI:{run:async()=>({response:'A broken fragment without an ending'})}},config,{fetcher,cache});
+assert.equal(failed.status,503);assert.equal(persistedStory,null);
+console.log('PASS: incomplete, oversized and token-exhausted drafts are rewritten; repeated failure is never saved.');

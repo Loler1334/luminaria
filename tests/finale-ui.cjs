@@ -22,7 +22,7 @@ await page.evaluate(({finale,results,observer,helpers,view,roundState})=>{
  window.loadLiveRoster=async()=>window.roster;
  window.addLiveScoreboard=async()=>{};window.prepareNextLiveRound=async()=>{};
  window.supabase={from:()=>({select(){return this},eq(){return this},order(){return this},then(resolve){return Promise.resolve({data:window.rounds,error:null}).then(resolve)}}),rpc:()=>({single:async()=>({data:{remaining_cards:0},error:null})}),auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};
- window.fetch=async()=>Response.json({story:'Когда луна утонула в чашке, лес заговорил голосами забытых друзей. Мы сложили их слова в ключ и открыли дверь за горизонтом. Там стоял накрытый стол — на одно место больше. Но никто не вспомнил, кого мы всё это время ждали.'});
+ window.fetch=async(url,options)=>{if(url.includes('illustration')){if(JSON.parse(options.body).language!==storyLanguage(window.rounds))throw Error('Wrong story language');const canvas=document.createElement('canvas');canvas.width=16;canvas.height=16;return Response.json({image:canvas.toDataURL()})}return Response.json({story:'Когда луна утонула в чашке, лес заговорил голосами забытых друзей. Мы сложили их слова в ключ и открыли дверь за горизонтом. Там стоял накрытый стол — на одно место больше. Но никто не вспомнил, кого мы всё это время ждали.'})};
  (0,eval)(helpers.replace(/export /g,''));(0,eval)(view.replace(/^import .*\r?\n/m,'').replace(/export /g,''));(0,eval)(roundState.replace(/export /g,''));
  (0,eval)(finale);(0,eval)(results);(0,eval)(observer);
 },{finale,results,observer,helpers:fs.readFileSync('src/game-finale.mjs','utf8'),view:fs.readFileSync('src/finale-view.mjs','utf8'),roundState:fs.readFileSync('src/round-state.js','utf8')});
@@ -41,6 +41,9 @@ for(let count=3;count<=10;count++){
  await page.locator('#nextLiveRound').evaluate(button=>button.click());
  await page.waitForFunction(()=>document.querySelector('#storyStatus')?.textContent==='История по ассоциациям всей партии.').catch(async error=>{console.error('Finale transition diagnostic:',await page.locator('body').innerText(),errors);throw error});
  assert.equal(await page.locator('.game-finale').count(),1);
+ await page.waitForFunction(()=>!document.querySelector('#finaleShareCard').hidden);
+ assert.equal(await page.locator('#shareFinaleCard').isVisible(),true);
+ assert.equal(await page.locator('#retryFinaleIllustration').isVisible(),false);
  assert.equal(await page.locator('.finale-scoreboard tbody tr').count(),count);
  assert.equal(await page.locator('#nextLiveRound').count(),0);
  assert.equal(await page.locator('.next-storyteller').count(),0);

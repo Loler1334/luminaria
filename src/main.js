@@ -376,7 +376,7 @@ addAuthButton();
 let liveRoomChannel=null,liveChatChannel=null,liveChatRoomId=null,liveChatMessages=[],liveStarScores={},unreadChatCount=0;
 function chatStorageKey(){return liveChatRoomId?`luminaria-chat-${liveChatRoomId}`:null}
 let liveStarPartyId=null;
-function starStorageKey(){return liveChatRoomId&&liveStarPartyId?`luminaria-stars-v2-${liveChatRoomId}-${liveStarPartyId}`:null}
+function starStorageKey(){return liveChatRoomId?liveStarPartyId?`luminaria-stars-v2-${liveChatRoomId}-${liveStarPartyId}`:`luminaria-stars-pending-${liveChatRoomId}`:null}
 function resetPartyStars(){
   const key=starStorageKey();if(key)localStorage.removeItem(key);
   liveStarPartyId=null;liveStarScores={};finaleStarRanking=[];
@@ -387,8 +387,17 @@ async function syncStarParty(){
   const {data,error}=await supabase.from('rounds').select('id').eq('room_id',roomId).order('created_at',{ascending:true}).order('id',{ascending:true}).limit(1).maybeSingle();
   if(error)throw error;
   if(epoch!==liveGameEpoch||roomId!==liveGameContext?.room.id||!data||liveStarPartyId===data.id)return;
+  const pendingKey=!liveStarPartyId?starStorageKey():null;
+  const userId=liveGameContext.session?.user.id;
+  const pending=pendingKey?liveStarScores[userId]:null;
   liveStarPartyId=data.id;
   try{liveStarScores=JSON.parse((starStorageKey()&&localStorage.getItem(starStorageKey()))||'{}')}catch{liveStarScores={}}
+  if(pending){
+    liveStarScores[userId]={...pending,score:Math.max(pending.score,liveStarScores[userId]?.score||0),partyId:liveStarPartyId};
+    localStorage.setItem(starStorageKey(),JSON.stringify(liveStarScores));
+    liveChatChannel?.send({type:'broadcast',event:'star_score',payload:liveStarScores[userId]});
+  }
+  if(pendingKey)localStorage.removeItem(pendingKey);
   renderStarScores();
   liveChatChannel?.send({type:'broadcast',event:'score_request',payload:{partyId:liveStarPartyId}});
 }
@@ -564,7 +573,28 @@ function syncLiveRoundNumber(){
 }
 const roundNumberObserver=new MutationObserver(syncLiveRoundNumber);roundNumberObserver.observe(document.body,{childList:true,subtree:true});
 function showLiveRoundWaiting(){const ru=language==='ru',context=liveGameContext,canBrowseHand=liveHandCache.length&&(liveStorytellerId||context.room.host_id)!==context.session.user.id;document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="waiting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Ожидание':'Waiting'}</div></nav><section class="waiting-stage"><div class="waiting-stars">✦ ✧ ✦</div><p class="eyebrow"><span></span><span>${ru?'Комната в игре':'Room is live'}</span></p><h1>${ru?'Ведущий выбирает<br><em>ассоциацию.</em>':'The storyteller is choosing<br><em>a clue.</em>'}</h1><p class="lead">${ru?'Пока ведущий думает, рассмотри свои карты или поймай как можно больше звёзд.':'While the storyteller thinks, explore your cards or catch as many stars as possible.'}</p><div class="waiting-players" id="awaitedStoryteller"></div><section class="waiting-score" id="waitingScore"></section><div class="waiting-minigame"><div class="star-arena"><i></i><i></i><i></i><button id="catchStar" type="button" aria-label="${ru?'Поймать звезду':'Catch the star'}">✦</button></div><div class="star-game-info"><strong>${ru?'Не дай звезде сбежать':'Don’t let the star escape'}</strong><small>${ru?'Твой счёт:':'Your score:'} <b id="starHits">0</b></small><div id="starLeaderboard"></div></div></div></section>${canBrowseHand?`<section class="waiting-hand"><div class="hand-heading"><div><p class="eyebrow"><span></span><span>${ru?'Твоя рука':'Your hand'}</span></p><h2>${ru?'Можно заранее рассмотреть карты':'Explore your cards while you wait'}</h2></div><span class="hand-count">${liveHandCache.length}</span></div>${gameHand(liveHandCache,ru)}</section>`:''}</main>`;if(canBrowseHand){const cards=[...document.querySelectorAll('.hand-card')],slides=cards.map(card=>{const image=card.querySelector('img');return{src:image.src,alt:image.alt}});cards.forEach((card,index)=>card.addEventListener('click',()=>openCardPreview({items:slides,index,kind:'view'})))}bindWaitingMinigame();updateLivePhaseProgress().catch(console.error);addWaitingScoreboard().catch(console.error);ensureLiveChat()}
-function bindWaitingMinigame(){const star=$('#catchStar'),hits=$('#starHits'),context=liveGameContext;if(!star||!hits||!context)return;if(!liveStarPartyId){star.disabled=true;void syncStarParty().then(()=>{if(star.isConnected&&liveStarPartyId){star.disabled=false;bindWaitingMinigame()}}).catch(console.error);return}const partyId=liveStarPartyId;const userId=context.session.user.id,mine=liveStarScores[userId]||{userId,name:context.player.name,score:0,partyId};liveStarScores[userId]=mine;hits.textContent=mine.score;const move=()=>{star.style.setProperty('--x',`${Math.round(Math.random()*210-105)}px`);star.style.setProperty('--y',`${Math.round(Math.random()*105-52)}px`)};const timer=setInterval(()=>{if(!star.isConnected)return clearInterval(timer);move()},1100);star.addEventListener('pointerdown',event=>{event.preventDefault();if(partyId!==liveStarPartyId||context.room.status!=='playing')return;mine.score+=1;hits.textContent=mine.score;liveStarScores[userId]={...mine};localStorage.setItem(starStorageKey(),JSON.stringify(liveStarScores));renderStarScores();liveChatChannel?.send({type:'broadcast',event:'star_score',payload:mine});move()});renderStarScores()}
+function bindWaitingMinigame(){
+  const star=$('#catchStar'),hits=$('#starHits'),context=liveGameContext,epoch=liveGameEpoch;
+  if(!star||!hits||!context||context.room.status!=='playing'||star.dataset.bound)return;
+  star.dataset.bound='true';star.disabled=false;
+  const userId=context.session.user.id;
+  liveStarScores[userId] ||= {userId,name:context.player.name,score:0,partyId:liveStarPartyId};
+  hits.textContent=liveStarScores[userId].score;
+  const move=()=>{star.style.setProperty('--x',`${Math.round(Math.random()*210-105)}px`);star.style.setProperty('--y',`${Math.round(Math.random()*105-52)}px`)};
+  const timer=setInterval(()=>{if(!star.isConnected)return clearInterval(timer);move()},1100);
+  star.addEventListener('pointerdown',event=>{
+    event.preventDefault();
+    if(!star.isConnected||epoch!==liveGameEpoch||context!==liveGameContext||context.room.status!=='playing')return;
+    const mine=liveStarScores[userId];if(!mine)return;
+    mine.score+=1;mine.partyId=liveStarPartyId;hits.textContent=mine.score;
+    const key=starStorageKey();if(key)localStorage.setItem(key,JSON.stringify(liveStarScores));
+    renderStarScores();
+    if(liveStarPartyId)liveChatChannel?.send({type:'broadcast',event:'star_score',payload:{...mine}});
+    move();
+  });
+  renderStarScores();
+  if(!liveStarPartyId)void syncStarParty().catch(console.error);
+}
 async function addWaitingScoreboard(){if(!liveGameContext)return;const host=$('#waitingScore');if(!host)return;const ru=language==='ru',roster=await loadLiveRoster(liveGameContext.room.id);if(!host.isConnected)return;host.innerHTML=`<div class="panel-title"><h2>${ru?'Общий счёт':'Total score'}</h2><span class="count">${ru?'Раунд':'Round'} ${liveRoundNumber}</span></div>${[...roster].sort((a,b)=>b.score-a.score).map((seat,index)=>`<div class="score-row ${seat.user_id===liveGameContext.session.user.id?'me':''}"><span class="score-avatar" data-live-profile-id="${seat.user_id}" data-live-profile-field="avatar">${avatarMarkup(seat.profile?.avatar,['✦','☽','♢','☼'][index%4])}</span><strong data-live-profile-id="${seat.user_id}" data-live-profile-field="nickname">${seat.profile?.nickname||'Dreamer'}</strong><em>${index===0?(ru?'Лидер':'Leading'):(ru?'За столом':'At the table')}</em><b>${seat.score}</b></div>`).join('')}`}
 async function updateLivePhaseProgress(round=liveRound){
   const context=liveGameContext;if(!context)return;
@@ -817,6 +847,7 @@ async function showGameFinished(){
     $('#rematchButton')?.addEventListener('click',async event=>{const button=event.currentTarget;button.disabled=true;try{await restartLiveRoom()}catch(error){if(button.isConnected){button.disabled=false;showInlineGameError(error.message)}}});
     $('#copyPartyStory').addEventListener('click',async event=>{try{await navigator.clipboard.writeText($('#partyStory').textContent);event.target.textContent=ru?'Скопировано ✓':'Copied ✓'}catch{$('#storyStatus').textContent=ru?'Выдели текст истории, чтобы скопировать её.':'Select the story text to copy it.'}});
     let illustrationLoading=false;
+    const shareCard=root.querySelector('#finaleShareCard');
     const illustrationStatus=root.querySelector('#illustrationStatus'),illustrationRetry=root.querySelector('#retryFinaleIllustration'),shareCardStory=root.querySelector('#shareCardStory'),shareCardImage=root.querySelector('#partyIllustration');
     const makeShareCard=storyText=>{
       const canvas=document.createElement('canvas');canvas.width=1080;const ctx=canvas.getContext('2d');
@@ -841,7 +872,7 @@ async function showGameFinished(){
       try{
         const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('Session unavailable');
         const until=Date.now()+150000;let result;
-        do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
+        do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language:storyLanguage(history)}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
         if(!result?.image)throw new Error('Illustration timed out');if(!root.isConnected)return;
         shareCardImage.src=result.image;shareCardImage.onload=()=>{};await shareCardImage.decode();shareCardStory.textContent=storyText;shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
       }catch{if(root.isConnected){illustrationStatus.textContent=ru?'Не удалось создать иллюстрацию. История сохранена — попробуй ещё раз.':'Could not create the illustration. Your story is saved — please try again.';illustrationRetry.hidden=false}}
@@ -864,7 +895,7 @@ async function showGameFinished(){
       try{
         const {data:{session}}=await supabase.auth.getSession();
         if(!session)throw new Error('Session unavailable');
-        const response=await fetch('/api/finale-story',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language}),signal:AbortSignal.timeout(35000)});
+        const response=await fetch('/api/finale-story',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language}),signal:AbortSignal.timeout(65000)});
         if(!response.ok)throw new Error('Story unavailable');
         const result=await response.json();if(typeof result.story!=='string'||!result.story.trim())throw new Error('Empty story');
         if(!root.isConnected)return;
