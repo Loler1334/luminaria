@@ -251,6 +251,8 @@ function renderRoundSelector(roster=lobbyRoster){
   const host=context.room.host_id===context.session.user.id;
   const selected=chosen?.cycles||configuredCycles;
   panel.innerHTML=`<h2>${ru?'Длительность партии':'Game length'}</h2><p>${ru?'Полный круг — каждый игрок становится ведущим один раз. Для стола от 7 игроков можно сыграть один круг, чтобы оставить карты на обмен.':'In a full cycle everyone tells a clue once. Tables of 7+ can play one cycle to keep cards in reserve for swaps.'}</p><label for="roundCycles">${ru?'Количество раундов':'Number of rounds'}</label><select id="roundCycles" ${!host||savingLobbySettings||(!options.length&&n>=3)?'disabled':''}>${options.map(o=>`<option value="${o.cycles}" ${o.cycles===selected?'selected':''}>${o.rounds} ${ru?'раундов':'rounds'} · ${o.cycles} ${ru?'круга':'cycles'}</option>`).join('')}</select><p class="round-capacity">${n<3?(ru?'Ведущий может настроить игру заранее. Начать можно от 3 игроков, а подходящее число раундов пересчитается автоматически.':'The host can set this in advance. The game starts with 3+ players, and playable rounds are recalculated automatically.'):chosen?(ru?`${n} игроков · ${chosen.cards} из ${cards} карт. Каждый загадает ${chosen.cycles} раз. Следующий круг потребует ${(options.at(-1).cycles+1)*n*n} карт.`:`${n} players · ${chosen.cards} of ${cards} cards. Everyone tells ${chosen.cycles} clues. Another cycle needs ${(options.at(-1).cycles+1)*n*n} cards.`):(ru?'Не хватает карт для выбранного числа игроков и запаса на обмен.':'Not enough cards for this player count plus the swap reserve.')}</p>`;
+  panel.insertAdjacentHTML('beforeend',`<label for="turnTimerSeconds">${ru?'Таймер хода':'Turn timer'}</label><select id="turnTimerSeconds" ${!host||savingLobbySettings?'disabled':''}>${[[null,ru?'Выключен':'Off'],[60,'60 '+(ru?'секунд':'seconds')],[90,'90 '+(ru?'секунд':'seconds')],[120,'120 '+(ru?'секунд':'seconds')]].map(([seconds,label])=>`<option value="${seconds??''}" ${context.room.turn_timer_seconds===seconds?'selected':''}>${label}</option>`).join('')}</select>`);
+  $('#turnTimerSeconds').onchange=async event=>{const seconds=event.target.value?Number(event.target.value):null;event.target.disabled=true;try{const {data,error}=await supabase.rpc('configure_luminaria_turn_timer',{p_room_id:context.room.id,p_seconds:seconds});if(error)throw error;context.room={...context.room,...data}}catch(error){showInlineGameError(error.message)}finally{renderRoundSelector()}};
   $('#roundCycles').onchange=event=>saveLobbySettings(selectedDeckId(),Number(event.target.value));
   const start=$('#startButton');if(start)start.disabled=savingLobbySettings||!chosen||!roster.every(seat=>seat.is_ready);
 }
@@ -485,7 +487,7 @@ function resetLiveParty(){
   liveRound=null;liveHandCache=[];liveStorytellerId=null;
   liveRoundNumber=1;liveRoundNumberForId=null;liveTotalRounds=0;liveHandVersion=0;
   activeRoundClue='';activeStorytellerCard='';activeMoonPhase=null;
-  if(liveGameContext)localStorage.removeItem(nextRoundStorageKey());
+
 }
 async function loadLiveHand(){if(!liveGameContext)return [];const {data,error}=await supabase.rpc('luminaria_hand',{target_room_id:liveGameContext.room.id});if(error)throw error;liveHandCache=(data||[]).map(card=>card.card_id);preloadCardImages(liveHandCache);return liveHandCache}
 async function loadLiveDeckProgress(){
@@ -531,23 +533,19 @@ function showClosedRoom(){
   const ru=language==='ru';
   document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i></div><main class="waiting-page"><section class="waiting-stage"><span class="waiting-stars">✦</span><h1>${ru?'Комната закрыта':'Room closed'}</h1><p class="lead">${ru?'Создатель закрыл это лобби. Можно найти другую открытую комнату или создать свою.':'The host closed this lobby. Find another open room or create your own.'}</p><a class="primary-button" href="/">${ru?'На главную':'Back to home'} →</a></section></main>`;
 }
-function nextRoundStorageKey(){return `luminaria-next-round-${liveGameContext.room.id}`}
 async function loadLiveRound(){
   if(!liveGameContext||liveGameContext.room.status!=='playing')return null;
   const epoch=liveGameEpoch;
   const {data,error}=await supabase.from('rounds').select('*').eq('room_id',liveGameContext.room.id).order('created_at',{ascending:false}).limit(1).maybeSingle();
   if(error)throw error;
   if(epoch!==liveGameEpoch||liveGameContext.room.status!=='playing')return null;
-  let pending=null;
-  try{pending=JSON.parse(localStorage.getItem(nextRoundStorageKey())||'null')}catch{}
-  if(data?.phase==='results'&&pending?.completedRoundId===data.id){
-    liveStorytellerId=pending.storytellerId;
+  if(data?.phase==='results'&&liveGameContext.room.awaiting_storyteller){
+    liveStorytellerId=liveGameContext.room.current_storyteller_id;
     liveHandVersion=data.id;
     liveRound=null;
     return null;
   }
-  if(data&&pending&&data.id!==pending.completedRoundId)localStorage.removeItem(nextRoundStorageKey());
-  if(!data){localStorage.removeItem(nextRoundStorageKey());liveStorytellerId=liveGameContext.room.host_id;liveRoundNumber=1;liveRoundNumberForId=null;}
+  if(!data){liveStorytellerId=liveGameContext.room.current_storyteller_id||liveGameContext.room.host_id;liveRoundNumber=1;liveRoundNumberForId=null;}
   // Keep raw clues in state; each HTML renderer escapes at the output boundary.
   liveRound=data;
   if(data&&!liveStarPartyId)await syncStarParty();
@@ -685,9 +683,8 @@ async function showLiveResults(round){
   const name=id=>roster.find(seat=>seat.user_id===id)?.profile?.nickname||'Dreamer';
   const storytellerCard=submissions.find(item=>item.player_id===round.storyteller_id);
   const correctVotes=votes.filter(vote=>vote.submission_id===storytellerCard?.id).length;
-  const storytellerPoints=correctVotes>0&&correctVotes<roster.length-1?3+correctVotes:0;
-  const currentStorytellerIndex=Math.max(0,roster.findIndex(seat=>seat.user_id===round.storyteller_id));
-  const nextStoryteller=roster[(currentStorytellerIndex+1)%roster.length];
+  const storytellerPoints=correctVotes>0&&correctVotes<votes.length?3+correctVotes:0;
+  const nextStoryteller=roster.find(seat=>seat.user_id===liveGameContext.room.current_storyteller_id);
   const pointsFor=seat=>{
     if(seat.user_id===round.storyteller_id)return storytellerPoints;
     const ownSubmission=submissions.find(submission=>submission.player_id===seat.user_id);
@@ -696,7 +693,7 @@ async function showLiveResults(round){
     return ownCardVotes+(guessed?3:0);
   };
   const explanationFor=seat=>{
-    if(seat.user_id===round.storyteller_id)return correctVotes===0?(ru?'Никто не угадал — 0 баллов':'Nobody guessed — 0 points'):correctVotes===roster.length-1?(ru?'Все угадали — 0 баллов':'Everyone guessed — 0 points'):(ru?'Карта ведущего':'Storyteller’s card');
+    if(seat.user_id===round.storyteller_id)return correctVotes===0?(ru?'Никто не угадал — 0 баллов':'Nobody guessed — 0 points'):correctVotes===votes.length?(ru?'Все проголосовавшие угадали — 0 баллов':'Every voter guessed — 0 points'):(ru?'Карта ведущего':'Storyteller’s card');
     const guessed=votes.some(vote=>vote.voter_id===seat.user_id&&vote.submission_id===storytellerCard?.id);
     const ownSubmission=submissions.find(submission=>submission.player_id===seat.user_id);
     const ownCardVotes=ownSubmission?votes.filter(vote=>vote.submission_id===ownSubmission.id).length:0;
@@ -713,8 +710,9 @@ async function showLiveResults(round){
 routeLiveRound=serialRefresh(async function(){
   if(!liveGameContext||preparingNextRound||submittingLiveCard)return;
   const epoch=liveGameEpoch;
-  const {data:roomState,error}=await supabase.from('rooms').select('status').eq('id',liveGameContext.room.id).maybeSingle();if(error)throw error;
+  const {data:roomState,error}=await supabase.from('rooms').select('*').eq('id',liveGameContext.room.id).maybeSingle();if(error)throw error;
   if(epoch!==liveGameEpoch)return;
+  if(roomState)liveGameContext.room=roomState;
   if(roomState?.status==='finished'){
     liveGameContext.room.status='finished';
     const {data:finalRound,error:finalRoundError}=await supabase.from('rounds').select('*').eq('room_id',liveGameContext.room.id).eq('phase','results').order('created_at',{ascending:false}).order('id',{ascending:false}).limit(1).maybeSingle();
@@ -729,7 +727,16 @@ routeLiveRound=serialRefresh(async function(){
   }
   if(roomState?.status!=='playing')return;
   await loadLiveDeckProgress();const round=await loadLiveRound();
-  if(!round||epoch!==liveGameEpoch)return;
+  if(epoch!==liveGameEpoch)return;
+  if(roomState.awaiting_storyteller){
+    liveStorytellerId=roomState.current_storyteller_id;
+    if(document.querySelector('main')?.dataset.roundView==='awaiting:'+liveStorytellerId)return;
+    await loadLiveHand();
+    if(liveStorytellerId===liveGameContext.session.user.id)demoShowGame();else showLiveRoundWaiting();
+    const main=document.querySelector('main');if(main)main.dataset.roundView='awaiting:'+liveStorytellerId;
+    return;
+  }
+  if(!round)return;
   const key=`${round.id}:${round.phase}`;
   if(document.querySelector('main')?.dataset.roundView===key){await updateLivePhaseProgress(round);return}
   const context=liveGameContext;await loadLiveHand();
@@ -744,6 +751,64 @@ routeLiveRound=serialRefresh(async function(){
   const main=document.querySelector('main');if(main)main.dataset.roundView=key;
 });
 async function watchLiveRound(){if(!liveGameContext)return;liveRoundChannel?.unsubscribe();const roomId=liveGameContext.room.id;liveRoundChannel=supabase.channel(`round-${roomId}`).on('postgres_changes',{event:'*',schema:'public',table:'rounds',filter:`room_id=eq.${roomId}`},()=>routeLiveRound()).on('postgres_changes',{event:'UPDATE',schema:'public',table:'rooms',filter:`id=eq.${roomId}`},payload=>{liveGameContext.room=payload.new;if(payload.new.status==='lobby')showLiveLobby(payload.new,liveGameContext.player,liveGameContext.session);else routeLiveRound()}).subscribe()}
+let liveTimerKey='',liveTimerDeadline=0,liveTimerBusy=false,liveTimerSkipping=false;
+async function syncLiveTimer(force=false){
+  const room=liveGameContext?.room;
+  if(!room||room.status!=='playing'||!room.phase_deadline_at){liveTimerKey='';liveTimerDeadline=0;return}
+  const key=`${room.id}:${room.phase_deadline_at}`;
+  if((!force&&key===liveTimerKey)||liveTimerBusy)return;
+  liveTimerBusy=true;
+  try{
+    const {data,error}=await supabase.rpc('luminaria_timer_state',{p_room_id:room.id});
+    if(error)throw error;
+    if(liveGameContext?.room.id!==room.id||Date.parse(liveGameContext.room.phase_deadline_at)!==Date.parse(data.deadline))return;
+    liveTimerKey=key;
+    liveTimerDeadline=performance.now()+Math.max(0,Number(data.remaining_ms)||0);
+  }catch(error){console.error('Could not sync turn timer',error)}
+  finally{liveTimerBusy=false}
+}
+function renderLiveTimer(){
+  const room=liveGameContext?.room,main=document.querySelector('main');
+  if(!main||!room||room.status!=='playing'||!room.phase_deadline_at||main.classList.contains('results-page')){
+    document.querySelector('#liveTurnTimer')?.remove();return;
+  }
+  if(liveTimerKey!==`${room.id}:${room.phase_deadline_at}`){void syncLiveTimer();return}
+  let panel=main.querySelector('#liveTurnTimer');
+  if(!panel){panel=document.createElement('aside');panel.id='liveTurnTimer';panel.className='turn-timer';main.querySelector('nav')?.after(panel)}
+  const remaining=Math.max(0,Math.ceil((liveTimerDeadline-performance.now())/1000));
+  const label=`${language==='ru'?'Время хода':'Turn time'}: ${Math.floor(remaining/60)}:${String(remaining%60).padStart(2,'0')}`;
+  if(!panel.querySelector('span'))panel.append(document.createElement('span'));
+  panel.querySelector('span').textContent=label;
+  let button=panel.querySelector('button');
+  if(remaining>0){button?.remove();return}
+  if(!button){
+    button=document.createElement('button');button.type='button';button.className='primary-button';
+    button.textContent=language==='ru'?'Время вышло — продолжить':'Time is up — continue';
+    button.addEventListener('click',async()=>{
+      if(liveTimerSkipping)return;
+      liveTimerSkipping=true;button.disabled=true;
+      const expected=liveGameContext.room.awaiting_storyteller?'awaiting_storyteller':liveRound?.phase;
+      try{
+        const {error}=await supabase.rpc('skip_expired_phase',{
+          p_room_id:liveGameContext.room.id,p_round_id:expected==='awaiting_storyteller'?null:liveRound?.id,
+          p_expected_phase:expected});
+        if(error)throw error;
+        liveTimerKey='';await routeLiveRound();
+      }catch(error){
+        console.error('Could not advance expired phase',error);
+        setTimeout(()=>{void syncLiveTimer(true)},2000);
+      }finally{liveTimerSkipping=false;button.disabled=false}
+    });
+    panel.append(button);
+  }
+}
+setInterval(renderLiveTimer,500);
+document.addEventListener('visibilitychange',()=>{if(!document.hidden&&liveGameContext?.room.status==='playing'){
+  void routeLiveRound();void syncLiveTimer(true);
+}});
+window.addEventListener('focus',()=>{if(liveGameContext?.room.status==='playing'){
+  void routeLiveRound();void syncLiveTimer(true);
+}});
 let advancingRound=false;
 async function advanceLiveRound(){
   if(!liveGameContext||advancingRound)return;
@@ -752,14 +817,6 @@ async function advanceLiveRound(){
     const round=await loadLiveRound();
     if(!round||round.phase==='results')return;
     const {error}=await supabase.rpc('advance_luminaria_round',{target_round_id:round.id});
-    if(error&&error.code==='PGRST202'){
-      if(round.storyteller_id!==liveGameContext.session.user.id)return;
-      const {data:progress,error:progressError}=await supabase.rpc('luminaria_round_progress',{target_round_id:round.id}).single();
-      if(progressError)throw progressError;
-      if(round.phase==='submitting'&&progress.submission_count>=progress.participant_count){const {error:updateError}=await supabase.from('rounds').update({phase:'voting'}).eq('id',round.id).eq('phase','submitting');if(updateError)throw updateError}
-      if(round.phase==='voting'&&progress.vote_count>=progress.participant_count-1){const {error:finishError}=await supabase.rpc('finalize_luminaria_round',{target_round_id:round.id});if(finishError)throw finishError}
-      return;
-    }
     if(error)throw error;
   } finally { advancingRound=false; }
 }
@@ -825,7 +882,7 @@ setInterval(()=>{if(!document.hidden)refreshLiveLobby?.()},10000);
 let startingLiveGame=false;
 function requestWithTimeout(request,timeout=15000){return Promise.race([request,new Promise((_,reject)=>setTimeout(()=>reject(new Error(language==='ru'?'Сервер слишком долго готовит колоду. Попробуй ещё раз.':'The server is taking too long to prepare the deck. Please try again.')),timeout))])}
 function suspendLobbyObservers(){[moonPhaseObserver,deckSearchObserver,deckPreviewObserver,leaveLobbyObserver,avatarObserver].forEach(observer=>observer.disconnect())}
-document.addEventListener('click',async event=>{const button=event.target.closest('#startButton');const context=liveGameContext;if(!button||button.disabled||startingLiveGame||!context||context.room.host_id!==context.session.user.id)return;event.preventDefault();event.stopImmediatePropagation();suspendLobbyObservers();startingLiveGame=true;button.disabled=true;button.textContent=language==='ru'?'Готовим колоду…':'Preparing the deck…';try{const roster=await loadLiveRoster(context.room.id);const chosen=selectedRoundOption(roster.length,selectedDeckCards().length,context.room.round_cycles||2);if(!chosen)throw new Error(language==='ru'?'Не хватает карт для стола и запаса на обмен.':'Not enough cards for this table and the swap reserve.');const shuffled=shuffleDeck(selectedDeckCards()).slice(0,chosen.cards);const {data:deckSetup,error:deckError}=await requestWithTimeout(supabase.rpc('start_luminaria_game',{target_room_id:context.room.id,card_ids:shuffled}));if(deckError)throw deckError;liveTotalRounds=deckSetup?.[0]?.total_rounds||0;liveHandCache=[];liveRound=null;liveStorytellerId=null;liveRoundNumber=1;localStorage.removeItem(nextRoundStorageKey());context.room={...context.room,status:'playing'};await showGame()}catch(error){const {data:roomState}=await supabase.from('rooms').select('status').eq('id',context.room.id).maybeSingle().catch(()=>({data:null}));if(roomState?.status==='playing'){context.room={...context.room,status:'playing'};await showGame();return}button.disabled=false;button.textContent=language==='ru'?'Начать игру':'Start the game';alert(error.message||'Could not start the room.')}finally{startingLiveGame=false}},true);
+document.addEventListener('click',async event=>{const button=event.target.closest('#startButton');const context=liveGameContext;if(!button||button.disabled||startingLiveGame||!context||context.room.host_id!==context.session.user.id)return;event.preventDefault();event.stopImmediatePropagation();suspendLobbyObservers();startingLiveGame=true;button.disabled=true;button.textContent=language==='ru'?'Готовим колоду…':'Preparing the deck…';try{const roster=await loadLiveRoster(context.room.id);const chosen=selectedRoundOption(roster.length,selectedDeckCards().length,context.room.round_cycles||2);if(!chosen)throw new Error(language==='ru'?'Не хватает карт для стола и запаса на обмен.':'Not enough cards for this table and the swap reserve.');const shuffled=shuffleDeck(selectedDeckCards()).slice(0,chosen.cards);const {data:deckSetup,error:deckError}=await requestWithTimeout(supabase.rpc('start_luminaria_game',{target_room_id:context.room.id,card_ids:shuffled}));if(deckError)throw deckError;liveTotalRounds=deckSetup?.[0]?.total_rounds||0;liveHandCache=[];liveRound=null;liveStorytellerId=null;liveRoundNumber=1;context.room={...context.room,status:'playing'};await showGame()}catch(error){const {data:roomState}=await supabase.from('rooms').select('status').eq('id',context.room.id).maybeSingle().catch(()=>({data:null}));if(roomState?.status==='playing'){context.room={...context.room,status:'playing'};await showGame();return}button.disabled=false;button.textContent=language==='ru'?'Начать игру':'Start the game';alert(error.message||'Could not start the room.')}finally{startingLiveGame=false}},true);
 let submittingLiveCard=false;
 document.addEventListener('click',async event=>{const button=event.target.closest('#revealButton,#sendCard');if(!button||!liveGameContext||submittingLiveCard)return;const context=liveGameContext,isHost=button.id==='revealButton';if(isHost!==((liveStorytellerId||context.room.host_id)===context.session.user.id))return;const image=document.querySelector('.hand-card.selected img');const clue=$('#clueInput')?.value.trim();if(!image||(isHost&&!clue))return;event.preventDefault();event.stopImmediatePropagation();submittingLiveCard=true;button.disabled=true;try{let round=await loadLiveRound();if(isHost&&!round){await loadLiveDeckProgress();if(liveRoundNumber>liveTotalRounds)throw new Error('Достигнут лимит раундов. Обнови страницу.');if(liveStorytellerId!==context.session.user.id)throw new Error('Сейчас очередь другого ведущего.');const {data,error}=await supabase.from('rounds').insert({room_id:context.room.id,storyteller_id:context.session.user.id,clue}).select().single();if(error)throw error;round=data;liveRound=round;liveStorytellerId=round.storyteller_id}else if(!round){round=await loadLiveRound()}if(!round)throw new Error(language==='ru'?'Раунд ещё не создан. Попробуй снова.':'The round is not ready yet. Please try again.');const cardId=decodeURIComponent(image.src.split('/').pop());const existing=await supabase.from('card_submissions').select('id,card_id').eq('round_id',round.id).eq('player_id',context.session.user.id).maybeSingle();if(existing.error)throw existing.error;if(!existing.data){const {error}=await supabase.rpc('play_luminaria_card',{target_round_id:round.id,chosen_card_id:cardId});if(error){const retry=await supabase.from('card_submissions').select('id').eq('round_id',round.id).eq('player_id',context.session.user.id).maybeSingle();if(retry.error||!retry.data)throw error}}liveHandCache=[];await loadLiveHand();showLiveRoundWaiting();await advanceLiveRound()}catch(error){console.error(error);button.disabled=false;showInlineGameError(error.message||'Could not save this card.')}finally{submittingLiveCard=false;routeLiveRound().catch(console.error)}},true);
 let openingFinale=null;
@@ -929,16 +986,14 @@ async function prepareNextLiveRound(){
     const completed=await loadLiveRound();
     if(completed&&completed.phase!=='results'){preparingNextRound=false;return routeLiveRound()}
     if(deckState.remaining_cards===0||(completed&&liveRoundNumber>=deckState.cards_per_player))return showGameFinished();
-    if(completed){
-      const roster=await loadLiveRoster(liveGameContext.room.id);
-      const currentIndex=Math.max(0,roster.findIndex(seat=>seat.user_id===completed.storyteller_id));
-      liveStorytellerId=roster[(currentIndex+1)%roster.length]?.user_id||liveGameContext.room.host_id;
-      localStorage.setItem(nextRoundStorageKey(),JSON.stringify({completedRoundId:completed.id,storytellerId:liveStorytellerId}));
-      liveHandVersion=completed.id;
-      liveRound=null;
-      liveRoundNumber+=1;
-      liveRoundNumberForId=null;
-    }
+    const {data:room,error:roomError}=await supabase.rpc('start_next_turn',{p_room_id:liveGameContext.room.id});
+    if(roomError)throw roomError;
+    liveGameContext.room=room;
+    liveStorytellerId=room.current_storyteller_id;
+    liveHandVersion=completed?.id||0;
+    liveRound=null;
+    liveRoundNumber+=1;
+    liveRoundNumberForId=null;
     await loadLiveHand();
     if(liveStorytellerId===liveGameContext.session.user.id)demoShowGame();else showLiveRoundWaiting();
   }finally{preparingNextRound=false}

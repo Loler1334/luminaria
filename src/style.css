@@ -70,3 +70,5 @@
 .status-dot.is-not-ready{background:#f07878;box-shadow:0 0 10px #f07878}
 .status-dot.is-ready{background:#7bd3a0;box-shadow:0 0 10px #7bd3a0}
 .host-start-hint{margin:12px 0 3px!important;color:#b9c2dc;font-size:11px!important;line-height:1.4}
+.turn-timer{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem auto;padding:.75rem 1rem;width:max-content;max-width:calc(100% - 2rem);border:1px solid rgba(255,255,255,.25);border-radius:1rem;background:rgba(15,18,47,.88);color:#fff;font-weight:700}
+.turn-timer .primary-button{width:auto;margin:0;padding:.55rem 1rem;font-size:.9rem}

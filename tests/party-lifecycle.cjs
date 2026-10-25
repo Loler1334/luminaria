@@ -12,7 +12,7 @@ const prepare=extract('async function prepareNextLiveRound(){','async function a
     const state={liveGameEpoch:0,liveGameContext:{room:{id:'room',host_id:'host',status:'playing'},session:{user:{id:'host'}}},liveRound:{id:'old-round'},liveStorytellerId:'old-leader',liveHandCache:['old-card'],liveRoundNumber:99,liveRoundNumberForId:'old-round',liveTotalRounds:99,liveHandVersion:99,activeRoundClue:'old',activeStorytellerCard:'old',activeMoonPhase:{},preparingNextRound:false,
       resetPartyStars:()=>{},nextRoundStorageKey:()=> 'pending',localStorage:{getItem:k=>saved.get(k),removeItem:k=>saved.delete(k),setItem:(k,v)=>saved.set(k,v)},escapeHtml:x=>x};
     vm.createContext(state);vm.runInContext(reset+load,state);state.resetLiveParty();
-    assert.equal(state.liveStorytellerId,null);assert.equal(state.liveRoundNumber,1);assert.equal(state.liveHandCache.length,0);assert.equal(saved.size,0);
+    assert.equal(state.liveStorytellerId,null);assert.equal(state.liveRoundNumber,1);assert.equal(state.liveHandCache.length,0);
     let release;
     const query={select(){return this},eq(){return this},order(){return this},limit(){return this},maybeSingle(){return new Promise(resolve=>release=resolve)}};
     state.supabase={from:()=>query};
