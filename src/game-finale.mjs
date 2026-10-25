@@ -65,15 +65,13 @@ export function fallbackStory(rounds, language = 'ru') {
   if (!clues.length) return language === 'ru'
     ? 'Ночью за пустым столом зажглась звезда. Никто не помнил, кто её загадал. К рассвету все карты исчезли, а на последней осталась дверь. За ней кто-то тихо произнёс наши имена. Кажется, история только начинается.'
     : 'At midnight a star appeared above the empty table. Nobody remembered naming it. By dawn the cards had vanished, leaving a door. From the other side, someone whispered our names. Perhaps the story was only beginning.';
-  const seed = storySeed(clues);
-  const fragmentCount = Math.min(clues.length, Math.max(3, Math.ceil(clues.length / 2)));
+  const fragmentCount = clues.length;
   const positions = fragmentCount === 1
     ? [0]
     : Array.from({ length: fragmentCount }, (_, i) => Math.round(i * (clues.length - 1) / (fragmentCount - 1)));
-  // Use the seed to vary which clues anchor short stories while retaining the
-  // beginning-to-end arc for longer parties.
-  if (positions.length > 3 && seed % 2) positions.splice(1, 1, Math.min(clues.length - 2, positions[1] + 1));
-  const fragments = positions.map(index => fitStory(clues[index], 28));
+  // The labelled offline vignette also preserves every original clue.
+
+  const fragments = positions.map(index => clues[index]);
   const words = fragments.map(fragment => language === 'ru' ? `«${fragment}»` : `“${fragment}”`).join(', ');
   return fitStory(language === 'ru'
     ? `Ночью на пустых картах проступили слова: ${words}. Мы сложили их в тайный знак — и за стеной открылась дверь. Утром каждый помнил эту историю, но никто не мог объяснить, кто впустил нас обратно.`

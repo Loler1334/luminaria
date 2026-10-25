@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
-import { handleStory } from '../worker/story-service.mjs';
-import { storyLanguage } from '../src/game-finale.mjs';
+import { handleStory, missingStoryClues } from '../worker/story-service.mjs';
+import { storyLanguage, fallbackStory } from '../src/game-finale.mjs';
 
 assert.equal(storyLanguage([{clue:'Moonlit forest'},{clue:'Sleeping dragon'}]),'en');
 assert.equal(storyLanguage([{clue:'Лунный лес'},{clue:'Спящий дракон'}]),'ru');
@@ -22,20 +22,20 @@ const fetcher=async(url,options={})=>{
 };
 const store=new Map();
 const cache={async match(key){return store.get(key.url)?.clone()},async put(key,response){store.set(key.url,response.clone())}};
-const env={AI:{async run(model,{messages,max_tokens}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;providedTokenLimit=max_tokens;providedPrompt=messages[0].content;return {response:providedClues.at(-1).startsWith('Новая')?'Новая партия началась с загадочного автобуса, который ехал сквозь сон. Пассажиры обменяли свои карты на звёзды, а в конце пути обнаружили дверь, которой прежде не было.':('Ночью наши слова сложились в карту исчезнувшего города. За последней дверью горел свет, пока звёзды рассказывали свою историю. ').repeat(4)}}}};
+const env={AI:{async run(model,{messages,max_tokens}){aiCalls++;providedClues=JSON.parse(messages[1].content).clues;providedTokenLimit=max_tokens;providedPrompt=messages[0].content;return {response:'Ночью ожили таблички: '+providedClues.join(', ')+'. Они отменили рассвет, съели будильник и назначили королём пустую кастрюлю. Король запретил тишину, и вселенная навсегда заговорила голосом чайника.'}}}};
 const config={url:'https://example.supabase.co',key:'public-key'};
 const request=(auth=true)=>new Request('https://luminaria.test/api/finale-story',{method:'POST',headers:auth?{Authorization:'Bearer token'}:{},body:JSON.stringify({roomId,language:'ru'})});
 assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).status,401);
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'Ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('Aim for 98 words'));assert(providedPrompt.includes('never more than 118'));assert(providedPrompt.includes('Be much crazier'));assert(providedTokenLimit>=1176);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('примерно 392 слов'));assert(providedPrompt.includes('максимум 549 слов'));assert(providedPrompt.includes('причинную связь'));assert(providedTokenLimit>=1176);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
 assert.equal(persistedStory.finalRoundId,'round-27');
 const oldStory=persistedStory.story;
 rounds.splice(0,rounds.length,...Array.from({length:18},(_,i)=>({id:`rematch-${i}`,clue:`Новая ассоциация ${i}`,phase:'results'})));
 const second=await (await handleStory(request(),env,config,{fetcher,cache})).json();
-assert.equal(second.clueCount,18);assert.equal(providedClues.at(-1),'Новая ассоциация 17');
+assert.equal(second.clueCount,18);assert.equal(providedClues.at(-1),'новая ассоциация 17');
 assert.notEqual(second.story,oldStory);
 assert.equal(persistedStory.finalRoundId,'rematch-17');assert.equal(aiCalls,2);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,second.story);
@@ -44,7 +44,7 @@ store.clear();const anotherClient=await handleStory(request(),env,config,{fetche
 member=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,403);
 member=true;store.clear();persistedStory=null;assert.equal((await handleStory(request(),{},config,{fetcher,cache})).status,503);
 for(const round of rounds)round.clue='Moonlit forest';
-const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.includes('in English'));return {response:'Under the moon, the forest folded its branches into a door. We stepped through and found the stars asleep among the roots, each dreaming of a different world.'}}}};
+const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.includes('in English'));return {response:'Under the moon, the Moonlit forest folded its branches into a door. We stepped through and found the stars asleep among the roots, each dreaming of a different world.'}}}};
 const englishResult=await handleStory(request(),englishEnv,config,{fetcher,cache});
 assert.equal(englishResult.status,200);
 assert((await englishResult.json()).story.startsWith('Under the moon'));
@@ -52,13 +52,15 @@ console.log('PASS: story authorization, compact adaptive length, all clues sent,
 
 // A cut-off or oversized draft must be rewritten, never persisted as-is.
 for (const badDraft of [
+  {response:'Король внезапно увидел 突然 и заговорил с чайником. Эта странная история закончилась тем, что чайник стал королём, а король отправился мыть посуду.'},
+  {response:'The kettle swallowed the entire royal palace and demanded a refund. The king crowned a teaspoon, folded the kingdom into a napkin and paid the bill.'},
   {response:'The king summoned a flying kettle and then'},
   {response:'A finished sentence. '.repeat(100)},
   {response:'A sentence ending in punctuation.',finish_reason:'length'},
   {response:'The king was just about to explain everything…'}
 ]) {
   store.clear();persistedStory=null;let attempts=0;
-  const repaired='The kettle swallowed the royal palace and demanded a refund. The king crowned a teaspoon, which abolished gravity, folded the kingdom into a napkin and finally paid the bill.';
+  const repaired='In the Moonlit forest, the kettle swallowed the royal palace and demanded a refund. The king crowned a teaspoon, which abolished gravity, folded the kingdom into a napkin and finally paid the bill.';
   const repairEnv={AI:{async run(model,{messages}){attempts++;if(attempts===1)return badDraft;assert(messages.at(-1).content.includes('not a continuation'));return {response:repaired}}}};
   const response=await handleStory(request(),repairEnv,config,{fetcher,cache});
   assert.equal(response.status,200);assert.equal(attempts,2);assert.equal(persistedStory.story,repaired);
@@ -67,3 +69,22 @@ store.clear();persistedStory=null;
 const failed=await handleStory(request(),{AI:{run:async()=>({response:'A broken fragment without an ending'})}},config,{fetcher,cache});
 assert.equal(failed.status,503);assert.equal(persistedStory,null);
 console.log('PASS: incomplete, oversized and token-exhausted drafts are rewritten; repeated failure is never saved.');
+
+assert.deepEqual(missingStoryClues('«ЛЁД И ПЛАМЯ» встретили КОТА!', ['лёд и пламя','кота']),[]);
+assert.deepEqual(missingStoryClues('Котик увидел Ассоциация 10.', ['Кот','Ассоциация 1']),['Кот','Ассоциация 1']);
+assert.deepEqual(missingStoryClues('🌕 появился.', ['🌕','☀️']),['☀️']);
+store.clear();persistedStory=null;
+const omitted=await handleStory(request(),{AI:{run:async()=>({response:'The kettle swallowed the entire royal palace and demanded a refund. The king crowned a teaspoon, folded the kingdom into a napkin and paid the bill.'})}},config,{fetcher,cache});
+assert.equal(omitted.status,503);assert.equal(persistedStory,null);
+console.log('PASS: missing clues trigger rewrite; incomplete coverage is never published; phrase boundaries, case and punctuation checked.');
+
+store.clear();persistedStory=null;
+const markerDraft=rounds.map((_,index)=>`[[clue:${index}]]`).join(', ')+': the kettle swallowed the king and abolished the kingdom forever.';
+const markerResult=await handleStory(request(),{AI:{run:async()=>({choices:[{finish_reason:'stop',message:{content:markerDraft,reasoning_content:'Must not be shown'}}]})}},config,{fetcher,cache});
+assert.equal(markerResult.status,200);assert(!persistedStory.story.includes('[[clue:'));
+assert.deepEqual(missingStoryClues(persistedStory.story,rounds.map(round=>round.clue)),[]);
+const fallbackClues=Array.from({length:18},(_,i)=>({clue:`Длинная неизменённая ассоциация номер ${i}`}));
+assert.deepEqual(missingStoryClues(fallbackStory(fallbackClues),fallbackClues.map(round=>round.clue)),[]);
+console.log('PASS: markers expand to original clues; the offline vignette also preserves all 18 phrases.');
+
+assert.deepEqual(missingStoryClues('Он съел съедобную корону, заплакал каменными слезами и заиграл на печальной гармонике.', ['Съедобная корона','Каменные слёзы','Печальная гармоника']),[]);

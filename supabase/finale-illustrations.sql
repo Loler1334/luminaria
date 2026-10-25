@@ -102,7 +102,7 @@ begin
   end if;
   if story_language not in ('ru', 'en')
     or generated_illustration !~ '^data:image/jpeg;charset=utf-8;base64,[A-Za-z0-9+/=]+$'
-    or char_length(generated_illustration) not between 1000 and 1400000 then
+    or char_length(generated_illustration) not between 1000 and 2800000 then
     raise exception 'Invalid finale illustration';
   end if;
 

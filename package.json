@@ -15,6 +15,7 @@
     "vite": "^7.1.7"
   },
   "dependencies": {
-    "@supabase/supabase-js": "^2.115.0"
+    "@supabase/supabase-js": "^2.115.0",
+    "snowball-stemmers": "^0.6.0"
   }
 }
