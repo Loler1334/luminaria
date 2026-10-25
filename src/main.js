@@ -4,6 +4,7 @@ import { roundOptions, selectedRoundOption, lobbyRoundChoices } from './round-op
 import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
+import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
 import './style.css';
 import './public-rooms.css';
@@ -904,6 +905,46 @@ async function showGameFinished(){
     finaleStarRanking=ranking;
     document.body.innerHTML=finaleMarkup({starScores:liveStarScores,ranking,rounds:history,roomId:context.room.id,roomCode:context.room.code,userId:context.session.user.id,language,story,isHost:context.room.host_id===context.session.user.id});
     const root=document.querySelector('.game-finale');
+    const bestRoundSection=root.querySelector('#bestRoundSection');
+    if(history.length){
+      const ids=history.map(round=>round.id);
+      const [{data:submissions,error:submissionError},{data:votes,error:voteError}]=await Promise.all([
+        supabase.from('card_submissions').select('id,round_id,card_id,player_id').in('round_id',ids),
+        supabase.from('votes').select('round_id,submission_id,voter_id').in('round_id',ids)
+      ]);
+      if(!submissionError&&!voteError&&root.isConnected){
+        const highlights=roundHighlights(history,submissions||[],votes||[]).filter(item=>item.cards.length);
+        if(highlights.length){
+          let selected=bestRoundIndex(highlights),previewUrl='',previewBlob=null,renderToken=0;
+          const label=root.querySelector('#bestRoundLabel'),preview=root.querySelector('#bestRoundPreview'),status=root.querySelector('#bestRoundStatus');
+          const seatName=id=>ranking.find(seat=>seat.user_id===id)?.name||(ru?'Мечтатель':'Dreamer');
+          const render=async()=>{
+            const token=++renderToken,item=highlights[selected];
+            label.textContent=`${ru?'Раунд':'Round'} ${item.index+1} ${ru?'из':'of'} ${history.length}`;
+            status.textContent=ru?'Собираем карточку…':'Creating the card…';
+            root.querySelector('#copyBestRound').disabled=true;root.querySelector('#downloadBestRound').disabled=true;
+            root.querySelector('#shareBestRound').hidden=true;
+            try{
+              const blob=await renderBestRoundCard(item,{language,name:seatName,cardUrl:card=>`/deck-preview/${card}${cardAssetVersion(card)}`,roundNumber:item.index+1});
+              if(token!==renderToken||!root.isConnected)return;
+              if(previewUrl)URL.revokeObjectURL(previewUrl);
+              previewBlob=blob;previewUrl=URL.createObjectURL(blob);preview.src=previewUrl;preview.hidden=false;
+              root.querySelector('#copyBestRound').disabled=false;root.querySelector('#downloadBestRound').disabled=false;
+              const share=root.querySelector('#shareBestRound');
+              try{share.hidden=!(navigator.share&&navigator.canShare?.({files:[new File([blob],'luminaria-round.png',{type:'image/png'})]}))}catch{share.hidden=true}
+              status.textContent=ru?'Можно выбрать другой раунд или сохранить PNG.':'Choose another round or save the PNG.';
+            }catch{if(token===renderToken)status.textContent=ru?'Не удалось создать карточку этого раунда.':'Could not create this round card.'}
+          };
+          bestRoundSection.hidden=false;
+          root.querySelector('#previousBestRound').addEventListener('click',()=>{selected=(selected-1+highlights.length)%highlights.length;void render()});
+          root.querySelector('#nextBestRound').addEventListener('click',()=>{selected=(selected+1)%highlights.length;void render()});
+          root.querySelector('#copyBestRound').addEventListener('click',async()=>{try{await navigator.clipboard.write([new ClipboardItem({'image/png':previewBlob})]);status.textContent=ru?'Картинка скопирована.':'Image copied.'}catch{status.textContent=ru?'Не удалось скопировать картинку. Скачай PNG или воспользуйся кнопкой «Поделиться».':'Could not copy the image. Download the PNG or use Share.'}});
+          root.querySelector('#shareBestRound').addEventListener('click',async()=>{try{const file=new File([previewBlob],`luminaria-round-${highlights[selected].index+1}.png`,{type:'image/png'});await navigator.share({files:[file],title:ru?'Лучший раунд Luminaria':'Best Luminaria round'});status.textContent=ru?'Карточкой поделились.':'Round card shared.'}catch(error){if(error?.name!=='AbortError')status.textContent=ru?'Не удалось поделиться. Скачай PNG.':'Could not share. Download the PNG.'}});
+          root.querySelector('#downloadBestRound').addEventListener('click',()=>{if(!previewUrl)return;const link=document.createElement('a');link.href=previewUrl;link.download=`luminaria-round-${highlights[selected].index+1}.png`;link.click()});
+          void render();
+        }
+      }else if(root.isConnected){bestRoundSection.hidden=false;root.querySelector('#bestRoundStatus').textContent=ru?'Не удалось загрузить сыгранные карты.':'Could not load played cards.'}
+    }
     $('#rematchButton')?.addEventListener('click',async event=>{const button=event.currentTarget;button.disabled=true;try{await restartLiveRoom()}catch(error){if(button.isConnected){button.disabled=false;showInlineGameError(error.message)}}});
     $('#copyPartyStory').addEventListener('click',async event=>{try{await navigator.clipboard.writeText($('#partyStory').textContent);event.target.textContent=ru?'Скопировано ✓':'Copied ✓'}catch{$('#storyStatus').textContent=ru?'Выдели текст истории, чтобы скопировать её.':'Select the story text to copy it.'}});
     let illustrationLoading=false;
