@@ -70,6 +70,8 @@ const absurdDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-abs.webp'
 const memeDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-meme.webp'));
 const cosmicDeck=__LUMINARIA_DECK_FILES__.filter(card=>card.endsWith('-cos.webp'));
 const cardAssetVersion=card=>card==='420-pop.webp'?'?v=naked-gun-1':'';
+const preloadedCardImages=new Set();
+function preloadCardImages(cards){for(const card of cards||[]){if(!card||!availableCards.has(card)||preloadedCardImages.has(card))continue;preloadedCardImages.add(card);const image=new Image();image.decoding='async';image.src=`/deck-preview/${card}${cardAssetVersion(card)}`}}
 const availableCards=new Set(__LUMINARIA_AVAILABLE_CARDS__);
 const deckCovers={moon:'005-card.webp',pop:'206-pop.webp',abs:'001-abs.webp',meme:'007-meme.webp',cosmic:'001-cos.webp'};
 const decks={moon:{ru:'Лунный архив',en:'Moonlit Archive',cards:deckPool,icon:'☾'},pop:{ru:'Поп-культура',en:'Pop Culture',cards:popDeck,icon:'✦'},abs:{ru:'Бытовой абсурд',en:'Everyday Absurdity',cards:absurdDeck,icon:'✳'},meme:{ru:'Мемный хаос',en:'Meme Chaos',cards:memeDeck,icon:'✺'},cosmic:{ru:'Путешествия в Космосе',en:'Space Journeys',cards:cosmicDeck,icon:'🛸'}};
@@ -485,7 +487,7 @@ function resetLiveParty(){
   activeRoundClue='';activeStorytellerCard='';activeMoonPhase=null;
   if(liveGameContext)localStorage.removeItem(nextRoundStorageKey());
 }
-async function loadLiveHand(){if(!liveGameContext)return [];const {data,error}=await supabase.rpc('luminaria_hand',{target_room_id:liveGameContext.room.id});if(error)throw error;liveHandCache=(data||[]).map(card=>card.card_id);return liveHandCache}
+async function loadLiveHand(){if(!liveGameContext)return [];const {data,error}=await supabase.rpc('luminaria_hand',{target_room_id:liveGameContext.room.id});if(error)throw error;liveHandCache=(data||[]).map(card=>card.card_id);preloadCardImages(liveHandCache);return liveHandCache}
 async function loadLiveDeckProgress(){
   if(!liveGameContext)return 0;
   const {data,error}=await supabase.rpc('luminaria_deck_state',{target_room_id:liveGameContext.room.id}).single();
@@ -627,15 +629,16 @@ async function routeLiveRound(){const round=await loadLiveRound();if(!round)retu
 async function showLiveVoting(round){
   round={...round,clue:escapeHtml(round.clue)};
   const ru=language==='ru',context=liveGameContext;
-  const {data:submissions,error}=await supabase.from('card_submissions').select('id,card_id,player_id').eq('round_id',round.id);
+  const {data:submissions,error}=await supabase.rpc('get_luminaria_voting_cards',{target_round_id:round.id});
   if(error)throw error;
   for(const submission of submissions||[])if(!availableCards.has(submission.card_id))submission.card_id=deckPool[0];
+  preloadCardImages((submissions||[]).map(submission=>submission.card_id));
   const isStoryteller=round.storyteller_id===context.session.user.id;
   const roster=await loadLiveRoster(round.room_id);
   const name=id=>roster.find(seat=>seat.user_id===id)?.profile?.nickname||'Dreamer';
   const ordered=votingOrder(submissions,round.id);
   const visibleSubmissions=isStoryteller?ordered:ordered.filter(submission=>submission.player_id!==context.session.user.id);
-  document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="voting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Голосование':'Voting'}</div></nav><section class="vote-header"><p class="eyebrow"><span></span><span>${ru?'Ассоциация ведущего':'Storyteller’s clue'}</span></p><blockquote>“${round.clue}”</blockquote><p>${isStoryteller?(ru?'Игроки голосуют. Нажми на любую карту, чтобы открыть её крупно.':'Players are voting. Select any card to inspect it full screen.'):ru?'Нажми на карту, чтобы открыть её крупно и выбрать для голоса. Твоя карта скрыта.':'Select a card to inspect it full screen and choose it for your vote. Your own card is hidden.'}</p></section><section class="vote-grid">${visibleSubmissions.map((submission,index)=>`<button class="vote-card ${isStoryteller?'storyteller-card':''}" data-submission="${submission.id}"><img src="/deck-preview/${submission.card_id}${cardAssetVersion(submission.card_id)}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${isStoryteller?name(submission.player_id):`${ru?'Карта':'Card'} ${index+1}`}</span></button>`).join('')}</section>${isStoryteller?`<p class="lead">${ru?'Голосование завершится автоматически, когда все игроки сделают выбор.':'Voting will finish automatically when every player has voted.'}</p>`:`<button class="primary-button cast-vote" id="castLiveVote">${ru?'Подтвердить голос':'Confirm vote'} <b>→</b></button>`}</main>`;
+  document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="voting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Голосование':'Voting'}</div></nav><section class="vote-header"><p class="eyebrow"><span></span><span>${ru?'Ассоциация ведущего':'Storyteller’s clue'}</span></p><blockquote>“${round.clue}”</blockquote><p>${isStoryteller?(ru?'Игроки голосуют. Нажми на любую карту, чтобы открыть её крупно.':'Players are voting. Select any card to inspect it full screen.'):ru?'Нажми на карту, чтобы открыть её крупно и выбрать для голоса. Твоя карта скрыта.':'Select a card to inspect it full screen and choose it for your vote. Your own card is hidden.'}</p></section><section class="vote-grid">${visibleSubmissions.map((submission,index)=>`<button class="vote-card ${isStoryteller?'storyteller-card':''}" data-submission="${submission.id}"><img src="/deck-preview/${submission.card_id}${cardAssetVersion(submission.card_id)}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${ru?'Карта':'Card'} ${index+1}</span></button>`).join('')}</section>${isStoryteller?`<p class="lead">${ru?'Голосование завершится автоматически, когда все игроки сделают выбор.':'Voting will finish automatically when every player has voted.'}</p>`:`<button class="primary-button cast-vote" id="castLiveVote">${ru?'Подтвердить голос':'Confirm vote'} <b>→</b></button>`}</main>`;
   updateLivePhaseProgress(round).catch(console.error);
   let selected=null;
   const voteCards=[...document.querySelectorAll('.vote-card')];

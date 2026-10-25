@@ -13,13 +13,13 @@ const fn=source.slice(source.indexOf('async function showLiveVoting(round)'),sou
 await page.evaluate(({fn,helper})=>{
  window.language='ru';window.$=s=>document.querySelector(s);
  window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
- window.cardAssetVersion=()=>'';window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
+ window.cardAssetVersion=()=>'';window.preloadCardImages=()=>{};window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
  window.loadLiveRoster=async()=>[];window.updateLivePhaseProgress=async()=>{};
  window.openCardPreview=options=>{window.slides=options.items};
  window.showInlineGameError=message=>{window.lastError=message};
  window.advanceLiveRound=async()=>{if(Object.keys(votes).length===playerCount-1)phase='results'};
  window.routeLiveRound=async()=>{};
- window.supabase={from:table=>{
+ window.supabase={rpc:async(name)=>{if(name!=='get_luminaria_voting_cards')throw Error('Unexpected RPC');return {data:cards.map(card=>({...card,player_id:card.player_id===liveGameContext.session.user.id?card.player_id:null})),error:null}},from:table=>{
    const filters={};
    return {select(){return this},eq(key,value){filters[key]=value;return this},
      maybeSingle:async()=>({data:votes[filters.voter_id]||null,error:null}),
