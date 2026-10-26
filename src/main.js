@@ -5,6 +5,7 @@ import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
+import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
 import './style.css';
 import './public-rooms.css';
@@ -480,6 +481,25 @@ function startInvitationFromLink(){
 document.addEventListener('click',event=>{const button=event.target.closest('#revealButton');if(!button?.classList.contains('is-ready'))return;const image=document.querySelector('.hand-card.selected img');if(image)activeStorytellerCard=image.src.split('/').pop()});
 function showResults(){const player=JSON.parse(localStorage.getItem('luminaria-player')||'{"name":"Dreamer","avatar":"✦"}');const ru=language==='ru';const defaultCards=['01-library-whale.png','03-mending-rain.png','04-teapot-city.png','08-cloud-bakery.png'];const cards=activeStorytellerCard?[activeStorytellerCard,...defaultCards.filter(card=>card!==activeStorytellerCard)].slice(0,4):defaultCards;const correctIndex=0;const otherNames=['Mira','Leo','June'];let otherIndex=0;const owners=cards.map((card,index)=>index===correctIndex?player.name:otherNames[otherIndex++]);const scores=[[player.name,'+5',ru?'Базовые +3 и +2 за двух угадавших':'Base +3 and +2 for two correct guesses'],['Mira','+3',ru?'Угадала карту ведущего':'Guessed the storyteller’s card'],['Leo','+0',ru?'Не угадал':'Did not guess'],['June','+3',ru?'Два голоса за её карту + бонус «Созвездие»':'Two votes for her card + Constellation bonus']];document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="results-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Результаты':'Results'}</div><button class="language" id="resultLanguage">${ru?'EN':'RU'}</button></nav><section class="result-head"><span class="result-star">✦</span><p class="eyebrow"><span></span><span>${ru?'Карты раскрыты':'Cards revealed'}</span></p><h1>${ru?'Вот что скрывалось<br>за <em>ассоциацией.</em>':'Here is what hid<br>behind the <em>clue.</em>'}</h1><p class="result-clue">“${activeRoundClue||(ru?'Твоя ассоциация':'Your clue')}”</p></section><section class="reveal-grid">${cards.map((card,index)=>`<article class="reveal-card ${index===correctIndex?'correct':''}"><img src="/deck-preview/${card}${cardAssetVersion(card)}" alt="Revealed card ${index+1}">${index===correctIndex?`<span class="correct-tag">✓ ${ru?'Карта ведущего':'Storyteller’s card'}</span>`:''}<small>${owners[index]}</small></article>`).join('')}</section><section class="scores"><div class="panel-title"><h2>${ru?'Очки за раунд':'Round scores'}</h2><span class="count">${ru?'Раунд 1':'Round 1'}</span></div>${scores.map((item,index)=>`<div class="score-row ${index===0?'me':''}"><span class="score-avatar">${index===0?'✦':['☽','♢','☼'][index-1]}</span><strong>${item[0]}</strong><em>${item[2]}</em><b>${item[1]}</b></div>`).join('')}<button class="primary-button next-round" id="nextRound">${ru?'Следующий раунд':'Next round'} <b>→</b></button></section></main>`;$('#nextRound').addEventListener('click',()=>{activeRoundClue='';activeStorytellerCard='';showGame()});$('#resultLanguage').addEventListener('click',()=>{language=language==='en'?'ru':'en';localStorage.setItem('luminaria-language',language);showResults()})}
 let liveGameContext=null,liveRound=null,liveRoundChannel=null,liveHandVersion=0,liveStorytellerId=null,liveRoundNumber=1,liveRoundNumberForId=null,liveTotalRounds=0;
+function isCurrentStoryteller(context=liveGameContext){
+  if(!context)return false;
+  const seatId=context.room.current_storyteller_participant_id;
+  if(seatId&&context.mySeatId)return seatId===context.mySeatId;
+  return (liveStorytellerId||context.room.current_storyteller_id||context.room.host_id)===context.session.user.id;
+}
+function isRoundStoryteller(round,context=liveGameContext){
+  if(!context)return false;
+  if(round.storyteller_participant_id&&context.mySeatId)return round.storyteller_participant_id===context.mySeatId;
+  return round.storyteller_id===context.session.user.id;
+}
+function ownSubmissionQuery(roundId,fields='id',context=liveGameContext){
+  const query=supabase.from('card_submissions').select(fields).eq('round_id',roundId);
+  return context.mySeatId?query.eq('participant_id',context.mySeatId):query.eq('player_id',context.session.user.id);
+}
+function ownVoteQuery(roundId,context=liveGameContext){
+  const query=supabase.from('votes').select('submission_id').eq('round_id',roundId);
+  return context.mySeatId?query.eq('voter_participant_id',context.mySeatId):query.eq('voter_id',context.session.user.id);
+}
 let liveHandCache=[];
 let liveGameEpoch=0;
 function resetLiveParty(){
@@ -573,7 +593,7 @@ function syncLiveRoundNumber(){
   }
 }
 const roundNumberObserver=new MutationObserver(syncLiveRoundNumber);roundNumberObserver.observe(document.body,{childList:true,subtree:true});
-function showLiveRoundWaiting(){const ru=language==='ru',context=liveGameContext,canBrowseHand=liveHandCache.length&&(liveStorytellerId||context.room.host_id)!==context.session.user.id;document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="waiting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Ожидание':'Waiting'}</div></nav><section class="waiting-stage"><div class="waiting-stars">✦ ✧ ✦</div><p class="eyebrow"><span></span><span>${ru?'Комната в игре':'Room is live'}</span></p><h1>${ru?'Ведущий выбирает<br><em>ассоциацию.</em>':'The storyteller is choosing<br><em>a clue.</em>'}</h1><p class="lead">${ru?'Пока ведущий думает, рассмотри свои карты или поймай как можно больше звёзд.':'While the storyteller thinks, explore your cards or catch as many stars as possible.'}</p><div class="waiting-players" id="awaitedStoryteller"></div><section class="waiting-score" id="waitingScore"></section><div class="waiting-minigame"><div class="star-arena"><i></i><i></i><i></i><button id="catchStar" type="button" aria-label="${ru?'Поймать звезду':'Catch the star'}">✦</button></div><div class="star-game-info"><strong>${ru?'Не дай звезде сбежать':'Don’t let the star escape'}</strong><small>${ru?'Твой счёт:':'Your score:'} <b id="starHits">0</b></small><div id="starLeaderboard"></div></div></div></section>${canBrowseHand?`<section class="waiting-hand"><div class="hand-heading"><div><p class="eyebrow"><span></span><span>${ru?'Твоя рука':'Your hand'}</span></p><h2>${ru?'Можно заранее рассмотреть карты':'Explore your cards while you wait'}</h2></div><span class="hand-count">${liveHandCache.length}</span></div>${gameHand(liveHandCache,ru)}</section>`:''}</main>`;if(canBrowseHand){const cards=[...document.querySelectorAll('.hand-card')],slides=cards.map(card=>{const image=card.querySelector('img');return{src:image.src,alt:image.alt}});cards.forEach((card,index)=>card.addEventListener('click',()=>openCardPreview({items:slides,index,kind:'view'})))}bindWaitingMinigame();updateLivePhaseProgress().catch(console.error);addWaitingScoreboard().catch(console.error);ensureLiveChat()}
+function showLiveRoundWaiting(){const ru=language==='ru',context=liveGameContext,canBrowseHand=liveHandCache.length&&!isCurrentStoryteller(context);document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="waiting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Ожидание':'Waiting'}</div></nav><section class="waiting-stage"><div class="waiting-stars">✦ ✧ ✦</div><p class="eyebrow"><span></span><span>${ru?'Комната в игре':'Room is live'}</span></p><h1>${ru?'Ведущий выбирает<br><em>ассоциацию.</em>':'The storyteller is choosing<br><em>a clue.</em>'}</h1><p class="lead">${ru?'Пока ведущий думает, рассмотри свои карты или поймай как можно больше звёзд.':'While the storyteller thinks, explore your cards or catch as many stars as possible.'}</p><div class="waiting-players" id="awaitedStoryteller"></div><section class="waiting-score" id="waitingScore"></section><div class="waiting-minigame"><div class="star-arena"><i></i><i></i><i></i><button id="catchStar" type="button" aria-label="${ru?'Поймать звезду':'Catch the star'}">✦</button></div><div class="star-game-info"><strong>${ru?'Не дай звезде сбежать':'Don’t let the star escape'}</strong><small>${ru?'Твой счёт:':'Your score:'} <b id="starHits">0</b></small><div id="starLeaderboard"></div></div></div></section>${canBrowseHand?`<section class="waiting-hand"><div class="hand-heading"><div><p class="eyebrow"><span></span><span>${ru?'Твоя рука':'Your hand'}</span></p><h2>${ru?'Можно заранее рассмотреть карты':'Explore your cards while you wait'}</h2></div><span class="hand-count">${liveHandCache.length}</span></div>${gameHand(liveHandCache,ru)}</section>`:''}</main>`;if(canBrowseHand){const cards=[...document.querySelectorAll('.hand-card')],slides=cards.map(card=>{const image=card.querySelector('img');return{src:image.src,alt:image.alt}});cards.forEach((card,index)=>card.addEventListener('click',()=>openCardPreview({items:slides,index,kind:'view'})))}bindWaitingMinigame();updateLivePhaseProgress().catch(console.error);addWaitingScoreboard().catch(console.error);ensureLiveChat()}
 function bindWaitingMinigame(){
   const star=$('#catchStar'),hits=$('#starHits'),context=liveGameContext,epoch=liveGameEpoch;
   if(!star||!hits||!context||context.room.status!=='playing'||star.dataset.bound)return;
@@ -603,7 +623,7 @@ async function updateLivePhaseProgress(round=liveRound){
   const roster=await loadLiveRoster(context.room.id);
   if(!root?.isConnected||liveGameContext!==context)return;
   if(!round){
-    const seat=roster.find(item=>item.user_id===(liveStorytellerId||context.room.host_id));
+    const seat=seatForGameRef(roster,context.room.current_storyteller_participant_id,liveStorytellerId||context.room.current_storyteller_id||context.room.host_id);
     const waiting=$('#awaitedStoryteller');
     if(waiting&&seat)waiting.innerHTML=`<div><span data-live-profile-id="${seat.user_id}" data-live-profile-field="avatar">${avatarMarkup(seat.profile?.avatar)}</span><small>${ru?'Ждём ассоциацию от':'Waiting for a clue from'} <strong data-live-profile-id="${seat.user_id}" data-live-profile-field="nickname">${seat.profile?.nickname||'Dreamer'}</strong></small><i></i></div>`;
     return;
@@ -613,18 +633,19 @@ async function updateLivePhaseProgress(round=liveRound){
   if(error)throw error;
   if(!root.isConnected||liveRound?.id!==round.id||liveRound?.phase!==round.phase)return;
   const host=root.querySelector(round.phase==='voting'?'.vote-header':'.waiting-stage,.guess-stage,.host-stage');if(!host)return;
-  const voting=round.phase==='voting',required=(data||[]).filter(seat=>!voting||seat.user_id!==round.storyteller_id);
+  const voting=round.phase==='voting',storytellerSeat=seatForGameRef(roster,round.storyteller_participant_id,round.storyteller_id);
+  const required=(data||[]).filter(seat=>!voting||seatForUser(roster,seat.user_id)?.id!==storytellerSeat?.id);
   const done=seat=>voting?seat.has_voted:seat.has_submitted;
   let progress=$('#livePhaseProgress');
   if(!progress){progress=document.createElement('div');progress.id='livePhaseProgress';const anchor=host.querySelector('#waitingScore');anchor?anchor.before(progress):host.append(progress)}
-  progress.innerHTML=`<p class="lead">${ru?(voting?'Голоса поданы':'Карты выбраны'):(voting?'Votes cast':'Cards chosen')}: ${required.filter(done).length} ${ru?'из':'of'} ${required.length}</p><div class="phase-waiting">${required.map(seat=>`<span class="${done(seat)?'done':''}" data-live-profile-id="${seat.user_id}" data-live-profile-field="nickname">${done(seat)?'✓':(ru?'Ждём:':'Waiting:')} ${roster.find(p=>p.user_id===seat.user_id)?.profile?.nickname||'Dreamer'}</span>`).join('')}</div>`;
+  progress.innerHTML=`<p class="lead">${ru?(voting?'Голоса поданы':'Карты выбраны'):(voting?'Votes cast':'Cards chosen')}: ${required.filter(done).length} ${ru?'из':'of'} ${required.length}</p><div class="phase-waiting">${required.map(seat=>`<span class="${done(seat)?'done':''}" data-live-profile-id="${seat.user_id}" data-live-profile-field="nickname">${done(seat)?'✓':(ru?'Ждём:':'Waiting:')} ${seatForUser(roster,seat.user_id)?.displayName||'Dreamer'}</span>`).join('')}</div>`;
   if(host.matches('.waiting-stage')){
     host.querySelector('h1').textContent=ru?(voting?'Ждём голоса игроков':'Игроки выбирают карты'):(voting?'Waiting for votes':'Players are choosing cards');
     host.querySelector(':scope > .lead').textContent=ru?'Можно посмотреть общий счёт или поймать звезду.':'Check the scores or catch a star while you wait.';
     $('#awaitedStoryteller')?.replaceChildren();
   }
 }
-async function routeLiveRound(){const round=await loadLiveRound();if(!round)return showLiveRoundWaiting();const context=liveGameContext;if(round.phase==='submitting'&&round.storyteller_id!==context.session.user.id){const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();return demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}showLiveRoundWaiting()}
+async function routeLiveRound(){const round=await loadLiveRound();if(!round)return showLiveRoundWaiting();const context=liveGameContext;if(round.phase==='submitting'&&!isRoundStoryteller(round,context)){const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();return demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}showLiveRoundWaiting()}
 async function showLiveVoting(round){
   round={...round,clue:escapeHtml(round.clue)};
   const ru=language==='ru',context=liveGameContext;
@@ -632,9 +653,8 @@ async function showLiveVoting(round){
   if(error)throw error;
   for(const submission of submissions||[])if(!availableCards.has(submission.card_id))submission.card_id=deckPool[0];
   preloadCardImages((submissions||[]).map(submission=>submission.card_id));
-  const isStoryteller=round.storyteller_id===context.session.user.id;
-  const roster=await loadLiveRoster(round.room_id);
-  const name=id=>roster.find(seat=>seat.user_id===id)?.profile?.nickname||'Dreamer';
+  await loadLiveRoster(round.room_id);
+  const isStoryteller=isRoundStoryteller(round,context);
   const ordered=votingOrder(submissions,round.id);
   const visibleSubmissions=isStoryteller?ordered:ordered.filter(submission=>submission.player_id!==context.session.user.id);
   document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="voting-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Голосование':'Voting'}</div></nav><section class="vote-header"><p class="eyebrow"><span></span><span>${ru?'Ассоциация ведущего':'Storyteller’s clue'}</span></p><blockquote>“${round.clue}”</blockquote><p>${isStoryteller?(ru?'Игроки голосуют. Нажми на любую карту, чтобы открыть её крупно.':'Players are voting. Select any card to inspect it full screen.'):ru?'Нажми на карту, чтобы открыть её крупно и выбрать для голоса. Твоя карта скрыта.':'Select a card to inspect it full screen and choose it for your vote. Your own card is hidden.'}</p></section><section class="vote-grid">${visibleSubmissions.map((submission,index)=>`<button class="vote-card ${isStoryteller?'storyteller-card':''}" data-submission="${submission.id}"><img src="/deck-preview/${submission.card_id}${cardAssetVersion(submission.card_id)}" alt="${ru?'Карта':'Card'} ${index+1}"><span>${ru?'Карта':'Card'} ${index+1}</span></button>`).join('')}</section>${isStoryteller?`<p class="lead">${ru?'Голосование завершится автоматически, когда все игроки сделают выбор.':'Voting will finish automatically when every player has voted.'}</p>`:`<button class="primary-button cast-vote" id="castLiveVote">${ru?'Подтвердить голос':'Confirm vote'} <b>→</b></button>`}</main>`;
@@ -652,7 +672,7 @@ async function showLiveVoting(round){
     voteCards.forEach(card=>{card.disabled=true;card.classList.toggle('selected',card.dataset.submission===selected)});
     castButton.disabled=true;castButton.classList.add('is-ready');castButton.textContent=ru?'Голос отправлен ✓':'Vote sent ✓';return true;
   };
-  const readVote=async()=>{const {data,error}=await supabase.from('votes').select('submission_id').eq('round_id',round.id).eq('voter_id',context.session.user.id).maybeSingle();if(error)throw error;return data};
+  const readVote=async()=>{const {data,error}=await ownVoteQuery(round.id,context).maybeSingle();if(error)throw error;return data};
   castButton.disabled=true;
   try{if(!restoreVote(await readVote()))castButton.disabled=false}catch(error){castButton.disabled=false;showInlineGameError(error.message)}
   castButton.addEventListener('click',async()=>{
@@ -670,41 +690,46 @@ async function showLiveVoting(round){
     }
   });
 }
-routeLiveRound=async function(){const round=await loadLiveRound();if(!round)return showLiveRoundWaiting();const context=liveGameContext;if(round.phase==='voting')return showLiveVoting(round);if(round.phase==='submitting'&&round.storyteller_id!==context.session.user.id){const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();return demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}showLiveRoundWaiting()};
+routeLiveRound=async function(){const round=await loadLiveRound();if(!round)return showLiveRoundWaiting();const context=liveGameContext;if(round.phase==='voting')return showLiveVoting(round);if(round.phase==='submitting'&&!isRoundStoryteller(round,context)){const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();return demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}showLiveRoundWaiting()};
 async function showLiveResults(round){
   round={...round,clue:escapeHtml(round.clue)};
   const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:round.room_id}).single();
   if(deckError)throw deckError;
   const isFinalRound=finalRoundReached(deckState,liveRoundNumber,liveGameContext?.room.status);
   const ru=language==='ru';
-  const [{data:submissions,error:submissionError},{data:votes,error:voteError}]=await Promise.all([supabase.from('card_submissions').select('id,card_id,player_id').eq('round_id',round.id),supabase.from('votes').select('submission_id,voter_id').eq('round_id',round.id)]);
+  const [{data:submissions,error:submissionError},{data:votes,error:voteError}]=await Promise.all([supabase.from('card_submissions').select('id,card_id,player_id,participant_id').eq('round_id',round.id),supabase.from('votes').select('submission_id,voter_id,voter_participant_id').eq('round_id',round.id)]);
   if(submissionError||voteError)throw submissionError||voteError;
   for(const submission of submissions||[])if(!availableCards.has(submission.card_id))submission.card_id=deckPool[0];
   const roster=await loadLiveRoster(round.room_id);
-  const name=id=>roster.find(seat=>seat.user_id===id)?.profile?.nickname||'Dreamer';
-  const storytellerCard=submissions.find(item=>item.player_id===round.storyteller_id);
+  const seatId=(participantId,userId)=>gameSeatId(roster,participantId,userId);
+  const storytellerSeatId=seatId(round.storyteller_participant_id,round.storyteller_id);
+  const submissionSeatId=submission=>seatId(submission.participant_id,submission.player_id);
+  const voterSeatId=vote=>seatId(vote.voter_participant_id,vote.voter_id);
+  const displayBySeatId=new Map(roster.map(seat=>[seat.id,seat]));
+  const name=id=>displayBySeatId.get(gameSeatId(roster,id,id))?.displayName||'Dreamer';
+  const storytellerCard=submissions.find(item=>submissionSeatId(item)===storytellerSeatId);
   const correctVotes=votes.filter(vote=>vote.submission_id===storytellerCard?.id).length;
   const storytellerPoints=correctVotes>0&&correctVotes<votes.length?3+correctVotes:0;
-  const nextStoryteller=roster.find(seat=>seat.user_id===liveGameContext.room.current_storyteller_id);
+  const nextStoryteller=seatForGameRef(roster,liveGameContext.room.current_storyteller_participant_id,liveGameContext.room.current_storyteller_id);
   const pointsFor=seat=>{
-    if(seat.user_id===round.storyteller_id)return storytellerPoints;
-    const ownSubmission=submissions.find(submission=>submission.player_id===seat.user_id);
+    if(seat.id===storytellerSeatId)return storytellerPoints;
+    const ownSubmission=submissions.find(submission=>submissionSeatId(submission)===seat.id);
     const ownCardVotes=ownSubmission?votes.filter(vote=>vote.submission_id===ownSubmission.id).length:0;
-    const guessed=votes.some(vote=>vote.voter_id===seat.user_id&&vote.submission_id===storytellerCard?.id);
+    const guessed=votes.some(vote=>voterSeatId(vote)===seat.id&&vote.submission_id===storytellerCard?.id);
     return ownCardVotes+(guessed?3:0);
   };
   const explanationFor=seat=>{
-    if(seat.user_id===round.storyteller_id)return correctVotes===0?(ru?'Никто не угадал — 0 баллов':'Nobody guessed — 0 points'):correctVotes===votes.length?(ru?'Все проголосовавшие угадали — 0 баллов':'Every voter guessed — 0 points'):(ru?'Карта ведущего':'Storyteller’s card');
-    const guessed=votes.some(vote=>vote.voter_id===seat.user_id&&vote.submission_id===storytellerCard?.id);
-    const ownSubmission=submissions.find(submission=>submission.player_id===seat.user_id);
+    if(seat.id===storytellerSeatId)return correctVotes===0?(ru?'Никто не угадал — 0 баллов':'Nobody guessed — 0 points'):correctVotes===votes.length?(ru?'Все проголосовавшие угадали — 0 баллов':'Every voter guessed — 0 points'):(ru?'Карта ведущего':'Storyteller’s card');
+    const guessed=votes.some(vote=>voterSeatId(vote)===seat.id&&vote.submission_id===storytellerCard?.id);
+    const ownSubmission=submissions.find(submission=>submissionSeatId(submission)===seat.id);
     const ownCardVotes=ownSubmission?votes.filter(vote=>vote.submission_id===ownSubmission.id).length:0;
     if(guessed&&ownCardVotes)return ru?'Угадал(а) и получил(а) голос за свою карту':'Guessed and received a vote for their card';
     if(guessed)return ru?'Угадал(а) карту ведущего':'Guessed the storyteller’s card';
     if(ownCardVotes)return ru?'Голоса за его(её) карту':'Votes for their card';
     return ru?'Без очков в этом раунде':'No points this round';
   };
-  document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="results-page" data-final-round="${isFinalRound}"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Результаты':'Results'}</div></nav><section class="result-head"><span class="result-star">✦</span><p class="eyebrow"><span></span><span>${ru?'Карты раскрыты':'Cards revealed'}</span></p><h1>${ru?'Вот что скрывалось<br>за <em>ассоциацией.</em>':'Here is what hid<br>behind the <em>clue.</em>'}</h1><p class="result-clue">“${round.clue}”</p></section><section class="reveal-grid">${submissions.map(submission=>`<article class="reveal-card ${submission.id===storytellerCard?.id?'correct':''}"><img src="/deck-preview/${submission.card_id}${cardAssetVersion(submission.card_id)}" alt="${ru?'Карта':'Card'}">${submission.id===storytellerCard?.id?`<span class="correct-tag">✓ ${ru?'Карта ведущего':'Storyteller’s card'}</span>`:''}<small>${name(submission.player_id)}</small></article>`).join('')}</section><section class="scores"><div class="panel-title"><h2>${ru?'Итог раунда':'Round result'}</h2><span class="count">${correctVotes} ${ru?'угадали':'guessed correctly'}</span></div>${roster.map((seat,index)=>`<div class="score-row ${seat.user_id===round.storyteller_id?'me':''}"><span class="score-avatar">${avatarMarkup(seat.profile?.avatar,['✦','☽','♢','☼'][index%4])}</span><strong>${name(seat.user_id)}</strong><em>${explanationFor(seat)}</em><b>+${pointsFor(seat)}</b></div>`).join('')}</section></main>`
-  document.querySelectorAll('.reveal-card').forEach((card,index)=>{const submission=submissions[index];if(!submission)return;const nameNode=card.querySelector('small');if(nameNode){nameNode.dataset.liveProfileId=submission.player_id;nameNode.dataset.liveProfileField='nickname'}const voterNames=votes.filter(vote=>vote.submission_id===submission.id).map(vote=>name(vote.voter_id));const note=document.createElement('span');note.className='reveal-voters';note.textContent=voterNames.length?`${ru?'Голосовали:':'Voted by:'} ${voterNames.join(', ')}`:(ru?'Нет голосов':'No votes');card.append(note)});
+  document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="results-page" data-final-round="${isFinalRound}"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Результаты':'Results'}</div></nav><section class="result-head"><span class="result-star">✦</span><p class="eyebrow"><span></span><span>${ru?'Карты раскрыты':'Cards revealed'}</span></p><h1>${ru?'Вот что скрывалось<br>за <em>ассоциацией.</em>':'Here is what hid<br>behind the <em>clue.</em>'}</h1><p class="result-clue">“${round.clue}”</p></section><section class="reveal-grid">${submissions.map(submission=>`<article class="reveal-card ${submission.id===storytellerCard?.id?'correct':''}"><img src="/deck-preview/${submission.card_id}${cardAssetVersion(submission.card_id)}" alt="${ru?'Карта':'Card'}">${submission.id===storytellerCard?.id?`<span class="correct-tag">✓ ${ru?'Карта ведущего':'Storyteller’s card'}</span>`:''}<small>${name(submissionSeatId(submission))}</small></article>`).join('')}</section><section class="scores"><div class="panel-title"><h2>${ru?'Итог раунда':'Round result'}</h2><span class="count">${correctVotes} ${ru?'угадали':'guessed correctly'}</span></div>${roster.map((seat,index)=>`<div class="score-row ${seat.id===storytellerSeatId?'me':''}"><span class="score-avatar">${avatarMarkup(seat.profile?.avatar,['✦','☽','♢','☼'][index%4])}</span><strong>${name(seat.id)}</strong><em>${explanationFor(seat)}</em><b>+${pointsFor(seat)}</b></div>`).join('')}</section></main>`
+  document.querySelectorAll('.reveal-card').forEach((card,index)=>{const submission=submissions[index];if(!submission)return;const nameNode=card.querySelector('small');if(nameNode){nameNode.dataset.liveProfileId=submission.player_id;nameNode.dataset.liveProfileField='nickname'}const voterNames=votes.filter(vote=>vote.submission_id===submission.id).map(vote=>name(voterSeatId(vote)));const note=document.createElement('span');note.className='reveal-voters';note.textContent=voterNames.length?`${ru?'Голосовали:':'Voted by:'} ${voterNames.join(', ')}`:(ru?'Нет голосов':'No votes');card.append(note)});
   document.querySelectorAll('.scores .score-row').forEach((row,index)=>{const seat=roster[index];if(!seat)return;const avatar=row.querySelector('.score-avatar'),playerName=row.querySelector('strong');if(avatar){avatar.dataset.liveProfileId=seat.user_id;avatar.dataset.liveProfileField='avatar'}if(playerName){playerName.dataset.liveProfileId=seat.user_id;playerName.dataset.liveProfileField='nickname'}});
   if(nextStoryteller&&!isFinalRound){const notice=document.createElement('p');notice.className='next-storyteller';notice.textContent=ru?`Следующий ведущий — ${nextStoryteller.profile?.nickname||'Мечтатель'}`:`Next storyteller — ${nextStoryteller.profile?.nickname||'Dreamer'}`;$('.scores')?.append(notice)}
 }
@@ -731,10 +756,10 @@ routeLiveRound=serialRefresh(async function(){
   if(epoch!==liveGameEpoch)return;
   if(roomState.awaiting_storyteller){
     liveStorytellerId=roomState.current_storyteller_id;
-    if(document.querySelector('main')?.dataset.roundView==='awaiting:'+liveStorytellerId)return;
+    if(document.querySelector('main')?.dataset.roundView==='awaiting:'+(roomState.current_storyteller_participant_id||liveStorytellerId))return;
     await loadLiveHand();
-    if(liveStorytellerId===liveGameContext.session.user.id)demoShowGame();else showLiveRoundWaiting();
-    const main=document.querySelector('main');if(main)main.dataset.roundView='awaiting:'+liveStorytellerId;
+    if(isCurrentStoryteller())demoShowGame();else showLiveRoundWaiting();
+    const main=document.querySelector('main');if(main)main.dataset.roundView='awaiting:'+(roomState.current_storyteller_participant_id||liveStorytellerId);
     return;
   }
   if(!round)return;
@@ -745,8 +770,8 @@ routeLiveRound=serialRefresh(async function(){
   if(round.phase==='results')await showLiveResults(round);
   else if(round.phase==='voting')await showLiveVoting(round);
   else {
-    const {data:submitted,error}=await supabase.from('card_submissions').select('id').eq('round_id',round.id).eq('player_id',context.session.user.id).maybeSingle();if(error)throw error;
-    if(submitted||round.storyteller_id===context.session.user.id)showLiveRoundWaiting();
+    const {data:submitted,error}=await ownSubmissionQuery(round.id,'id',context).maybeSingle();if(error)throw error;
+    if(submitted||isRoundStoryteller(round,context))showLiveRoundWaiting();
     else {const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}
   }
   const main=document.querySelector('main');if(main)main.dataset.roundView=key;
@@ -855,11 +880,11 @@ showGame=async function(){
   openingLiveGame=true;
   try{
     await watchLiveRound();
-    await Promise.all([loadLiveHand(),loadLiveDeckProgress()]);
+    await Promise.all([loadLiveHand(),loadLiveDeckProgress(),loadLiveRoster(liveGameContext.room.id)]);
     const round=await loadLiveRound();
     if(round)return routeLiveRound();
     if(liveGameContext.room.status!=='playing')return;
-    if((liveStorytellerId||liveGameContext.room.host_id)===liveGameContext.session.user.id)return demoShowGame();
+    if(isCurrentStoryteller())return demoShowGame();
     showLiveRoundWaiting();
   }catch(error){
     console.error('Could not open live game',error);
@@ -885,7 +910,7 @@ function requestWithTimeout(request,timeout=15000){return Promise.race([request,
 function suspendLobbyObservers(){[moonPhaseObserver,deckSearchObserver,deckPreviewObserver,leaveLobbyObserver,avatarObserver].forEach(observer=>observer.disconnect())}
 document.addEventListener('click',async event=>{const button=event.target.closest('#startButton');const context=liveGameContext;if(!button||button.disabled||startingLiveGame||!context||context.room.host_id!==context.session.user.id)return;event.preventDefault();event.stopImmediatePropagation();suspendLobbyObservers();startingLiveGame=true;button.disabled=true;button.textContent=language==='ru'?'Готовим колоду…':'Preparing the deck…';try{const roster=await loadLiveRoster(context.room.id);const chosen=selectedRoundOption(roster.length,selectedDeckCards().length,context.room.round_cycles||2);if(!chosen)throw new Error(language==='ru'?'Не хватает карт для стола и запаса на обмен.':'Not enough cards for this table and the swap reserve.');const shuffled=shuffleDeck(selectedDeckCards()).slice(0,chosen.cards);const {data:deckSetup,error:deckError}=await requestWithTimeout(supabase.rpc('start_luminaria_game',{target_room_id:context.room.id,card_ids:shuffled}));if(deckError)throw deckError;liveTotalRounds=deckSetup?.[0]?.total_rounds||0;liveHandCache=[];liveRound=null;liveStorytellerId=null;liveRoundNumber=1;context.room={...context.room,status:'playing'};await showGame()}catch(error){const {data:roomState}=await supabase.from('rooms').select('status').eq('id',context.room.id).maybeSingle().catch(()=>({data:null}));if(roomState?.status==='playing'){context.room={...context.room,status:'playing'};await showGame();return}button.disabled=false;button.textContent=language==='ru'?'Начать игру':'Start the game';alert(error.message||'Could not start the room.')}finally{startingLiveGame=false}},true);
 let submittingLiveCard=false;
-document.addEventListener('click',async event=>{const button=event.target.closest('#revealButton,#sendCard');if(!button||!liveGameContext||submittingLiveCard)return;const context=liveGameContext,isHost=button.id==='revealButton';if(isHost!==((liveStorytellerId||context.room.host_id)===context.session.user.id))return;const image=document.querySelector('.hand-card.selected img');const clue=$('#clueInput')?.value.trim();if(!image||(isHost&&!clue))return;event.preventDefault();event.stopImmediatePropagation();submittingLiveCard=true;button.disabled=true;try{let round=await loadLiveRound();if(isHost&&!round){await loadLiveDeckProgress();if(liveRoundNumber>liveTotalRounds)throw new Error('Достигнут лимит раундов. Обнови страницу.');if(liveStorytellerId!==context.session.user.id)throw new Error('Сейчас очередь другого ведущего.');const {data,error}=await supabase.from('rounds').insert({room_id:context.room.id,storyteller_id:context.session.user.id,clue}).select().single();if(error)throw error;round=data;liveRound=round;liveStorytellerId=round.storyteller_id}else if(!round){round=await loadLiveRound()}if(!round)throw new Error(language==='ru'?'Раунд ещё не создан. Попробуй снова.':'The round is not ready yet. Please try again.');const cardId=decodeURIComponent(image.src.split('/').pop());const existing=await supabase.from('card_submissions').select('id,card_id').eq('round_id',round.id).eq('player_id',context.session.user.id).maybeSingle();if(existing.error)throw existing.error;if(!existing.data){const {error}=await supabase.rpc('play_luminaria_card',{target_round_id:round.id,chosen_card_id:cardId});if(error){const retry=await supabase.from('card_submissions').select('id').eq('round_id',round.id).eq('player_id',context.session.user.id).maybeSingle();if(retry.error||!retry.data)throw error}}liveHandCache=[];await loadLiveHand();showLiveRoundWaiting();await advanceLiveRound()}catch(error){console.error(error);button.disabled=false;showInlineGameError(error.message||'Could not save this card.')}finally{submittingLiveCard=false;routeLiveRound().catch(console.error)}},true);
+document.addEventListener('click',async event=>{const button=event.target.closest('#revealButton,#sendCard');if(!button||!liveGameContext||submittingLiveCard)return;const context=liveGameContext,isHost=button.id==='revealButton';if(isHost!==isCurrentStoryteller(context))return;const image=document.querySelector('.hand-card.selected img');const clue=$('#clueInput')?.value.trim();if(!image||(isHost&&!clue))return;event.preventDefault();event.stopImmediatePropagation();submittingLiveCard=true;button.disabled=true;try{let round=await loadLiveRound();if(isHost&&!round){await loadLiveDeckProgress();if(liveRoundNumber>liveTotalRounds)throw new Error('Достигнут лимит раундов. Обнови страницу.');if(!isCurrentStoryteller(context))throw new Error('Сейчас очередь другого ведущего.');const {data,error}=await supabase.from('rounds').insert({room_id:context.room.id,storyteller_id:context.session.user.id,clue}).select().single();if(error)throw error;round=data;liveRound=round;liveStorytellerId=round.storyteller_id}else if(!round){round=await loadLiveRound()}if(!round)throw new Error(language==='ru'?'Раунд ещё не создан. Попробуй снова.':'The round is not ready yet. Please try again.');const cardId=decodeURIComponent(image.src.split('/').pop());const existing=await ownSubmissionQuery(round.id,'id,card_id',context).maybeSingle();if(existing.error)throw existing.error;if(!existing.data){const {error}=await supabase.rpc('play_luminaria_card',{target_round_id:round.id,chosen_card_id:cardId});if(error){const retry=await ownSubmissionQuery(round.id,'id',context).maybeSingle();if(retry.error||!retry.data)throw error}}liveHandCache=[];await loadLiveHand();showLiveRoundWaiting();await advanceLiveRound()}catch(error){console.error(error);button.disabled=false;showInlineGameError(error.message||'Could not save this card.')}finally{submittingLiveCard=false;routeLiveRound().catch(console.error)}},true);
 let openingFinale=null;
 async function showGameFinished(){
   const context=liveGameContext;if(!context)return;
@@ -894,12 +919,12 @@ async function showGameFinished(){
   openingFinale=(async()=>{
     const [roster,{data:rounds,error}]=await Promise.all([
       loadLiveRoster(context.room.id),
-      supabase.from('rounds').select('id,clue,storyteller_id,created_at').eq('room_id',context.room.id).eq('phase','results').order('created_at',{ascending:true}).order('id',{ascending:true})
+      supabase.from('rounds').select('id,clue,storyteller_id,storyteller_participant_id,created_at').eq('room_id',context.room.id).eq('phase','results').order('created_at',{ascending:true}).order('id',{ascending:true})
     ]);
     if(error)throw error;
     if(liveGameContext?.room.id!==context.room.id)return;
     const ru=language==='ru',decode=document.createElement('textarea');
-    const ranking=rankPlayers(roster).map(seat=>{decode.innerHTML=seat.profile?.nickname||'Dreamer';return {...seat,name:decode.value,avatarHtml:avatarMarkup(seat.profile?.avatar,'✦')}});
+    const ranking=rankPlayers(roster).map(seat=>{decode.innerHTML=seat.displayName;return {...seat,name:decode.value,avatarHtml:avatarMarkup(seat.avatar,'✦')}});
     const history=rounds||[],story=fallbackStory(history,storyLanguage(history));
     await syncStarParty();
     finaleStarRanking=ranking;
@@ -909,15 +934,16 @@ async function showGameFinished(){
     if(history.length){
       const ids=history.map(round=>round.id);
       const [{data:submissions,error:submissionError},{data:votes,error:voteError}]=await Promise.all([
-        supabase.from('card_submissions').select('id,round_id,card_id,player_id').in('round_id',ids),
-        supabase.from('votes').select('round_id,submission_id,voter_id').in('round_id',ids)
+        supabase.from('card_submissions').select('id,round_id,card_id,player_id,participant_id').in('round_id',ids),
+        supabase.from('votes').select('round_id,submission_id,voter_id,voter_participant_id').in('round_id',ids)
       ]);
       if(!submissionError&&!voteError&&root.isConnected){
-        const highlights=roundHighlights(history,submissions||[],votes||[]).filter(item=>item.cards.length);
+        const highlights=roundHighlights(history,submissions||[],votes||[],ranking).filter(item=>item.cards.length);
         if(highlights.length){
           let selected=bestRoundIndex(highlights),previewUrl='',previewBlob=null,renderToken=0;
           const label=root.querySelector('#bestRoundLabel'),preview=root.querySelector('#bestRoundPreview'),status=root.querySelector('#bestRoundStatus');
-          const seatName=id=>ranking.find(seat=>seat.user_id===id)?.name||(ru?'Мечтатель':'Dreamer');
+          const seatNames=new Map(ranking.map(seat=>[seat.id||seat.user_id,seat.name]));
+          const seatName=id=>seatNames.get(id)||(ru?'Мечтатель':'Dreamer');
           const render=async()=>{
             const token=++renderToken,item=highlights[selected];
             label.textContent=`${ru?'Раунд':'Round'} ${item.index+1} ${ru?'из':'of'} ${history.length}`;
@@ -1036,7 +1062,7 @@ async function prepareNextLiveRound(){
     liveRoundNumber+=1;
     liveRoundNumberForId=null;
     await loadLiveHand();
-    if(liveStorytellerId===liveGameContext.session.user.id)demoShowGame();else showLiveRoundWaiting();
+    if(isCurrentStoryteller())demoShowGame();else showLiveRoundWaiting();
   }finally{preparingNextRound=false}
 }
 async function addLiveScoreboard(){if(!liveGameContext||!document.querySelector('.results-page')||$('#liveScoreboard'))return;const scores=$('.scores');if(!scores)return;const roster=await loadLiveRoster(liveGameContext.room.id);const ru=language==='ru';const board=document.createElement('section');board.id='liveScoreboard';board.className='live-scoreboard';board.innerHTML=`<div class="panel-title"><h2>${ru?'Общий счёт':'Total score'}</h2><span class="count">${ru?'Комната':'Room'} ${liveGameContext.room.code}</span></div>${[...roster].sort((a,b)=>b.score-a.score).map((seat,index)=>`<div class="score-row ${seat.user_id===liveGameContext.session.user.id?'me':''}"><span class="score-avatar">${index+1}</span><strong>${seat.profile?.nickname||'Dreamer'}</strong><em>${index===0?(ru?'Лидер':'Leading'):(ru?'За столом':'At the table')}</em><b>${seat.score}</b></div>`).join('')}`;scores.after(board)}
@@ -1101,15 +1127,20 @@ function applyLiveProfileUpdate(userId,nickname,avatar){
   if(liveStarScores[userId]){liveStarScores[userId]={...liveStarScores[userId],name:safeName};const key=starStorageKey();if(key)localStorage.setItem(key,JSON.stringify(liveStarScores));renderStarScores()}
 }
 async function loadLiveRoster(roomId){
-  const {data:seats,error}=await supabase.from('room_players').select('user_id,is_ready,score').eq('room_id',roomId).order('joined_at');
+  const {data:seats,error}=await supabase.from('room_players').select('id,user_id,is_ready,score,joined_at').eq('room_id',roomId).order('joined_at').order('id');
   if(error)throw error;
-  const missingIds=[...new Set(seats.map(seat=>seat.user_id).filter(id=>!liveProfileCache.has(id)))];
+  const missingIds=[...new Set(seats.map(seat=>seat.user_id).filter(id=>id&&!liveProfileCache.has(id)))];
   if(missingIds.length){
     const {data:profiles,error:profileError}=await supabase.from('profiles').select('id,nickname,avatar').in('id',missingIds);
     if(profileError)throw profileError;
     for(const profile of profiles||[])liveProfileCache.set(profile.id,{...profile,nickname:escapeHtml(profile.nickname||'Dreamer'),avatar:safeAvatar({avatar:profile.avatar})});
   }
-  return seats.map(seat=>({...seat,profile:liveProfileCache.get(seat.user_id)}));
+  const roster=seats.map(seat=>{
+    const profile=seat.user_id?liveProfileCache.get(seat.user_id):null;
+    return {...seat,profile,displayName:profile?.nickname||'Dreamer',avatar:profile?.avatar||'✦'};
+  });
+  if(liveGameContext?.room.id===roomId)liveGameContext.mySeatId=seatForUser(roster,liveGameContext.session.user.id)?.id||null;
+  return roster;
 }
 const leaveLobbyObserver=new MutationObserver(()=>{
   if(!liveGameContext||!document.querySelector('.lobby-page')||$('#leaveLobby')||liveGameContext.room.host_id===liveGameContext.session.user.id)return;
