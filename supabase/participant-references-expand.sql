@@ -166,7 +166,13 @@ begin
       raise exception 'No room seat for legacy game user';
     end if;
     participant_id := matching_seat_id;
-  elsif tg_table_name = 'rooms' then
+  elsif tg_table_name in ('rooms', 'room_deck_cards') and (
+    participant_id is null
+    or (tg_op = 'UPDATE' and previous_user_id is not null
+      and participant_id = previous_participant_id)
+  ) then
+    -- A legacy writer clearing a human owner also clears its seat. An explicit
+    -- new participant ID (future bot) is checked by the branch below.
     participant_id := null;
   elsif participant_id is null or not exists (
     select 1 from public.room_players
@@ -191,27 +197,35 @@ revoke all on function public.sync_luminaria_participant_reference()
 
 drop trigger if exists sync_luminaria_room_storyteller_participant on public.rooms;
 create trigger sync_luminaria_room_storyteller_participant
-before insert or update on public.rooms for each row
+-- Starting a game updates status only; the existing BEFORE trigger assigns
+-- current_storyteller_id from host_id during that same statement.
+before insert or update of status, current_storyteller_id,
+  current_storyteller_participant_id on public.rooms for each row
 execute function public.sync_luminaria_participant_reference();
 drop trigger if exists sync_luminaria_round_storyteller_participant on public.rounds;
 create trigger sync_luminaria_round_storyteller_participant
-before insert or update on public.rounds for each row
+before insert or update of room_id, storyteller_id,
+  storyteller_participant_id on public.rounds for each row
 execute function public.sync_luminaria_participant_reference();
 drop trigger if exists sync_luminaria_submission_participant on public.card_submissions;
 create trigger sync_luminaria_submission_participant
-before insert or update on public.card_submissions for each row
+before insert or update of round_id, player_id, participant_id
+on public.card_submissions for each row
 execute function public.sync_luminaria_participant_reference();
 drop trigger if exists sync_luminaria_vote_participant on public.votes;
 create trigger sync_luminaria_vote_participant
-before insert or update on public.votes for each row
+before insert or update of round_id, voter_id, voter_participant_id
+on public.votes for each row
 execute function public.sync_luminaria_participant_reference();
 drop trigger if exists sync_luminaria_deck_owner_participant on public.room_deck_cards;
 create trigger sync_luminaria_deck_owner_participant
-before insert or update on public.room_deck_cards for each row
+before insert or update of room_id, owner_id, owner_participant_id
+on public.room_deck_cards for each row
 execute function public.sync_luminaria_participant_reference();
 drop trigger if exists sync_luminaria_reroll_participant on public.luminaria_card_rerolls;
 create trigger sync_luminaria_reroll_participant
-before insert or update on public.luminaria_card_rerolls for each row
+before insert or update of room_id, player_id, participant_id
+on public.luminaria_card_rerolls for each row
 execute function public.sync_luminaria_participant_reference();
 
 -- Nullable FKs allow legacy writers until the dual-write cutover.
