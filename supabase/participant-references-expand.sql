@@ -1,11 +1,13 @@
--- Phase 2 DRAFT: do not apply to production until the dual-write triggers
--- and recovery path have been exercised in an isolated database.
+-- Phase 2 of participant IDs. Apply after participant-seats-expand.sql and
+-- repair-recovered-seat-links.sql. Verified on the live schema in one
+-- transaction ending with ROLLBACK before release.
 -- These nullable references preserve the existing human-only client and RPCs.
 -- Existing clients and RPCs keep writing legacy user IDs. The triggers below
 -- fill participant IDs for every new row in the same transaction as backfill.
 
 begin;
 set local lock_timeout = '2s';
+set local statement_timeout = '30s';
 
 do $$
 begin
@@ -285,6 +287,7 @@ commit;
 -- the metadata locks held while the new columns and triggers are installed.
 begin;
 set local lock_timeout = '2s';
+set local statement_timeout = '30s';
 alter table public.rooms validate constraint rooms_current_storyteller_participant_fk;
 alter table public.rounds validate constraint rounds_storyteller_participant_fk;
 alter table public.card_submissions validate constraint card_submissions_participant_fk;
