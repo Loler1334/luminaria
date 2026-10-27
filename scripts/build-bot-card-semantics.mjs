@@ -32,6 +32,23 @@ for (const file of (fs.existsSync(fantasy) ? fs.readdirSync(fantasy) : []).sort(
     cards.set(cardId, { title: match[2].replaceAll('-', ' '), scene: '', keywords: '', clues: [] });
   }
 }
+const moonlitEarly = ['001-050', '051-112'].flatMap(range =>
+  JSON.parse(fs.readFileSync(new URL(`src/moonlit-archive-${range}-semantics.json`, root), 'utf8')));
+if (moonlitEarly.length !== 83 || new Set(moonlitEarly.map(card => card.card)).size !== 83) {
+  throw new Error('Expected 83 distinct curated early Moonlit Archive cards');
+}
+for (const card of moonlitEarly) {
+  const existing = cards.get(card.card);
+  if (!/^\d{3}-card\.webp$/.test(card.card)
+      || !existing || existing.scene || existing.keywords || existing.clues.length
+      || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
+      || !card.title?.trim() || card.scene?.trim().length <= 40 || card.keywords?.trim().length <= 20
+      || !Array.isArray(card.clues) || card.clues.length !== 2
+      || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === card.title.toLowerCase())) {
+    throw new Error(`Invalid curated early Moonlit card: ${card.card}`);
+  }
+  cards.set(card.card, card);
+}
 const moonlitExtras = JSON.parse(fs.readFileSync(new URL('src/moonlit-archive-extra-semantics.json', root), 'utf8'));
 if (moonlitExtras.length !== 27) throw new Error('Expected 27 curated Moonlit Archive cards');
 for (const card of moonlitExtras) {
