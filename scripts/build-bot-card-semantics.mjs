@@ -29,6 +29,24 @@ for (const card of moonlitExtras) {
   }
   cards.set(card.card, card);
 }
+const popSources = JSON.parse(fs.readFileSync(new URL('src/pop-culture-201-300-sources.json', root), 'utf8'));
+const popSourceIds = new Set(popSources.map(source => source.card));
+const popSemantics = ['201-250', '251-300'].flatMap(range =>
+  JSON.parse(fs.readFileSync(new URL(`src/pop-culture-${range}-semantics.json`, root), 'utf8')));
+if (popSemantics.length !== 100) throw new Error('Expected 100 curated Pop Culture cards');
+for (const card of popSemantics) {
+  const number = Number(card.card.slice(0, 3));
+  if (!/^\d{3}-pop\.webp$/.test(card.card) || number < 201 || number > 300
+      || !popSourceIds.has(card.card)
+      || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
+      || cards.has(card.card)
+      || !card.title?.trim() || !card.scene?.trim() || !card.keywords?.trim()
+      || !Array.isArray(card.clues) || card.clues.length < 2 || card.clues.length > 3
+      || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === card.title.toLowerCase())) {
+    throw new Error(`Invalid curated Pop Culture card: ${card.card}`);
+  }
+  cards.set(card.card, card);
+}
 for (const override of JSON.parse(fs.readFileSync(new URL('src/bot-clue-overrides.json', root), 'utf8'))) {
   const existing = cards.get(override.card);
   if (!existing || !override.keywords || !Array.isArray(override.clues)
@@ -42,7 +60,7 @@ const literal = value => `'${String(value).replaceAll("'", "''")}'`;
 const rows = [...cards].sort(([a], [b]) => a.localeCompare(b))
   .map(([id, { title, scene, keywords, clues }]) => `  (${literal(id)}, ${literal(title)}, ${literal(scene)}, ${literal(keywords)}, ARRAY[${clues.map(literal).join(', ')}]::text[])`);
 const sql = [
-  '-- Descriptions of published cards, generated from tracked card manifests and fantasy source filenames.',
+  '-- Descriptions of published cards, generated from tracked card manifests and curated semantics.',
   '-- Rebuild with node scripts/build-bot-card-semantics.mjs when those sources change.',
   'begin;',
   "set local lock_timeout = '2s';",
