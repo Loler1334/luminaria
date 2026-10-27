@@ -12,7 +12,9 @@ try{
  await page.evaluate(({helpers,settings,waiting,profile,handlers})=>{
   window.$=s=>document.querySelector(s);window.language='ru';window.escapeHtml=s=>s;window.avatarMarkup=()=> '✦';
   window.liveGameContext={room:{id:'room',host_id:'p0',round_cycles:2},session:{user:{id:'p0'}},player:{name:'Alice'}};
-  window.roster=Array.from({length:6},(_,i)=>({user_id:'p'+i,is_ready:true,score:i,profile:{nickname:'Player '+i}}));
+  window.roster=Array.from({length:6},(_,i)=>({id:'s'+i,user_id:'p'+i,is_ready:true,score:i,profile:{nickname:'Player '+i},displayName:'Player '+i}));
+  window.seatForGameRef=(seats,seatId,userId)=>seats.find(seat=>seat.id===seatId)||seats.find(seat=>seat.user_id===userId);
+  window.seatAvatarMarkup=()=> '✦';window.seatProfileAttrs=()=>'';window.seatBotBadge=seat=>seat.is_bot?' <small class="bot-badge">ИИ</small>':'';
   window.loadLiveRoster=async()=>roster;window.selectedDeckCards=()=>Array(100);window.selectedDeckId=()=> 'moon';window.decks={moon:{cards:Array(100)}};
   window.supabase={rpc:async(name,args)=>({data:name==='luminaria_round_waiting'?roster.map((p,i)=>({user_id:p.user_id,has_submitted:i<3,has_voted:i===1})):null}),auth:{getSession:async()=>({data:{session:liveGameContext.session}})},from:()=>({upsert:async value=>{window.saved=value;return {error:null}}})};
   window.liveHandCache=[];window.liveStorytellerId='p0';window.liveRound=null;window.liveRoundNumber=1;window.applyLiveProfileUpdate=()=>{};window.liveChatChannel=null;
@@ -31,10 +33,12 @@ try{
  assert.ok(await page.evaluate(()=>Boolean(document.querySelector('#waitingScore').compareDocumentPosition(document.querySelector('.waiting-minigame'))&Node.DOCUMENT_POSITION_FOLLOWING)));
  await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','waiting-mobile.png'),fullPage:true});
  for(let n=3;n<=10;n++){
-  await page.evaluate(async n=>{roster=Array.from({length:n},(_,i)=>({user_id:'p'+i,profile:{nickname:'Player '+i}}));document.body.innerHTML='<main><section class="vote-header"></section></main>';liveRound={id:'r',phase:'voting',storyteller_id:'p0'};await updateLivePhaseProgress()},n);
+   await page.evaluate(async n=>{roster=Array.from({length:n},(_,i)=>({id:'s'+i,user_id:'p'+i,profile:{nickname:'Player '+i},displayName:'Player '+i}));document.body.innerHTML='<main><section class="vote-header"></section></main>';liveRound={id:'r',phase:'voting',storyteller_id:'p0'};await updateLivePhaseProgress()},n);
   assert.equal(await page.locator('.phase-waiting span').count(),n-1);assert.equal(await page.locator('.phase-waiting .done').count(),1);
   assert.ok(!(await page.locator('.phase-waiting').innerText()).includes('Player 0'));
  }
+  await page.evaluate(async()=>{roster[1]={...roster[1],user_id:null,is_bot:true,displayName:'Лунный Архивариус'};liveRound.storyteller_participant_id='s1';await updateLivePhaseProgress()});
+  assert.ok(!(await page.locator('.phase-waiting').innerText()).includes('Лунный Архивариус'));
  await page.evaluate(()=>{liveGameContext.session.user.user_metadata={};liveGameContext.session.user.id='p0'});
  for(let i=0;i<5;i++){
   await page.evaluate(()=>openProfileSetup(liveGameContext.session));

@@ -15,6 +15,7 @@ const vm = require('node:vm');
     supabase: { from: () => query }, language: 'ru',
     document: { body: { innerHTML: '' }, querySelectorAll: () => [] },
     availableCards: new Set(), loadLiveRoster: async () => [], votingOrder: rows => rows,
+    isRoundStoryteller: () => true,
     updateLivePhaseProgress: async () => {}, console
   };
   vm.createContext(state);

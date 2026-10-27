@@ -18,17 +18,20 @@ await page.evaluate(({finale,results,observer,helpers,view,roundState})=>{
  window.liveGameContext={room:{id:'room',code:'WYBTMN',host_id:'player-0'},session:{user:{id:'player-0'}}};
  window.liveRoundNumber=18;
  window.cardAssetVersion=()=>'';window.availableCards=new Set(['001-card.webp']);window.deckPool=['001-card.webp'];
- window.avatarMarkup=()=> '✦';window.restartLiveRoom=async()=>{window.rematched=true};window.showInlineGameError=message=>{throw Error(message)};window.syncStarParty=async()=>{};window.liveStarScores={};
+ window.avatarMarkup=()=> '✦';window.seatAvatarMarkup=()=> '✦';window.seatBotBadge=()=>'';window.restartLiveRoom=async()=>{window.rematched=true};window.showInlineGameError=message=>{throw Error(message)};window.syncStarParty=async()=>{};window.liveStarScores={};
  window.loadLiveRoster=async()=>window.roster;
+ window.gameSeatId=(seats,seatId,userId)=>seatId||seats.find(seat=>seat.user_id===userId)?.id||userId;
+ window.seatForGameRef=(seats,seatId,userId)=>seats.find(seat=>seat.id===seatId)||seats.find(seat=>seat.user_id===userId);
+ window.roundHighlights=()=>[];
  window.addLiveScoreboard=async()=>{};window.prepareNextLiveRound=async()=>{};
- window.supabase={from:()=>({select(){return this},eq(){return this},order(){return this},then(resolve){return Promise.resolve({data:window.rounds,error:null}).then(resolve)}}),rpc:()=>({single:async()=>({data:{remaining_cards:0},error:null})}),auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};
+ window.supabase={from:()=>({select(){return this},eq(){return this},order(){return this},in(){this.historyCards=true;return this},then(resolve){return Promise.resolve({data:this.historyCards?[]:window.rounds,error:null}).then(resolve)}}),rpc:()=>({single:async()=>({data:{remaining_cards:0},error:null})}),auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};
  window.fetch=async(url,options)=>{if(url.includes('illustration')){if(JSON.parse(options.body).language!==storyLanguage(window.rounds))throw Error('Wrong story language');const canvas=document.createElement('canvas');canvas.width=16;canvas.height=16;return Response.json({image:canvas.toDataURL()})}return Response.json({story:'Когда луна утонула в чашке, лес заговорил голосами забытых друзей. Мы сложили их слова в ключ и открыли дверь за горизонтом. Там стоял накрытый стол — на одно место больше. Но никто не вспомнил, кого мы всё это время ждали.'})};
- (0,eval)(helpers.replace(/export /g,''));(0,eval)(view.replace(/^import .*\r?\n/m,'').replace(/export /g,''));(0,eval)(roundState.replace(/export /g,''));
+ (0,eval)(helpers.replace(/export /g,''));(0,eval)(view.replace(/^import .*\r?\n/gm,'').replace(/export /g,''));(0,eval)(roundState.replace(/export /g,''));
  (0,eval)(finale);(0,eval)(results);(0,eval)(observer);
 },{finale,results,observer,helpers:fs.readFileSync('src/game-finale.mjs','utf8'),view:fs.readFileSync('src/finale-view.mjs','utf8'),roundState:fs.readFileSync('src/round-state.js','utf8')});
 for(let count=3;count<=10;count++){
  await page.evaluate(async count=>{
-   window.roster=Array.from({length:count},(_,i)=>({user_id:`player-${i}`,score:[41,40,30,30,30,27,20][i],profile:{nickname:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]}}));
+   window.roster=Array.from({length:count},(_,i)=>({id:`seat-${i}`,user_id:`player-${i}`,score:[41,40,30,30,30,27,20][i],profile:{nickname:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]},displayName:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]}));
    window.rounds=Array.from({length:Math.floor(86/count)},(_,i)=>({id:`r${i}`,clue:i===Math.floor(86/count)-1?'<img src=x onerror=alert(1)>':`Тайна ${i+1}: город, который умеет летать`,storyteller_id:`player-${i%count}`}));
    document.body.innerHTML='<main class="results-page"><section class="scores"></section></main>';
    await showLiveResults({room_id:'room',phase:'results',clue:'<img src=x onerror=alert(1)>'});
@@ -58,6 +61,10 @@ await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT
 await page.setViewportSize({width:1280,height:1000});
 await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','finale-desktop.png'),fullPage:true});
 await page.locator('#rematchButton').click();assert(await page.evaluate(()=>rematched));
+await page.evaluate(()=>{const humans=[{id:'seat-human',user_id:'player-0',name:'Игрок',score:4,place:2,avatarHtml:'✦'}];const bots=[{id:'seat-bot-one',user_id:null,is_bot:true,name:'Лунный Архивариус',score:7,place:1,avatarHtml:'☽'},{id:'seat-bot-two',user_id:null,is_bot:true,name:'Звёздный Плут',score:2,place:3,avatarHtml:'✺'}];document.body.innerHTML=finaleMarkup({ranking:[...humans,...bots],rounds:[],roomId:'room',roomCode:'WYBTMN',userId:'player-0',language:'ru',story:'Конец',isHost:false})});
+assert.equal(await page.locator('.finale-scoreboard .bot-badge').count(),2);
+assert.equal(await page.locator('[data-live-profile-id="null"]').count(),0);
+assert.match(await page.locator('.finale-scoreboard').innerText(),/Лунный Архивариус/);
 assert.deepEqual(errors,[]);
 console.log('PASS: actual final-round renderer for 3–10 players, no winner error or next-round action, tie podium, full history, idempotent concurrent finale, mobile width, rematch.');
 }finally{await browser.close()}

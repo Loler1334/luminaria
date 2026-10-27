@@ -72,3 +72,4 @@
 .host-start-hint{margin:12px 0 3px!important;color:#b9c2dc;font-size:11px!important;line-height:1.4}
 .turn-timer{display:flex;align-items:center;justify-content:center;gap:1rem;flex-wrap:wrap;margin:1rem auto;padding:.75rem 1rem;width:max-content;max-width:calc(100% - 2rem);border:1px solid rgba(255,255,255,.25);border-radius:1rem;background:rgba(15,18,47,.88);color:#fff;font-weight:700}
 .turn-timer .primary-button{width:auto;margin:0;padding:.55rem 1rem;font-size:.9rem}
+.bot-badge{display:inline-block!important;margin:0 0 0 5px!important;padding:2px 6px;border:1px solid #f1c98588;border-radius:999px;color:#f1c985!important;background:#f1c9851c;font:700 10px/1.2 system-ui,sans-serif;vertical-align:middle;letter-spacing:.05em}.add-bot-button{margin-top:16px;width:100%;text-align:center}.add-bot-button:disabled{opacity:.5;cursor:not-allowed}
