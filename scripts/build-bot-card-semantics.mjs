@@ -7,6 +7,22 @@ for (const deck of ['cosmic-absurdity', 'meme-chaos', 'everyday-absurdity']) {
   const manifest = JSON.parse(fs.readFileSync(new URL(`src/${deck}-manifest.json`, root), 'utf8'));
   for (const card of manifest) cards.set(card.card, { title: card.title, scene: card.scene || '', keywords: '', clues: [] });
 }
+const everydaySemantics = ['001-055', '056-110'].flatMap(range =>
+  JSON.parse(fs.readFileSync(new URL(`src/everyday-absurd-${range}-semantics.json`, root), 'utf8')));
+if (everydaySemantics.length !== 110) throw new Error('Expected 110 curated Everyday Absurdity cards');
+for (const card of everydaySemantics) {
+  const number = Number(card.card.slice(0, 3));
+  const existing = cards.get(card.card);
+  if (!/^\d{3}-abs\.webp$/.test(card.card) || number < 1 || number > 110
+      || !existing || existing.scene || existing.keywords || existing.clues.length
+      || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
+      || !card.scene?.trim() || !card.keywords?.trim()
+      || !Array.isArray(card.clues) || card.clues.length !== 2
+      || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
+    throw new Error(`Invalid curated Everyday Absurdity card: ${card.card}`);
+  }
+  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+}
 const fantasy = new URL('public/deck-candidates/fantasy-anthology/', root);
 for (const file of (fs.existsSync(fantasy) ? fs.readdirSync(fantasy) : []).sort()) {
   const match = /^fantasy-(\d+)-(.+)\.png$/.exec(file);

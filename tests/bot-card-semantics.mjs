@@ -2,6 +2,8 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 
 const curated = JSON.parse(fs.readFileSync('src/moonlit-archive-extra-semantics.json', 'utf8'));
+const everyday = ['001-055', '056-110'].flatMap(range =>
+  JSON.parse(fs.readFileSync(`src/everyday-absurd-${range}-semantics.json`, 'utf8')));
 const overrides = JSON.parse(fs.readFileSync('src/bot-clue-overrides.json', 'utf8'));
 const pop = ['201-250', '251-300', '401-450', '451-500'].flatMap(range =>
   JSON.parse(fs.readFileSync(`src/pop-culture-${range}-semantics.json`, 'utf8')));
@@ -39,4 +41,15 @@ for (const n of [...Array.from({ length: 100 }, (_, i) => 201 + i), ...Array.fro
 }
 assert.equal([...sql.matchAll(/\('[0-9]{3}-pop\.webp',/g)].length, 200);
 assert.equal([...sql.matchAll(/^  \('[0-9]{3}-[^']+\.webp',/gm)].length, 640);
-console.log('PASS: 640 active cards, including 110 Moonlit and 200 Pop Culture cards, have semantic records.');
+assert.equal(everyday.length, 110);
+assert.equal(new Set(everyday.map(card => card.card)).size, 110);
+for (let n = 1; n <= 110; n++) {
+  const id = `${String(n).padStart(3, '0')}-abs.webp`;
+  const card = everyday.find(entry => entry.card === id);
+  assert.ok(card, `Missing curated Everyday Absurdity card ${id}`);
+  assert.ok(card.scene.length > 40 && card.keywords.length > 20);
+  assert.equal(card.clues.length, 2);
+  assert.ok(sql.includes(`('${id}',`));
+  for (const clue of card.clues) assert.ok(sql.includes(clue));
+}
+console.log('PASS: 640 active cards, including 110 fully curated Everyday Absurdity cards, have semantic records.');
