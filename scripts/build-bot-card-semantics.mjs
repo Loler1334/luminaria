@@ -7,6 +7,23 @@ for (const deck of ['cosmic-absurdity', 'meme-chaos', 'everyday-absurdity']) {
   const manifest = JSON.parse(fs.readFileSync(new URL(`src/${deck}-manifest.json`, root), 'utf8'));
   for (const card of manifest) cards.set(card.card, { title: card.title, scene: card.scene || '', keywords: '', clues: [] });
 }
+const memeSemantics = ['001-055', '056-110'].flatMap(range =>
+  JSON.parse(fs.readFileSync(new URL(`src/meme-chaos-${range}-semantics.json`, root), 'utf8')));
+if (memeSemantics.length !== 110 || new Set(memeSemantics.map(card => card.card)).size !== 110) {
+  throw new Error('Expected 110 distinct curated Meme Chaos cards');
+}
+for (const card of memeSemantics) {
+  const existing = cards.get(card.card);
+  if (!/^\d{3}-meme\.webp$/.test(card.card)
+      || !existing || existing.keywords || existing.clues.length
+      || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
+      || card.scene?.trim().length <= 40 || card.keywords?.trim().length <= 20
+      || !Array.isArray(card.clues) || card.clues.length !== 2
+      || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
+    throw new Error(`Invalid curated Meme Chaos card: ${card.card}`);
+  }
+  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+}
 const everydaySemantics = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(new URL(`src/everyday-absurd-${range}-semantics.json`, root), 'utf8')));
 if (everydaySemantics.length !== 110) throw new Error('Expected 110 curated Everyday Absurdity cards');
