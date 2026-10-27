@@ -59,6 +59,13 @@ export function fitStory(text, max = Infinity) {
   return excerpt.slice(0, space > 150 ? space : undefined).replace(/[,;:\s]+$/, '') + '…';
 }
 
+export function unquoteStoryClues(story, rounds) {
+  const clues = new Set(cleanClues(rounds).map(clue => clue.toLocaleLowerCase()));
+  return String(story || '').replace(/[«“]([^»”]+)[»”]/g, (quoted, phrase) =>
+    clues.has(phrase.trim().toLocaleLowerCase()) && !/[.!?]/.test(phrase)
+      ? phrase : quoted);
+}
+
 // A local vignette keeps the finale usable if the story service is unavailable.
 export function fallbackStory(rounds, language = 'ru') {
   const clues = cleanClues(rounds);
@@ -72,8 +79,8 @@ export function fallbackStory(rounds, language = 'ru') {
   // The labelled offline vignette also preserves every original clue.
 
   const fragments = positions.map(index => clues[index]);
-  const words = fragments.map(fragment => language === 'ru' ? `«${fragment}»` : `“${fragment}”`).join(', ');
+  const words = fragments.join(', ');
   return fitStory(language === 'ru'
-    ? `Ночью на пустых картах проступили слова: ${words}. Мы сложили их в тайный знак — и за стеной открылась дверь. Утром каждый помнил эту историю, но никто не мог объяснить, кто впустил нас обратно.`
-    : `At midnight, blank cards revealed the words ${words}. We joined them into a secret sign, and a door opened in the wall. By dawn everyone remembered the story, but nobody knew who had let us back in.`);
+    ? `Ночью городской принтер напечатал приказ: ${words}. По нелепому закону всё напечатанное тут же становилось правдой. Мэр пытался выключить принтер, но тот выдал ему счёт за аренду реальности. Утром город удалось спасти: принтер назначили мэром. Теперь он хотя бы не врёт о бюджете.`
+    : `At midnight the city printer issued a decree: ${words}. By an absurd local law, everything it printed became true. The mayor tried to unplug it, but it billed him for renting reality. By morning the city was saved: they made the printer mayor. At least it never lies about the budget.`);
 }

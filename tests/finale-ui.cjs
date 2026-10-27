@@ -60,6 +60,10 @@ for(let count=3;count<=10;count++){
 await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','finale-mobile.png'),fullPage:true});
 await page.setViewportSize({width:1280,height:1000});
 await page.screenshot({path:require('node:path').join(process.env.UI_TEST_OUTPUT_DIR||'output','finale-desktop.png'),fullPage:true});
+await page.evaluate(()=>{window.ClipboardItem=class{constructor(items){this.items=items}};Object.defineProperty(navigator,'clipboard',{configurable:true,value:{write:async items=>{window.copiedCard=items[0].items['image/png']}}});navigator.share=()=>{throw Error('Desktop share sheet should not open')}});
+await page.locator('#shareFinaleCard').click();
+assert(await page.evaluate(()=>copiedCard instanceof Blob&&copiedCard.type==='image/png'));
+assert.match(await page.locator('#illustrationStatus').innerText(),/скопирована/);
 await page.locator('#rematchButton').click();assert(await page.evaluate(()=>rematched));
 await page.evaluate(()=>{const humans=[{id:'seat-human',user_id:'player-0',name:'Игрок',score:4,place:2,avatarHtml:'✦'}];const bots=[{id:'seat-bot-one',user_id:null,is_bot:true,name:'Лунный Архивариус',score:7,place:1,avatarHtml:'☽'},{id:'seat-bot-two',user_id:null,is_bot:true,name:'Звёздный Плут',score:2,place:3,avatarHtml:'✺'}];document.body.innerHTML=finaleMarkup({ranking:[...humans,...bots],rounds:[],roomId:'room',roomCode:'WYBTMN',userId:'player-0',language:'ru',story:'Конец',isHost:false})});
 assert.equal(await page.locator('.finale-scoreboard .bot-badge').count(),2);

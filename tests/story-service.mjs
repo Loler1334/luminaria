@@ -1,11 +1,12 @@
 import assert from 'node:assert/strict';
 import { handleStory, missingStoryClues } from '../worker/story-service.mjs';
-import { storyLanguage, fallbackStory } from '../src/game-finale.mjs';
+import { storyLanguage, fallbackStory, unquoteStoryClues } from '../src/game-finale.mjs';
 
 assert.equal(storyLanguage([{clue:'Moonlit forest'},{clue:'Sleeping dragon'}]),'en');
 assert.equal(storyLanguage([{clue:'Лунный лес'},{clue:'Спящий дракон'}]),'ru');
 assert.equal(storyLanguage([{clue:'Moon'},{clue:'Forest'},{clue:'Очень длинная русская ассоциация'}]),'en');
 assert.equal(storyLanguage([{clue:'123 ✨'}]),'en');
+assert.equal(unquoteStoryClues('Он увидел «сонную улитку» и сказал: «Пора домой!»', [{clue:'Сонную улитку'}]),'Он увидел сонную улитку и сказал: «Пора домой!»');
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
@@ -69,6 +70,12 @@ store.clear();persistedStory=null;
 const failed=await handleStory(request(),{AI:{run:async()=>({response:'A broken fragment without an ending'})}},config,{fetcher,cache});
 assert.equal(failed.status,503);assert.equal(persistedStory,null);
 console.log('PASS: incomplete, oversized and token-exhausted drafts are rewritten; repeated failure is never saved.');
+
+store.clear();persistedStory=null;let quoteAttempts=0;
+const quoted=await handleStory(request(),{AI:{async run(){quoteAttempts++;return {response:quoteAttempts===1
+  ? 'The city council placed “Moonlit forest” inside a glass jar and charged every visitor for breathing. The jar escaped, stole the mayor’s shoes, and declared the council a collection of teaspoons.'
+  : 'The Moonlit forest escaped its glass jar, stole the mayor’s shoes, and billed the city council for breathing. The council paid with teaspoons, so the forest opened a cutlery shop and hired the mayor as its dishwasher.'}}}},config,{fetcher,cache});
+assert.equal(quoted.status,200);assert.equal(quoteAttempts,2);assert(!persistedStory.story.includes('“Moonlit forest”'));
 
 assert.deepEqual(missingStoryClues('«ЛЁД И ПЛАМЯ» встретили КОТА!', ['лёд и пламя','кота']),[]);
 assert.deepEqual(missingStoryClues('Котик увидел Ассоциация 10.', ['Кот','Ассоциация 1']),['Кот','Ассоциация 1']);

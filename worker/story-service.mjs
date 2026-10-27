@@ -90,10 +90,13 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
           const suppliedCharacters = new Set(clues.join(''));
           const foreignScript = [...story].some(char => /[\p{Script=Han}\p{Script=Hiragana}\p{Script=Katakana}]/u.test(char) && !suppliedCharacters.has(char));
           const missing = missingStoryClues(story, clues);
+          const quotedClues = clues.filter(clue =>
+            [`«${clue}»`, `“${clue}”`, `"${clue}"`]
+              .some(quoted => story.toLocaleLowerCase().includes(quoted.toLocaleLowerCase())));
           const exhausted = (choice?.finish_reason ?? response?.finish_reason) === 'length' || response?.usage?.completion_tokens >= maxTokens;
-          if ([...story].length >= 100 && complete && !foreignScript && !exhausted && !missing.length && !/<\/?think>/.test(story) && !/\[\[clue:/.test(story) && story.split(/\s+/).length <= maxWords) break;
+          if ([...story].length >= 100 && complete && !foreignScript && !exhausted && !missing.length && !quotedClues.length && !/<\/?think>/.test(story) && !/\[\[clue:/.test(story) && story.split(/\s+/).length <= maxWords) break;
           if (attempt === 1) throw new Error('Story generation did not produce a complete compact ending');
-          messages.push({ role: 'assistant', content: fitStory(draft) }, { role: 'user', content: `Repair and return the entire story in about ${targetWords} words, at most ${maxWords}. Incorporate all missing phrases: ${JSON.stringify(missing)}. Keep every other clue already present. Inflect the words naturally but keep each phrase's words together. Resolve the original problem and give it a funny consequence. Write in ${language === 'ru' ? 'Russian' : 'English'}. Return only the finished story, not a continuation.` });
+          messages.push({ role: 'assistant', content: fitStory(draft) }, { role: 'user', content: `Repair and return the entire story in about ${targetWords} words, at most ${maxWords}. Incorporate all missing phrases: ${JSON.stringify(missing)}. Weave these quoted clues into ordinary narration without quotation marks: ${JSON.stringify(quotedClues)}. Keep every other clue already present. Inflect the words naturally but keep each phrase's words together. Resolve the original problem and give it a funny consequence. Write in ${language === 'ru' ? 'Russian' : 'English'}. Return only the finished story, not a continuation.` });
         }
         const publish = await fetcher(`${config.url}/rest/v1/rpc/publish_luminaria_finale_story`, {
           method: 'POST', headers: { ...headers, 'Content-Type': 'application/json' },

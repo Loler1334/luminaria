@@ -6,6 +6,8 @@ async function main() {
   assert.equal(fantasyAvatars.length, 9);
   assert.equal(new Set(fantasyAvatars.map(({ id }) => id)).size, fantasyAvatars.length);
   assert.equal(normalizeAvatar('☽'), 'mage-female', 'legacy moon avatar stays recognizable');
+  assert.equal(normalizeAvatar('✺'), 'elf', 'bot avatar uses the same portrait presets');
+  assert.equal(normalizeAvatar('☄'), 'dragonkin');
   assert.equal(normalizeAvatar('✶'), 'mage-male', 'legacy star avatar stays recognizable');
   assert.equal(normalizeAvatar('goblin'), 'goblin');
   assert.equal(normalizeAvatar('unknown-avatar'), 'mage-male');

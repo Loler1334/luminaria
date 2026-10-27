@@ -22,6 +22,10 @@ const legacyAvatarIds = {
   '✿': 'goblin',
   '✧': 'witch',
   '♧': 'ent',
+  '✺': 'elf',
+  '⌛': 'dwarf',
+  '☄': 'dragonkin',
+  '◇': 'witch',
 };
 
 export function normalizeAvatar(value, fallback = 'mage-male') {

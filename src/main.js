@@ -2,7 +2,7 @@ import { CANONICAL_SITE_URL, roomInviteUrl, personalReturnUrl, parsePersonalRetu
 import { savedLiveRoom as readSavedLiveRoom, savedGuestProfile as readSavedGuestProfile, canReclaimSavedSeat } from './guest-recovery.js';
 import { roundOptions, selectedRoundOption, lobbyRoundChoices } from './round-options.mjs';
 import './lobby-settings.css';
-import { rankPlayers, fallbackStory, fitStory, storyLanguage } from './game-finale.mjs';
+import { rankPlayers, fallbackStory, fitStory, storyLanguage, unquoteStoryClues } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
 import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
@@ -422,11 +422,11 @@ function ensureLiveChat(){if(!liveGameContext||!document.querySelector('main')||
 const liveChatObserver=new MutationObserver(()=>{if(liveGameContext&&!$('#liveChat'))ensureLiveChat()});liveChatObserver.observe(document.body,{childList:true,subtree:false});
 function makeRoomCode(){return Array.from(crypto.getRandomValues(new Uint32Array(6)),n=>'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'[n%32]).join('')}
 const renderLegacyGuesser=showGuesser;
-showGuesser=function(storyteller,clue){renderLegacyGuesser({...storyteller,name:escapeHtml(storyteller?.name||'Storyteller'),avatar:storyteller?.isBot?escapeHtml(storyteller.avatar||'✦'):avatarMarkup(safeAvatar({avatar:storyteller?.avatar}))},escapeHtml(clue||''));const avatar=$('.storyteller .lobby-avatar'),name=$('.storyteller strong');if(avatar&&liveStorytellerId){avatar.dataset.liveProfileId=liveStorytellerId;avatar.dataset.liveProfileField='avatar'}if(name&&liveStorytellerId){name.dataset.liveProfileId=liveStorytellerId;name.dataset.liveProfileField='nickname'}if(storyteller?.isBot&&name)name.insertAdjacentHTML('beforeend',seatBotBadge({is_bot:true}))};
+showGuesser=function(storyteller,clue){renderLegacyGuesser({...storyteller,name:escapeHtml(storyteller?.name||'Storyteller'),avatar:avatarMarkup(storyteller?.avatar)},escapeHtml(clue||''));const avatar=$('.storyteller .lobby-avatar'),name=$('.storyteller strong');if(avatar&&liveStorytellerId){avatar.dataset.liveProfileId=liveStorytellerId;avatar.dataset.liveProfileField='avatar'}if(name&&liveStorytellerId){name.dataset.liveProfileId=liveStorytellerId;name.dataset.liveProfileField='nickname'}if(storyteller?.isBot&&name)name.insertAdjacentHTML('beforeend',seatBotBadge({is_bot:true}))};
 function safeAvatar(player){return normalizeAvatar(player?.avatar||'mage-male')}
 function cachePlayer(player,userId){if(!player?.name)return;const avatar=typeof player.avatar==='string'&&player.avatar.startsWith('data:image/')?'☽':safeAvatar(player);localStorage.setItem('luminaria-player',JSON.stringify({name:String(player.name).slice(0,24),avatar}));if(userId)localStorage.setItem('luminaria-player-user',userId)}
 function avatarMarkup(value, fallback='mage-male'){const avatar=safeAvatar({avatar:value||fallback});return typeof avatar==='string'&&avatar.startsWith('data:image/')?`<img class="avatar-photo" src="${avatar}" alt="">`:avatarPortraitMarkup(avatar)}
-function seatAvatarMarkup(seat,fallback='mage-male'){return seat?.is_bot?escapeHtml(seat.bot_avatar||'✦'):avatarMarkup(seat?.profile?.avatar,fallback)}
+function seatAvatarMarkup(seat,fallback='mage-male'){return avatarMarkup(seat?.is_bot?seat.bot_avatar:seat?.profile?.avatar,fallback)}
 function seatProfileAttrs(seat,field){return seat?.user_id?` data-live-profile-id="${seat.user_id}" data-live-profile-field="${field}"`:''}
 function seatBotBadge(seat){return seat?.is_bot?` <small class="bot-badge">${language==='ru'?'ИИ':'BOT'}</small>`:''}
 function avatarDataUrl(file){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onerror=()=>reject(reader.error);reader.onload=()=>resolve(String(reader.result));reader.readAsDataURL(file)})}
@@ -492,7 +492,7 @@ let botAdvanceTimer=null,botAdvanceInFlight=false,botAdvanceLastAt=0;
 function scheduleBotAdvance(room,round){
   const context=liveGameContext;
   if(!context?.hasBots||room?.status!=='playing'||botAdvanceTimer||botAdvanceInFlight)return;
-  if(!room.awaiting_storyteller&&!['submitting','voting'].includes(round?.phase))return;
+  if(!room.awaiting_storyteller&&!['submitting','voting','results'].includes(round?.phase))return;
   if(Date.now()-botAdvanceLastAt<800)return;
   const roomId=room.id,epoch=liveGameEpoch;
   botAdvanceTimer=setTimeout(async()=>{
@@ -500,12 +500,22 @@ function scheduleBotAdvance(room,round){
     if(!liveGameContext||liveGameContext.room.id!==roomId||epoch!==liveGameEpoch||botAdvanceInFlight)return;
     botAdvanceInFlight=true;botAdvanceLastAt=Date.now();
     try{
+      if(!room.awaiting_storyteller&&round?.phase==='results'){
+        const roster=await loadLiveRoster(roomId);
+        if(!roster.some(seat=>seat.is_bot&&seat.id===room.current_storyteller_participant_id)){botAdvanceLastAt=0;return}
+        const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:roomId}).single();
+        if(deckError)throw deckError;
+        if(deckState.remaining_cards===0||liveRoundNumber>=deckState.cards_per_player){botAdvanceLastAt=0;return}
+        const {data:nextRoom,error:nextError}=await supabase.rpc('start_next_turn',{p_room_id:roomId});
+        if(nextError)throw nextError;
+        if(liveGameContext?.room.id===roomId)liveGameContext.room=nextRoom;
+      }
       const {data,error}=await supabase.rpc('advance_luminaria_bots',{target_room_id:roomId});
       if(error)throw error;
       if(data?.advanced&&liveGameContext?.room.id===roomId)await routeLiveRound();
     }catch(error){console.error('Bot turn failed',error);showInlineGameError(language==='ru'?'Ход ИИ-игрока задержался. Повторяем попытку…':'AI player turn is delayed. Retrying…')}
     finally{botAdvanceInFlight=false}
-  },500);
+  },round?.phase==='results'?2500:500);
 }
 function isCurrentStoryteller(context=liveGameContext){
   if(!context)return false;
@@ -1001,7 +1011,7 @@ async function showGameFinished(){
     }
     $('#rematchButton')?.addEventListener('click',async event=>{const button=event.currentTarget;button.disabled=true;try{await restartLiveRoom()}catch(error){if(button.isConnected){button.disabled=false;showInlineGameError(error.message)}}});
     $('#copyPartyStory').addEventListener('click',async event=>{try{await navigator.clipboard.writeText($('#partyStory').textContent);event.target.textContent=ru?'Скопировано ✓':'Copied ✓'}catch{$('#storyStatus').textContent=ru?'Выдели текст истории, чтобы скопировать её.':'Select the story text to copy it.'}});
-    let illustrationLoading=false;
+    let illustrationLoading=false,shareCardBlob=null;
     const shareCard=root.querySelector('#finaleShareCard');
     const illustrationStatus=root.querySelector('#illustrationStatus'),illustrationRetry=root.querySelector('#retryFinaleIllustration'),shareCardStory=root.querySelector('#shareCardStory'),shareCardImage=root.querySelector('#partyIllustration');
     const makeShareCard=storyText=>{
@@ -1023,13 +1033,13 @@ async function showGameFinished(){
       });
     };
     const loadIllustration=async storyText=>{
-      if(illustrationLoading||!root.isConnected)return;illustrationLoading=true;illustrationRetry.hidden=true;illustrationStatus.textContent=ru?'Рисуем абсурдную иллюстрацию к истории…':'Painting an absurd illustration for the story…';
+      if(illustrationLoading||!root.isConnected)return;illustrationLoading=true;shareCardBlob=null;shareCard.hidden=true;root.querySelector('#shareFinaleCard').hidden=true;illustrationRetry.hidden=true;illustrationStatus.textContent=ru?'Рисуем абсурдную иллюстрацию к истории…':'Painting an absurd illustration for the story…';
       try{
         const {data:{session}}=await supabase.auth.getSession();if(!session)throw new Error('Session unavailable');
         const until=Date.now()+150000;let result;
         do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language:storyLanguage(history)}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
         if(!result?.image)throw new Error('Illustration timed out');if(!root.isConnected)return;
-        shareCardImage.src=result.image;shareCardImage.onload=()=>{};await shareCardImage.decode();shareCardStory.textContent=storyText;shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
+        shareCardImage.src=result.image;await shareCardImage.decode();shareCardStory.textContent=storyText;shareCardBlob=await makeShareCard(storyText);if(!shareCardBlob)throw new Error('Could not create story card');shareCard.hidden=false;illustrationStatus.textContent=ru?'Карточка готова — в ней история, иллюстрация и имена игроков.':'Your story card is ready with the illustration and player names.';root.querySelector('#shareFinaleCard').hidden=false;
       }catch{if(root.isConnected){illustrationStatus.textContent=ru?'Не удалось создать иллюстрацию. История сохранена — попробуй ещё раз.':'Could not create the illustration. Your story is saved — please try again.';illustrationRetry.hidden=false}}
       finally{illustrationLoading=false}
     };
@@ -1037,10 +1047,11 @@ async function showGameFinished(){
     root.querySelector('#shareFinaleCard').addEventListener('click',async event=>{
       const button=event.currentTarget;button.disabled=true;
       const caption=`${ru?'Наша общая история в Luminaria':'Our shared story in Luminaria'}\n\n${$('#partyStory').textContent}\n\n${ru?'Игроки':'Players'}: ${ranking.map(seat=>seat.name).join(', ')}\n\n${ru?'Сыграть с друзьями':'Play with friends'}: https://luminaria.cc`;
-      try{const blob=await makeShareCard($('#partyStory').textContent);if(!blob)throw new Error('Could not create story card');const file=new File([blob],'luminaria-story.png',{type:'image/png'});const payload={title:ru?'История нашей партии в Luminaria':'Our Luminaria story',text:caption,url:'https://luminaria.cc',files:[file]};
-        if(navigator.canShare?.({files:[file]})){await navigator.share(payload);illustrationStatus.textContent=ru?'Карточкой поделились!':'Story card shared!'}
-        else{const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='luminaria-story.png';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);try{await navigator.clipboard.writeText(caption);illustrationStatus.textContent=ru?'Карточка скачана, история и ссылка скопированы. Прикрепи картинку к сообщению.':'Card downloaded; story and link copied. Attach the image to your message.'}catch{illustrationStatus.textContent=ru?'Карточка скачана. Прикрепи её к сообщению и добавь ссылку luminaria.cc.':'Card downloaded. Attach it to your message and add luminaria.cc.'}};
-      }catch(error){if(error?.name!=='AbortError')illustrationStatus.textContent=ru?'Не удалось поделиться карточкой. Попробуй ещё раз.':'Could not share the card. Please try again.'}finally{button.disabled=false}
+      try{const blob=shareCardBlob;if(!blob)throw new Error('Could not create story card');const file=new File([blob],'luminaria-story.png',{type:'image/png'});const payload={title:ru?'История нашей партии в Luminaria':'Our Luminaria story',text:caption,url:'https://luminaria.cc',files:[file]};
+        if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)&&navigator.canShare?.({files:[file]})){await navigator.share(payload);illustrationStatus.textContent=ru?'Карточкой поделились!':'Story card shared!'}
+        else if(navigator.clipboard?.write&&typeof ClipboardItem!=='undefined'){await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);illustrationStatus.textContent=ru?'Картинка с историей скопирована — вставь её в чат через Ctrl+V.':'The illustrated story is copied — paste it into a chat.'}
+        else{const link=document.createElement('a');link.href=URL.createObjectURL(blob);link.download='luminaria-story.png';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);illustrationStatus.textContent=ru?'Карточка скачана. Прикрепи её к сообщению.':'Card downloaded. Attach it to your message.'}
+      }catch(error){if(error?.name!=='AbortError'){if(shareCardBlob){const link=document.createElement('a');link.href=URL.createObjectURL(shareCardBlob);link.download='luminaria-story.png';link.click();setTimeout(()=>URL.revokeObjectURL(link.href),1000);illustrationStatus.textContent=ru?'Не удалось скопировать картинку, поэтому карточка скачана в PNG.':'Could not copy the image, so the PNG was downloaded.'}else illustrationStatus.textContent=ru?'Не удалось подготовить карточку. Попробуй ещё раз.':'Could not prepare the card. Please try again.'}}finally{button.disabled=false}
     });
     let storyLoading=false;
     const loadStory=async()=>{
@@ -1054,7 +1065,7 @@ async function showGameFinished(){
         if(!response.ok)throw new Error('Story unavailable');
         const result=await response.json();if(typeof result.story!=='string'||!result.story.trim())throw new Error('Empty story');
         if(!root.isConnected)return;
-        text.textContent=fitStory(result.story);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';void loadIllustration(text.textContent);
+        text.textContent=unquoteStoryClues(fitStory(result.story),history);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';void loadIllustration(text.textContent);
       }catch{
         if(root.isConnected){status.textContent=ru?'Пока — эпилог из отдельных фраз. История по всей партии временно недоступна; все ассоциации сохранены ниже.':'For now, a vignette from a few clues. The full story is temporarily unavailable; every clue is listed below.';illustrationStatus.textContent=ru?'Сначала загрузим полную историю, затем нарисуем к ней карточку.':'The full story must load before its illustrated card can be created.';retry.hidden=false}
       }finally{storyLoading=false}
@@ -1091,6 +1102,7 @@ async function prepareNextLiveRound(){
     liveRoundNumberForId=null;
     await loadLiveHand();
     if(isCurrentStoryteller())demoShowGame();else showLiveRoundWaiting();
+    scheduleBotAdvance(room,null);
   }finally{preparingNextRound=false}
 }
 async function addLiveScoreboard(){if(!liveGameContext||!document.querySelector('.results-page')||$('#liveScoreboard'))return;const scores=$('.scores');if(!scores)return;const roster=await loadLiveRoster(liveGameContext.room.id);const ru=language==='ru';const board=document.createElement('section');board.id='liveScoreboard';board.className='live-scoreboard';board.innerHTML=`<div class="panel-title"><h2>${ru?'Общий счёт':'Total score'}</h2><span class="count">${ru?'Комната':'Room'} ${liveGameContext.room.code}</span></div>${[...roster].sort((a,b)=>b.score-a.score).map((seat,index)=>`<div class="score-row ${seat.user_id===liveGameContext.session.user.id?'me':''}"><span class="score-avatar">${index+1}</span><strong>${seat.displayName}${seatBotBadge(seat)}</strong><em>${index===0?(ru?'Лидер':'Leading'):(ru?'За столом':'At the table')}</em><b>${seat.score}</b></div>`).join('')}`;scores.after(board)}
