@@ -3,7 +3,7 @@ import fs from 'node:fs';
 
 const curated = JSON.parse(fs.readFileSync('src/moonlit-archive-extra-semantics.json', 'utf8'));
 const overrides = JSON.parse(fs.readFileSync('src/bot-clue-overrides.json', 'utf8'));
-const pop = ['201-250', '251-300'].flatMap(range =>
+const pop = ['201-250', '251-300', '401-450', '451-500'].flatMap(range =>
   JSON.parse(fs.readFileSync(`src/pop-culture-${range}-semantics.json`, 'utf8')));
 const sql = fs.readFileSync('supabase/bot-card-semantics-data.sql', 'utf8');
 const ids = new Set(curated.map(card => card.card));
@@ -25,9 +25,9 @@ for (const card of overrides) {
   assert.ok(sql.includes(`('${card.card}',`));
   for (const clue of card.clues) assert.ok(sql.includes(clue));
 }
-assert.equal(pop.length, 100);
-assert.equal(new Set(pop.map(card => card.card)).size, 100);
-for (let n = 201; n <= 300; n++) {
+assert.equal(pop.length, 200);
+assert.equal(new Set(pop.map(card => card.card)).size, 200);
+for (const n of [...Array.from({ length: 100 }, (_, i) => 201 + i), ...Array.from({ length: 100 }, (_, i) => 401 + i)]) {
   const id = `${n}-pop.webp`;
   const card = pop.find(entry => entry.card === id);
   assert.ok(card, `Missing curated Pop Culture card ${id}`);
@@ -37,5 +37,6 @@ for (let n = 201; n <= 300; n++) {
   assert.ok(sql.includes(`('${id}',`), `Generated SQL omits ${id}`);
   for (const clue of card.clues) assert.ok(sql.includes(clue), `Generated SQL omits clue for ${id}`);
 }
-assert.equal([...sql.matchAll(/\('[0-9]{3}-pop\.webp',/g)].length, 100);
-console.log('PASS: 110 Moonlit cards and 100 curated Pop Culture cards have semantic records.');
+assert.equal([...sql.matchAll(/\('[0-9]{3}-pop\.webp',/g)].length, 200);
+assert.equal([...sql.matchAll(/^  \('[0-9]{3}-[^']+\.webp',/gm)].length, 640);
+console.log('PASS: 640 active cards, including 110 Moonlit and 200 Pop Culture cards, have semantic records.');

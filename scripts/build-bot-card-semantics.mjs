@@ -31,13 +31,17 @@ for (const card of moonlitExtras) {
 }
 const popSources = JSON.parse(fs.readFileSync(new URL('src/pop-culture-201-300-sources.json', root), 'utf8'));
 const popSourceIds = new Set(popSources.map(source => source.card));
-const popSemantics = ['201-250', '251-300'].flatMap(range =>
+const popSemantics = ['201-250', '251-300', '401-450', '451-500'].flatMap(range =>
   JSON.parse(fs.readFileSync(new URL(`src/pop-culture-${range}-semantics.json`, root), 'utf8')));
-if (popSemantics.length !== 100) throw new Error('Expected 100 curated Pop Culture cards');
+if (popSemantics.length !== 200) throw new Error('Expected 200 curated Pop Culture cards');
+const publishedPopIds = new Set(JSON.parse(fs.readFileSync(new URL('src/pop-culture-manifest.json', root), 'utf8'))
+  .map(entry => entry.card));
 for (const card of popSemantics) {
   const number = Number(card.card.slice(0, 3));
-  if (!/^\d{3}-pop\.webp$/.test(card.card) || number < 201 || number > 300
-      || !popSourceIds.has(card.card)
+  if (!/^\d{3}-pop\.webp$/.test(card.card)
+      || !((number >= 201 && number <= 300) || (number >= 401 && number <= 500))
+      || !publishedPopIds.has(card.card)
+      || (number <= 300 && !popSourceIds.has(card.card))
       || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
       || cards.has(card.card)
       || !card.title?.trim() || !card.scene?.trim() || !card.keywords?.trim()
