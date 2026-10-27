@@ -24,6 +24,23 @@ for (const card of memeSemantics) {
   }
   cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
 }
+const cosmicSemantics = ['001-055', '056-110'].flatMap(range =>
+  JSON.parse(fs.readFileSync(new URL(`src/cosmic-absurdity-${range}-semantics.json`, root), 'utf8')));
+if (cosmicSemantics.length !== 109 || new Set(cosmicSemantics.map(card => card.card)).size !== 109) {
+  throw new Error('Expected 109 distinct curated Cosmic Absurdity cards');
+}
+for (const card of cosmicSemantics) {
+  const existing = cards.get(card.card);
+  if (!/^\d{3}-cos\.webp$/.test(card.card) || card.card === '096-cos.webp'
+      || !existing || existing.keywords || existing.clues.length
+      || !fs.existsSync(new URL(`public/deck-preview/${card.card}`, root))
+      || card.scene?.trim().length <= 40 || card.keywords?.trim().length <= 20
+      || !Array.isArray(card.clues) || card.clues.length !== 2
+      || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
+    throw new Error(`Invalid curated Cosmic Absurdity card: ${card.card}`);
+  }
+  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+}
 const everydaySemantics = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(new URL(`src/everyday-absurd-${range}-semantics.json`, root), 'utf8')));
 if (everydaySemantics.length !== 110) throw new Error('Expected 110 curated Everyday Absurdity cards');

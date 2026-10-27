@@ -8,6 +8,8 @@ const everyday = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(`src/everyday-absurd-${range}-semantics.json`, 'utf8')));
 const memes = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(`src/meme-chaos-${range}-semantics.json`, 'utf8')));
+const cosmic = ['001-055', '056-110'].flatMap(range =>
+  JSON.parse(fs.readFileSync(`src/cosmic-absurdity-${range}-semantics.json`, 'utf8')));
 const overrides = JSON.parse(fs.readFileSync('src/bot-clue-overrides.json', 'utf8'));
 const pop = ['201-250', '251-300', '401-450', '451-500'].flatMap(range =>
   JSON.parse(fs.readFileSync(`src/pop-culture-${range}-semantics.json`, 'utf8')));
@@ -59,6 +61,17 @@ for (const n of [...Array.from({ length: 100 }, (_, i) => 201 + i), ...Array.fro
 }
 assert.equal([...sql.matchAll(/\('[0-9]{3}-pop\.webp',/g)].length, 200);
 assert.equal([...sql.matchAll(/^  \('[0-9]{3}-[^']+\.webp',/gm)].length, 640);
+assert.equal(cosmic.length, 109);
+assert.equal(new Set(cosmic.map(card => card.card)).size, 109);
+const activeCosmicIds = new Set(fs.readdirSync('public/deck-preview').filter(name => /^\d{3}-cos\.webp$/.test(name)));
+assert.equal(activeCosmicIds.size, 110);
+assert.deepEqual(new Set([...cosmic.map(card => card.card), '096-cos.webp']), activeCosmicIds);
+for (const card of cosmic) {
+  assert.ok(card.scene.length > 40 && card.keywords.length > 20);
+  assert.equal(card.clues.length, 2);
+  assert.ok(sql.includes(`('${card.card}',`));
+  for (const clue of card.clues) assert.ok(sql.includes(clue));
+}
 assert.equal(memes.length, 110);
 assert.equal(new Set(memes.map(card => card.card)).size, 110);
 const activeMemeIds = new Set(fs.readdirSync('public/deck-preview').filter(name => /^\d{3}-meme\.webp$/.test(name)));
@@ -80,4 +93,4 @@ for (let n = 1; n <= 110; n++) {
   assert.ok(sql.includes(`('${id}',`));
   for (const clue of card.clues) assert.ok(sql.includes(clue));
 }
-console.log('PASS: 640 active cards, including 110 fully curated Meme Chaos, Moonlit Archive and Everyday Absurdity cards, have semantic records.');
+console.log('PASS: all 640 active cards have scenes, keywords and at least two clues.');
