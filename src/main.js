@@ -1433,6 +1433,10 @@ installRerolls({
   onChanged: async ({ changed }) => {
     if (!changed) return;
     const clue = $('#clueInput')?.value || '';
+    // A swap changes the hand without changing the round phase. Force the
+    // current view to render again after showGame reloads the server hand.
+    const main = document.querySelector('main');
+    if (main) delete main.dataset.roundView;
     await showGame();
     if ($('#clueInput')) $('#clueInput').value = clue;
   },
