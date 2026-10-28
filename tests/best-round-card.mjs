@@ -49,6 +49,6 @@ for (const players of [3, 10]) {
   const cards = Array.from({ length: players }, (_, index) => ({ id: `s${index}`, round_id: 'large', player_id: `p${index}` }));
   const ballots = cards.slice(1).map((card, index) => ({ round_id: 'large', submission_id: index % 2 ? 's2' : 's0' }));
   const [highlight] = roundHighlights([{ id: 'large', storyteller_id: 'p0' }], cards, ballots);
-  assert.equal(visibleRoundCards(highlight).length, Math.min(players, 4));
+  assert.equal(visibleRoundCards(highlight).length, players);
   assert.equal(visibleRoundCards(highlight)[0].player_id, 'p0');
 }

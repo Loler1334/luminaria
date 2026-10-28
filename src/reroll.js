@@ -21,10 +21,10 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     busy = true;
     const dialog = document.createElement('dialog');
     dialog.id = 'rerollDialog';
-    dialog.innerHTML = `<section class="reroll-modal"><button class="close" type="button" aria-label="${text('Закрыть', 'Close')}">×</button><p class="eyebrow">${text('Новый поворот', 'A new twist')}</p><h2>${text('Какую карту заменим?', 'Which card shall we swap?')}</h2><p>${text('Выбери одну карту. Получишь случайную новую, а выбранная вернётся в запас. Можно отказаться от обмена.', 'Choose one card to receive a random reserve card. Your old card returns to the reserve. You can skip the swap.')}</p><div class="reroll-cards"></div><p class="reroll-status" role="status">${text('Загружаем руку…', 'Loading your hand…')}</p><button class="primary-button full" id="confirmReroll" type="button" disabled>${text('Обменять карту', 'Swap card')} ↻</button><button class="text-button" id="skipReroll" type="button">${text('Пропустить этот обмен', 'Skip this swap')}</button></section>`;
+    dialog.innerHTML = `<section class="reroll-modal"><button class="close" type="button" aria-label="${text('Закрыть', 'Close')}">×</button><p class="eyebrow">${text('Новый поворот', 'A new twist')}</p><h2>${text('Какую карту заменим?', 'Which card shall we swap?')}</h2><p>${text('Выбери одну карту. Получишь случайную новую, а выбранная вернётся в запас. Можно отказаться от обмена.', 'Choose one card to receive a random reserve card. Your old card returns to the reserve. You can skip the swap.')}</p><div class="reroll-cards"></div><p class="reroll-status" role="status">${text('Загружаем руку…', 'Loading your hand…')}</p><button class="text-button" id="retryRerollHand" type="button" hidden>${text('Загрузить руку снова', 'Retry loading your hand')}</button><button class="primary-button full" id="confirmReroll" type="button" disabled>${text('Обменять карту', 'Swap card')} ↻</button><button class="text-button" id="skipReroll" type="button">${text('Пропустить этот обмен', 'Skip this swap')}</button></section>`;
     document.body.append(dialog); dialog.showModal();
-    const notice = dialog.querySelector('.reroll-status'), confirm = dialog.querySelector('#confirmReroll'), skip = dialog.querySelector('#skipReroll');
-    let selected = null, saving = false;
+    const notice = dialog.querySelector('.reroll-status'), confirm = dialog.querySelector('#confirmReroll'), skip = dialog.querySelector('#skipReroll'), retry = dialog.querySelector('#retryRerollHand');
+    let selected = null, saving = false, loading = false, handAttempts = 0;
     const close = () => { if (saving) return; dialog.close(); dialog.remove(); busy = false; schedule(); };
     dialog.querySelector('.close').addEventListener('click', close);
     dialog.addEventListener('cancel', event => { event.preventDefault(); close(); });
@@ -49,10 +49,15 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
     }
     confirm.addEventListener('click', () => { if (selected) void submit(selected); });
     skip.addEventListener('click', () => void submit(null));
-    try {
+    async function loadPickerHand() {
+      if (loading || !dialog.isConnected) return;
+      loading = true; handAttempts++; retry.hidden = true; notice.textContent = handAttempts > 1 ? text('Повторно загружаем руку…', 'Retrying your hand…') : text('Загружаем руку…', 'Loading your hand…');
+      try {
       const { data, error } = await bounded(supabase.rpc('luminaria_hand', { target_room_id: context.room.id }));
       if (error) throw error;
-      if (!root.isConnected || getContext()?.room.id !== context.room.id) return close();
+      if (!dialog.isConnected || !root.isConnected || getContext()?.room.id !== context.room.id) return close();
+      selected = null; confirm.disabled = true; dialog.querySelector('.reroll-cards').replaceChildren();
+      if (!data?.length) throw new Error('Empty hand');
       for (const row of data || []) {
         const button = document.createElement('button'), image = document.createElement('img');
         button.type = 'button'; button.className = 'reroll-card'; button.setAttribute('aria-pressed', 'false');
@@ -69,7 +74,11 @@ export function installRerolls({ supabase, getContext, getLanguage, cardInfo, on
         dialog.querySelector('.reroll-cards').append(button);
       }
       notice.textContent = text('Один обмен после каждых 5 раундов. Неиспользованные обмены не накапливаются.', 'One swap after every 5 rounds. Unused swaps do not accumulate.');
-    } catch { notice.textContent = text('Не удалось загрузить карты. Закрой окно и попробуй снова.', 'Could not load your cards. Close and try again.'); }
+      } catch { if (dialog.isConnected) { if (handAttempts === 1) { setTimeout(() => void loadPickerHand(), 500); } else { notice.textContent = text('Не удалось загрузить карты. Попробуй ещё раз.', 'Could not load your cards. Try again.'); retry.hidden = false; } } }
+      finally { loading = false; }
+    }
+    retry.addEventListener('click', () => void loadPickerHand());
+    void loadPickerHand();
   }
 
   async function refresh() {

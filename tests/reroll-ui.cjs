@@ -52,6 +52,26 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || 'playwright');
       assert.equal(await page.evaluate(() => calls.filter(call => call.name === 'luminaria_hand').length), 1);
       await page.close();
     }
+    const retryPage = await browser.newPage({ viewport: { width: 390, height: 844 } });
+    await retryPage.setContent('<main><section class="hand-area"></section></main>');
+    const source = fs.readFileSync('src/reroll.js', 'utf8').replace(/^import .*\r?\n/m, '').replace('export function installRerolls', 'function installRerolls');
+    await retryPage.evaluate(source => {
+      let handCalls = 0;
+      const context = { room: { id: 'room-1', status: 'playing' } };
+      const supabase = { rpc: async name => name === 'luminaria_reroll_status'
+        ? { data: { available: true, milestone: 'milestone-5' } }
+        : name === 'luminaria_hand' && ++handCalls <= 2
+          ? { error: { message: 'Temporary connection failure' } }
+          : { data: [{ card_id: 'last-card.webp' }] } };
+      (0, eval)(source);
+      installRerolls({ supabase, getContext: () => context, getLanguage: () => 'en', cardInfo: () => null, onChanged: async () => {} });
+    }, source);
+    await retryPage.locator('.reroll-offer button').click();
+    await retryPage.locator('#retryRerollHand:visible').waitFor();
+    await retryPage.locator('#retryRerollHand').click();
+    await retryPage.locator('.reroll-card').waitFor();
+    assert.equal(await retryPage.locator('.reroll-card').count(), 1);
+    await retryPage.close();
     console.log('PASS: reroll offer, six-card and last-card pickers, exchange request, and optional decline on mobile viewport. Uses a simulated server.');
   } finally { await browser.close(); }
 })().catch(error => { console.error(error); process.exitCode = 1; });

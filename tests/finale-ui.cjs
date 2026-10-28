@@ -12,7 +12,7 @@ const source=fs.readFileSync('src/main.js','utf8');
 const finale=source.slice(source.indexOf('let openingFinale=null;'),source.indexOf('\nasync function restartLiveRoom()'));
 const results=source.slice(source.indexOf('async function showLiveResults(round)'),source.indexOf('\nrouteLiveRound=serialRefresh'));
 const observer=source.slice(source.indexOf('const liveResultsObserver='),source.indexOf('\nasync function createLiveRoom'));
-await page.evaluate(({finale,results,observer,helpers,view,roundState})=>{
+ await page.evaluate(({finale,results,observer,helpers,view,roundState,storyShare})=>{
  window.language='ru';window.$=selector=>document.querySelector(selector);
  window.escapeHtml=value=>String(value??'').replace(/[&<>"']/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
  window.liveGameContext={room:{id:'room',code:'WYBTMN',host_id:'player-0'},session:{user:{id:'player-0'}}};
@@ -27,8 +27,9 @@ await page.evaluate(({finale,results,observer,helpers,view,roundState})=>{
  window.supabase={from:()=>({select(){return this},eq(){return this},order(){return this},in(){this.historyCards=true;return this},then(resolve){return Promise.resolve({data:this.historyCards?[]:window.rounds,error:null}).then(resolve)}}),rpc:()=>({single:async()=>({data:{remaining_cards:0},error:null})}),auth:{getSession:async()=>({data:{session:{access_token:'test'}}})}};
  window.fetch=async(url,options)=>{if(url.includes('illustration')){if(JSON.parse(options.body).language!==storyLanguage(window.rounds))throw Error('Wrong story language');const canvas=document.createElement('canvas');canvas.width=16;canvas.height=16;return Response.json({image:canvas.toDataURL()})}return Response.json({story:'Когда луна утонула в чашке, лес заговорил голосами забытых друзей. Мы сложили их слова в ключ и открыли дверь за горизонтом. Там стоял накрытый стол — на одно место больше. Но никто не вспомнил, кого мы всё это время ждали.'})};
  (0,eval)(helpers.replace(/export /g,''));(0,eval)(view.replace(/^import .*\r?\n/gm,'').replace(/export /g,''));(0,eval)(roundState.replace(/export /g,''));
+ (0,eval)(storyShare.replace(/export /g,''));
  (0,eval)(finale);(0,eval)(results);(0,eval)(observer);
-},{finale,results,observer,helpers:fs.readFileSync('src/game-finale.mjs','utf8'),view:fs.readFileSync('src/finale-view.mjs','utf8'),roundState:fs.readFileSync('src/round-state.js','utf8')});
+},{finale,results,observer,helpers:fs.readFileSync('src/game-finale.mjs','utf8'),view:fs.readFileSync('src/finale-view.mjs','utf8'),roundState:fs.readFileSync('src/round-state.js','utf8'),storyShare:fs.readFileSync('src/story-share-card.mjs','utf8')});
 for(let count=3;count<=10;count++){
  await page.evaluate(async count=>{
    window.roster=Array.from({length:count},(_,i)=>({id:`seat-${i}`,user_id:`player-${i}`,score:[41,40,30,30,30,27,20][i],profile:{nickname:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]},displayName:['182мужик182','Kistya','Дориан Ятс','Друзь','Semen','camilian','Последний игрок'][i]}));
