@@ -40,7 +40,7 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
     const seats = await read(`room_players?room_id=eq.${body.roomId}&user_id=eq.${encodeURIComponent(user.id)}&select=user_id`);
     if (!seats.length) return json({ error: 'Room members only' }, 403);
     const [rooms, rounds] = await Promise.all([
-      read(`rooms?id=eq.${body.roomId}&select=status`),
+      read(`rooms?id=eq.${body.roomId}&select=status,language`),
       read(`rounds?room_id=eq.${body.roomId}&select=id,clue,phase,created_at&order=created_at.asc,id.asc`)
     ]);
     if (!rooms.length || !rounds.length || rounds.some(round => round.phase !== 'results')) return json({ error: 'Game not finished' }, 409);
@@ -51,7 +51,8 @@ export async function handleStory(request, env, config, { fetcher = fetch, cache
       });
       if (!state.ok || (await state.json())[0]?.remaining_cards !== 0) return json({ error: 'Game not finished' }, 409);
     }
-    const language = storyLanguage(rounds);
+    const language = ['ru', 'en'].includes(rooms[0].language)
+      ? rooms[0].language : storyLanguage(rounds);
     const finalRoundId = rounds.at(-1).id;
     const saved = await fetcher(`${config.url}/rest/v1/finale_stories?room_id=eq.${body.roomId}&language=eq.${language}&final_round_id=eq.${encodeURIComponent(finalRoundId)}&select=story`, { headers, signal: AbortSignal.timeout(10000) });
     if (saved.ok) {

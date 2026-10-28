@@ -1,57 +1,882 @@
 [
-  {"card":"001-meme.webp","scene":"Пёс спокойно сидит с чашкой чая в кафе, которое уже захлестнула огненная лава из вулкана.","keywords":"это нормально, this is fine, пёс, собака, чай, чашка, кафе, огонь, лава, вулкан","clues":["Когда отчёт горит, но совещание по расписанию","Уровень тревоги: заварить ещё одну чашку"]},
-  {"card":"002-meme.webp","scene":"Королева за роскошным столом сердито спорит с белым котом, который смотрит на неё совершенно невозмутимо.","keywords":"женщина кричит на кота, woman yelling at cat, королева, белый кот, спор, пир, стол","clues":["Когда тебя обвинили в съеденном ужине без доказательств","Один говорит громче, другой увереннее"]},
-  {"card":"003-meme.webp","scene":"Парень на прогулке оборачивается вслед ожившему розовому пончику на каблуках, пока его спутница смотрит с упрёком.","keywords":"неверный парень, distracted boyfriend, парень, девушка, пончик, каблуки, ревность, улица","clues":["Когда обещал экономить, но мимо прошла пекарня","Новый приоритет заметили раньше, чем он успел объясниться"]},
-  {"card":"004-meme.webp","scene":"Подросток в баскетбольном зале делает жест шесть-семь, а ожившие цифры и игрок у кольца создают полный хаос.","keywords":"шесть-семь, 6-7, six seven, подросток, жест руками, баскетбол, кольцо, цифры","clues":["Когда ответ на вопрос зависит от настроения табло","Счёт матча неожиданно стал главным героем"]},
-  {"card":"005-meme.webp","scene":"Пёс с царственным видом сидит на огромной горе печенья высоко над облаками и горами.","keywords":"Doge, доге, собака сиба-ину, пёс, печенье, трон, гора, король","clues":["Очень богат, много хруста, вау","Бюджет на лакомства опять превысил бюджет королевства"]},
-  {"card":"006-meme.webp","scene":"Ворчливый кот хмурится на трибуне, пока под ним улыбающиеся облака участвуют в праздничном конкурсе.","keywords":"Grumpy Cat, грустный кот, сердитый кот, облака, улыбки, конкурс, недовольство","clues":["Когда даже небо предлагает улыбнуться для фото","Жюри заранее поставило всем неудовлетворительно"]},
-  {"card":"007-meme.webp","scene":"Пиксельный кот с радужным хвостом летит сквозь космическую прачечную между планетами и стиральными машинами.","keywords":"Nyan Cat, ньян-кэт, пиксельный кот, радужный след, космос, планеты, стиральная машина","clues":["Режим стирки: бесконечное веселье","После него даже орбита пахнет конфетами"]},
-  {"card":"008-meme.webp","scene":"Кот в смокинге играет на клавишах пианино внутри лифта, который стремительно падает между домами.","keywords":"Keyboard Cat, кот за клавиатурой, кот-пианист, пианино, лифт, падение, смокинг","clues":["Музыкант доиграет даже на первом этаже","Когда сопровождение звучит драматичнее самой поездки"]},
-  {"card":"009-meme.webp","scene":"Невероятно длинный белый кот растянулся мостом между двумя скалами над рекой молока.","keywords":"Longcat, длиннокот, длинный кот, мост, река молока, скалы, водопад","clues":["Строительство переправы доверили самому гибкому соседу","Конец очереди уже на другом берегу"]},
-  {"card":"010-meme.webp","scene":"Спокойный антропоморфный пёс в сером свитере стоит с руками в карманах среди летающих зонтов и бури.","keywords":"Chill Guy, чилл гай, спокойный парень, пёс, серый свитер, руки в карманах, буря, зонты","clues":["Когда вокруг дедлайн, а у тебя внутренний выходной","Ветер нервничает за всех сразу"]},
-  {"card":"011-meme.webp","scene":"Рыжий кот с огромными влажными глазами держит пустую миску, пока вокруг него с неба падают рыбы.","keywords":"Crying Cat, плачущий кот, рыжий кот, слеза, миска, рыбы, дождь","clues":["Еда почти рядом, но сервис всё равно ужасный","Когда вселенная услышала просьбу слишком буквально"]},
-  {"card":"012-meme.webp","scene":"Маленький блестящий бегемотик с открытой пастью пытается укусить большой зелёный поливочный шланг в зоопарке.","keywords":"Moo Deng, Му Денг, бегемотик, карликовый бегемот, пасть, шланг, зоопарк","clues":["Размер маленький, характер на весь вольер","Когда полив внезапно оказался личным врагом"]},
-  {"card":"013-meme.webp","scene":"Белый улыбающийся кот отбивает ритм лапами на двух больших барабанах-планетах среди звёзд.","keywords":"Bongo Cat, бонго-кот, белый кот, барабаны, лапы, планеты, космос","clues":["У соседей опять репетиция на всю галактику","Когда настроение само нашло себе ударные"]},
-  {"card":"014-meme.webp","scene":"Кот с неестественно широко открытой пастью вскрикивает перед будильником в спальне.","keywords":"Popcat, попкэт, кот, открытая пасть, крик, будильник, спальня","clues":["Пять минут сна закончились очень громко","Когда утро ответило за тебя"]},
-  {"card":"015-meme.webp","scene":"Четыре разных кота нависают над кроватью и внимательно смотрят на проснувшегося человека в перевёрнутой комнате.","keywords":"Наташа вставай, коты Наташа, четыре кота, кровать, утро, перевёрнутая комната","clues":["Дом уже упал, а ты всё ещё спишь","Совет директоров требует открыть глаза немедленно"]},
-  {"card":"016-meme.webp","scene":"Малыш с победно сжатым кулаком стоит в воде и держит песочный замок на фоне настоящего замка.","keywords":"Success Kid, успешный малыш, ребёнок, кулак, песочный замок, море, победа","clues":["Когда построил дворец до обеда и ещё успел искупаться","План на день выполнен с первого кулачка"]},
-  {"card":"017-meme.webp","scene":"Девочка с загадочной улыбкой смотрит в камеру, пока за её спиной горит причудливый замок из тостов.","keywords":"Disaster Girl, девочка-катастрофа, девочка, улыбка, пожар, горящий замок, тосты","clues":["Когда сказала, что завтрак будет с огоньком","Лицо человека, который точно ничего не трогал"]},
-  {"card":"018-meme.webp","scene":"Девочка в оранжевом платье косо смотрит на семейный автомобиль, у которого внезапно выросли паучьи ноги.","keywords":"Side Eye Chloe, Хлоя косой взгляд, девочка, автомобиль, паучьи лапы, удивление","clues":["Когда родители назвали это обычной поездкой","Вопросов больше, чем свободных мест в машине"]},
-  {"card":"019-meme.webp","scene":"Седой мужчина с натянутой улыбкой сидит за столом на офисном кресле, которое превратилось в колючий кактус.","keywords":"Hide the Pain Harold, Гарольд скрывающий боль, седой мужчина, улыбка, кактус, офис, кресло","clues":["Когда работа нравится особенно остро","Улыбка согласилась, спина ещё не решила"]},
-  {"card":"020-meme.webp","scene":"Седой режиссёр в пустом кинотеатре восхищённо разводит руками перед экраном с фильмом о танцующем чайнике.","keywords":"Absolute Cinema, абсолютное кино, режиссёр, кинотеатр, экран, танцующий чайник, восторг","clues":["Когда бюджет ушёл на один гениальный кадр","Зрителей нет, но шедевр уже состоялся"]},
-  {"card":"021-meme.webp","scene":"Плюшевая обезьянка в жёлтом костюме подозрительно косится в сторону, пока позади рушится громадный торт.","keywords":"Monkey Puppet Side Eye, обезьянка косой взгляд, кукла, жёлтый костюм, торт, подозрение","clues":["Когда услышал шум за спиной и решил не уточнять","Я ничего не видел, особенно крем на потолке"]},
-  {"card":"022-meme.webp","scene":"Хитро улыбающийся мужчина касается виска под дырявой крышей и держит зонт прямо внутри комнаты.","keywords":"Roll Safe, парень у виска, хитрый план, мужчина, зонт, дырявая крыша, дождь","clues":["Проблемы с крышей нет, если улица уже дома","Гениальное решение появилось на третьей протечке"]},
-  {"card":"023-meme.webp","scene":"Крошечный хомяк с огромными печальными глазами играет на скрипке в пустом зале старого вокзала.","keywords":"Sad Hamster, грустный хомяк, хомяк, слёзы, скрипка, вокзал, одиночество","clues":["Когда твой поезд ушёл, а оркестр остался","Самая печальная мелодия на самой маленькой платформе"]},
-  {"card":"024-meme.webp","scene":"Взволнованный исследователь разводит руки перед гигантской пирамидой из телевизоров, над которой парит тарелка.","keywords":"Ancient Aliens, древние пришельцы, исследователь, пирамида, телевизоры, НЛО, теория","clues":["Когда пульт исчез и объяснение нашлось само","Наука просила доказательства, а получила антенну"]},
-  {"card":"025-meme.webp","scene":"Детектив в комнате с доской улик и красными нитями пытается раскрыть дело об одной пропавшей носке.","keywords":"Conspiracy Board, доска заговоров, детектив, красные нити, улики, пропавшая носка","clues":["Стирка уже закончилась, расследование только началось","Все подозреваемые были в одном ящике"]},
-  {"card":"026-meme.webp","scene":"Человек указывает на лампу, пролетающую над городской улицей, будто принимает её за птицу.","keywords":"Is This a Pigeon, это голубь, человек указывает пальцем, летающая лампа, птица, город","clues":["Когда контрольная по биологии была слишком давно","Летает — значит, наверное, живое"]},
-  {"card":"027-meme.webp","scene":"Озадаченная женщина смотрит на чайник без ручки, пока вокруг её головы висят формулы, фигуры и ложки.","keywords":"Confused Math Lady, женщина с формулами, задумчивость, чайник, ложки, геометрия","clues":["Задача со звёздочкой появилась на кухне","Когда ответ вроде есть, но за него не ухватиться"]},
-  {"card":"028-meme.webp","scene":"Один и тот же нарисованный человечек на трёх кадрах сперва пугается, затем успокаивается и снова пугается ожившего тостера.","keywords":"Panik Kalm Panik, паника спокойствие паника, человечек, тостер, три кадра","clues":["Я всё исправил. Кажется. Нет, не исправил","Каждая новая проверка делает результат хуже"]},
-  {"card":"029-meme.webp","scene":"Седой мужчина в тёплых варежках и маске сидит один на складном стуле посреди роскошного бала.","keywords":"Bernie Mittens, Берни Сандерс в варежках, седой мужчина, складной стул, бал, маска","clues":["Пришёл на праздник со своим уровнем комфорта","Дресс-код сдался перед здравым смыслом"]},
-  {"card":"030-meme.webp","scene":"Упрямый игрок сидит за столом с огромной горой карт, хотя мог бы просто закрыть открытое окно.","keywords":"UNO Draw 25, уно возьми 25, карточная игра, игрок, гора карт, окно, упрямство","clues":["Когда проще взять ещё двадцать проблем, чем решить одну","Руки заняты, принцип всё ещё свободен"]},
-  {"card":"031-meme.webp","scene":"Взволнованный супергерой не может выбрать между двумя огромными кнопками с солнцем и луной.","keywords":"Two Buttons, две кнопки, потный супергерой, выбор, солнце, луна","clues":["Когда оба варианта кажутся неправильным временем суток","На собеседовании спросили, кто ты утром и вечером"]},
-  {"card":"032-meme.webp","scene":"Мальчик уверенно танцует на носу лодки, которая мчится через огромные волны, пока другие едва справляются с греблей.","keywords":"фарм ауры, aura farming, танец на лодке, мальчик, волны, гребцы, океан","clues":["Когда у команды аврал, а у тебя собственный клип","Чем сильнее качает, тем увереннее поза"]},
-  {"card":"033-meme.webp","scene":"Путник пытается пролезть в крошечную дверь величественного магазина среди каменных стен и узких ступеней.","keywords":"One Does Not Simply, просто так не войти, путник, маленькая дверь, магазин, порог","clues":["Инструкция звучала легко до знакомства с входом","Когда ключ нашёлся, а размер дверей забыли указать"]},
-  {"card":"034-meme.webp","scene":"Девушка с чрезмерно пристальным взглядом лежит в постели и внимательно следит за часами будильника.","keywords":"Overly Attached Girlfriend, навязчивая девушка, пристальный взгляд, будильник, часы, спальня","clues":["Я просто проверяю, почему ты не ответил в 7:01","Даже время попросило немного личного пространства"]},
-  {"card":"035-meme.webp","scene":"Серое складчатое существо с длинным носом терпеливо сидит на стуле среди множества часов в пустом зале.","keywords":"Ждун, Homunculus Loxodontus, серое существо, длинный нос, ожидание, стул, часы","clues":["Заявка принята, ответ будет в следующем тысячелетии","Когда очередь давно стала частью интерьера"]},
-  {"card":"036-meme.webp","scene":"Пушистый рыжий кот в бумажном колпаке машет волшебной палочкой, и билеты взлетают над очередью.","keywords":"кот Вжух, вжух, рыжий кот, волшебная палочка, билеты, очередь, касса","clues":["Когда билет закончился, а чудо только началось","Очередь исчезла быстрее, чем кассир нашёл сдачу"]},
-  {"card":"037-meme.webp","scene":"Белый нарисованный человечек с широко открытым ртом заглядывает в холодильник, где вместо еды сияет целая галактика.","keywords":"Ничоси, удивлённый человечек, белый персонаж, холодильник, галактика, планеты, восторг","clues":["Когда в поисках ужина нашёл новую вселенную","Открываешь дверцу на секунду, зависаешь на эпоху"]},
-  {"card":"038-meme.webp","scene":"Зелёный раптор задумчиво сидит в обсерватории перед огромным яйцом и звёздным окном.","keywords":"Philosoraptor, философораптор, раптор, динозавр, яйцо, обсерватория, звёзды","clues":["Если сначала была скорлупа, кто придумал завтрак","Мысль настолько глубокая, что до неё не долетает свет"]},
-  {"card":"039-meme.webp","scene":"Маленькая принцесса с короной сидит невозмутимо, хотя вокруг неё плачут придворные и падает люстра.","keywords":"Queen Never Cry, королева не плачет, младенец, принцесса, корона, придворные, люстра","clues":["Во дворце паника, у руководства тихий час","Когда проблемы есть у всех, кроме главной"]},
-  {"card":"040-meme.webp","scene":"Седой стрелок в белой футболке с рукой в кармане спокойно целится на турнире в парящие мыльные пузыри.","keywords":"Turkish Shooter, турецкий стрелок, Юсуф Дикеч, пистолет, футболка, пузырь, турнир","clues":["Когда пришёл без подготовки и всё равно попал","Одна рука работает, другая отдыхает"]},
-  {"card":"041-meme.webp","scene":"Маленькая красная пушистая кукла радостно раскинула руки перед горящими офисными принтерами и взрывами.","keywords":"Elmo Fire, Элмо в огне, красная кукла, пожар, принтеры, офис, радость","clues":["Пятница наконец дошла до отдела печати","Когда ошибка в отчёте уже не имеет значения"]},
-  {"card":"042-meme.webp","scene":"Воин в красном плаще с силой сталкивает в пропасть громадный будильник вместо врага.","keywords":"This is Sparta, это Спарта, воин, будильник, пинок, пропасть, красный плащ","clues":["Утро получило решительный отказ","Когда кнопки отложить уже недостаточно"]},
-  {"card":"043-meme.webp","scene":"Бурундук резко поворачивается к зрителям на сцене маленького театра, словно услышал неожиданный секрет.","keywords":"Dramatic Chipmunk, драматичный бурундук, бурундук, сцена, театр, резкий взгляд","clues":["Когда за спиной произнесли твоё имя","Пауза длилась секунду, эффект — целую вечность"]},
-  {"card":"044-meme.webp","scene":"Девочка с косичками радостно бежит по улице, прижимая к груди стопку оживших книг с большими глазами.","keywords":"Ermahgerd, эрмагёрд, девочка, косички, книги, восторг, улица","clues":["Когда библиотека наконец выпустила продолжение","Счастье весит больше, чем весь рюкзак"]},
-  {"card":"045-meme.webp","scene":"Четверо носильщиков в чёрных костюмах танцуют с гробом по нотному мосту под оранжевым небом.","keywords":"Coffin Dance, танец с гробом, носильщики, чёрные костюмы, музыка, мост, танец","clues":["Когда финал оказался ритмичнее всей вечеринки","Слишком торжественный выход из чата"]},
-  {"card":"046-meme.webp","scene":"Огромный мускулистый пёс с пакетами продуктов идёт рядом с маленьким робким псом на городской улице.","keywords":"Buff Doge vs Cheems, качок Доге и Чимс, собаки, мускулы, пакеты продуктов, контраст","clues":["Один несёт все покупки, второй моральную поддержку","Когда вчера и сегодня по-разному ходят в магазин"]},
-  {"card":"047-meme.webp","scene":"Деловой манекен торжествует за ресторанным столом перед графиком роста, построенным из макарон.","keywords":"Stonks, стонкс, манекен, бизнес, график роста, макароны, деньги","clues":["Инвестиции в ужин неожиданно пошли вверх","Финансовый отчёт пахнет сыром"]},
-  {"card":"048-meme.webp","scene":"На конвейере фабрики треугольников внезапно появляется большой синий шар, изумляя рабочих.","keywords":"Circle in Triangle Factory, круг на фабрике треугольников, конвейер, синий шар, фигуры, рабочие","clues":["Когда прошёл собеседование не в тот отдел","Каждый продукт идеален, кроме самого интересного"]},
-  {"card":"049-meme.webp","scene":"Две огромные мускулистые руки сцепляются над столом переговоров, под которым внезапно извергается вулкан.","keywords":"Epic Handshake, эпическое рукопожатие, руки, сила, стол, вулкан, союз","clues":["Нашли общий язык и сломали переговорную","Когда компромисс оказался слишком горячим"]},
-  {"card":"050-meme.webp","scene":"Круглый енот вертится как волчок на зеркальном диско-шаре, пока вокруг стоят серьёзные лесные звери.","keywords":"Pedro Raccoon, енот Педро, енот, танец, диско-шар, лесные звери, вечеринка","clues":["Когда ты единственный услышал музыку","Вечеринка началась без согласования с лесом"]},
-  {"card":"051-meme.webp","scene":"Сурок на горной вершине кричит в огромный бронзовый чайник под ярким небом.","keywords":"Screaming Marmot, кричащий сурок, сурок, гора, чайник, крик, Альпы","clues":["Когда вода закипела раньше терпения","Объявление для всей долины без микрофона"]},
-  {"card":"052-meme.webp","scene":"Маленькая панда чихает так сильно, что рядом рушится высокая бамбуковая башня.","keywords":"Sneezing Panda, чихающая панда, панда, чих, бамбук, башня, падение","clues":["Самый короткий способ отменить строительство","Будь здоров — сказала вся деревня"]},
-  {"card":"053-meme.webp","scene":"Танцующий малыш задаёт ритм параду строгих роботов на городской площади под красным солнцем.","keywords":"Dancing Baby, танцующий малыш, младенец, роботы, парад, танец, город","clues":["Они получили команду маршировать, а выучили джайв","Самый маленький хореограф взял смену под контроль"]},
-  {"card":"054-meme.webp","scene":"Разъярённый скелет в броне бьёт мечом по щиту, разбрасывая вокруг тарелки и ложки.","keywords":"Skeleton Banging Shield, скелет бьёт по щиту, скелет, броня, меч, щит, тарелки","clues":["Когда позвали ужинать слишком торжественно","Соседи снизу уже выучили этот ритм"]},
-  {"card":"055-meme.webp","scene":"Зелёная кукольная лягушка пьёт чай на театральном балконе и смотрит на город, охваченный сплетнями.","keywords":"Kermit Sipping Tea, лягушонок Кермит пьёт чай, лягушка, чашка, театр, сплетни","clues":["Я ничего не утверждаю, просто завариваю факты","Когда всё видишь и остаёшься зрителем"]}
+  {
+    "card": "001-meme.webp",
+    "scene": "Пёс спокойно сидит с чашкой чая в кафе, которое уже захлестнула огненная лава из вулкана.",
+    "keywords": "это нормально, this is fine, пёс, собака, чай, чашка, кафе, огонь, лава, вулкан",
+    "clues": [
+      "Когда отчёт горит, но совещание по расписанию",
+      "Уровень тревоги: заварить ещё одну чашку"
+    ],
+    "title_en": "This Is Fine",
+    "scene_en": "A dog calmly drinks tea in a cafe as fiery lava from a volcano floods the room.",
+    "keywords_en": "fine, dog, calmly, drinks, tea, cafe, fiery, lava, volcano, floods, room",
+    "clues_en": [
+      "The report is on fire, but the meeting is on schedule",
+      "Anxiety level: brew another cup"
+    ]
+  },
+  {
+    "card": "002-meme.webp",
+    "scene": "Королева за роскошным столом сердито спорит с белым котом, который смотрит на неё совершенно невозмутимо.",
+    "keywords": "женщина кричит на кота, woman yelling at cat, королева, белый кот, спор, пир, стол",
+    "clues": [
+      "Когда тебя обвинили в съеденном ужине без доказательств",
+      "Один говорит громче, другой увереннее"
+    ],
+    "title_en": "Woman Yelling at a Cat",
+    "scene_en": "An angry queen argues with an unbothered white cat across a lavish dinner table.",
+    "keywords_en": "woman, yelling, cat, angry, queen, argues, unbothered, white, lavish, dinner, table",
+    "clues_en": [
+      "Accused of eating dinner without a shred of evidence",
+      "One side speaks louder; the other is more certain"
+    ]
+  },
+  {
+    "card": "003-meme.webp",
+    "scene": "Парень на прогулке оборачивается вслед ожившему розовому пончику на каблуках, пока его спутница смотрит с упрёком.",
+    "keywords": "неверный парень, distracted boyfriend, парень, девушка, пончик, каблуки, ревность, улица",
+    "clues": [
+      "Когда обещал экономить, но мимо прошла пекарня",
+      "Новый приоритет заметили раньше, чем он успел объясниться"
+    ],
+    "title_en": "Distracted Boyfriend",
+    "scene_en": "A man turns to stare at a living pink doughnut in heels while his girlfriend watches in disbelief.",
+    "keywords_en": "distracted, boyfriend, man, turns, stare, living, pink, doughnut, heels, girlfriend, watches, disbelief",
+    "clues_en": [
+      "He promised to save money, then passed the bakery",
+      "She noticed his new priority before he could explain"
+    ]
+  },
+  {
+    "card": "004-meme.webp",
+    "scene": "Подросток в баскетбольном зале делает жест шесть-семь, а ожившие цифры и игрок у кольца создают полный хаос.",
+    "keywords": "шесть-семь, 6-7, six seven, подросток, жест руками, баскетбол, кольцо, цифры",
+    "clues": [
+      "Когда ответ на вопрос зависит от настроения табло",
+      "Счёт матча неожиданно стал главным героем"
+    ],
+    "title_en": "Six Seven",
+    "scene_en": "A teenager makes the six-seven gesture in a basketball gym as living numbers and players cause chaos.",
+    "keywords_en": "six, seven, teenager, makes, gesture, basketball, gym, living, numbers, players, cause, chaos",
+    "clues_en": [
+      "The answer depends on the scoreboard's mood",
+      "The match score stole the whole show"
+    ]
+  },
+  {
+    "card": "005-meme.webp",
+    "scene": "Пёс с царственным видом сидит на огромной горе печенья высоко над облаками и горами.",
+    "keywords": "Doge, доге, собака сиба-ину, пёс, печенье, трон, гора, король",
+    "clues": [
+      "Очень богат, много хруста, вау",
+      "Бюджет на лакомства опять превысил бюджет королевства"
+    ],
+    "title_en": "Doge",
+    "scene_en": "A regal dog sits on a mountain of cookies high above the clouds.",
+    "keywords_en": "doge, regal, dog, sits, mountain, cookies, high, clouds",
+    "clues_en": [
+      "Much wealth, many crunches, wow",
+      "The treat budget surpassed the kingdom's entire treasury"
+    ]
+  },
+  {
+    "card": "006-meme.webp",
+    "scene": "Ворчливый кот хмурится на трибуне, пока под ним улыбающиеся облака участвуют в праздничном конкурсе.",
+    "keywords": "Grumpy Cat, грустный кот, сердитый кот, облака, улыбки, конкурс, недовольство",
+    "clues": [
+      "Когда даже небо предлагает улыбнуться для фото",
+      "Жюри заранее поставило всем неудовлетворительно"
+    ],
+    "title_en": "Grumpy Cat",
+    "scene_en": "A scowling cat sits at a podium while smiling clouds take part in a festive contest below.",
+    "keywords_en": "grumpy, cat, scowling, sits, podium, smiling, clouds, take, part, festive, contest",
+    "clues_en": [
+      "Even the sky asked for a smile in the photo",
+      "The judge gave everyone a failing grade in advance"
+    ]
+  },
+  {
+    "card": "007-meme.webp",
+    "scene": "Пиксельный кот с радужным хвостом летит сквозь космическую прачечную между планетами и стиральными машинами.",
+    "keywords": "Nyan Cat, ньян-кэт, пиксельный кот, радужный след, космос, планеты, стиральная машина",
+    "clues": [
+      "Режим стирки: бесконечное веселье",
+      "После него даже орбита пахнет конфетами"
+    ],
+    "title_en": "Nyan Cat",
+    "scene_en": "A pixel cat with a rainbow trail flies through a cosmic laundromat among planets and washing machines.",
+    "keywords_en": "nyan, cat, pixel, rainbow, trail, flies, cosmic, laundromat, among, planets, washing, machines",
+    "clues_en": [
+      "Wash cycle: endless joy",
+      "Even the orbit smells of candy afterward"
+    ]
+  },
+  {
+    "card": "008-meme.webp",
+    "scene": "Кот в смокинге играет на клавишах пианино внутри лифта, который стремительно падает между домами.",
+    "keywords": "Keyboard Cat, кот за клавиатурой, кот-пианист, пианино, лифт, падение, смокинг",
+    "clues": [
+      "Музыкант доиграет даже на первом этаже",
+      "Когда сопровождение звучит драматичнее самой поездки"
+    ],
+    "title_en": "Keyboard Cat",
+    "scene_en": "A tuxedo cat plays piano inside an elevator falling between buildings.",
+    "keywords_en": "keyboard, cat, tuxedo, plays, piano, elevator, falling, buildings",
+    "clues_en": [
+      "The musician will finish the song on the ground floor",
+      "The soundtrack is more dramatic than the ride"
+    ]
+  },
+  {
+    "card": "009-meme.webp",
+    "scene": "Невероятно длинный белый кот растянулся мостом между двумя скалами над рекой молока.",
+    "keywords": "Longcat, длиннокот, длинный кот, мост, река молока, скалы, водопад",
+    "clues": [
+      "Строительство переправы доверили самому гибкому соседу",
+      "Конец очереди уже на другом берегу"
+    ],
+    "title_en": "Longcat",
+    "scene_en": "An impossibly long white cat stretches between cliffs to form a bridge over a river of milk.",
+    "keywords_en": "longcat, impossibly, long, white, cat, stretches, cliffs, form, bridge, river, milk",
+    "clues_en": [
+      "They hired the most flexible neighbor to build the crossing",
+      "The end of the line is already on the other shore"
+    ]
+  },
+  {
+    "card": "010-meme.webp",
+    "scene": "Спокойный антропоморфный пёс в сером свитере стоит с руками в карманах среди летающих зонтов и бури.",
+    "keywords": "Chill Guy, чилл гай, спокойный парень, пёс, серый свитер, руки в карманах, буря, зонты",
+    "clues": [
+      "Когда вокруг дедлайн, а у тебя внутренний выходной",
+      "Ветер нервничает за всех сразу"
+    ],
+    "title_en": "Chill Guy",
+    "scene_en": "A calm dog in a gray sweater stands with hands in pockets amid flying umbrellas and a storm.",
+    "keywords_en": "chill, guy, calm, dog, gray, sweater, stands, hands, pockets, amid, flying, umbrellas, storm",
+    "clues_en": [
+      "Everything has a deadline except his inner weekend",
+      "The wind is nervous enough for everyone"
+    ]
+  },
+  {
+    "card": "011-meme.webp",
+    "scene": "Рыжий кот с огромными влажными глазами держит пустую миску, пока вокруг него с неба падают рыбы.",
+    "keywords": "Crying Cat, плачущий кот, рыжий кот, слеза, миска, рыбы, дождь",
+    "clues": [
+      "Еда почти рядом, но сервис всё равно ужасный",
+      "Когда вселенная услышала просьбу слишком буквально"
+    ],
+    "title_en": "Crying Cat",
+    "scene_en": "A ginger cat with huge wet eyes holds an empty bowl as fish rain from the sky.",
+    "keywords_en": "crying, cat, ginger, huge, wet, eyes, holds, empty, bowl, fish, rain, sky",
+    "clues_en": [
+      "The food is almost here and the service is still terrible",
+      "The universe took a request much too literally"
+    ]
+  },
+  {
+    "card": "012-meme.webp",
+    "scene": "Маленький блестящий бегемотик с открытой пастью пытается укусить большой зелёный поливочный шланг в зоопарке.",
+    "keywords": "Moo Deng, Му Денг, бегемотик, карликовый бегемот, пасть, шланг, зоопарк",
+    "clues": [
+      "Размер маленький, характер на весь вольер",
+      "Когда полив внезапно оказался личным врагом"
+    ],
+    "title_en": "Moo Deng",
+    "scene_en": "A tiny shiny hippo tries to bite a large green garden hose at the zoo.",
+    "keywords_en": "moo, deng, shiny, hippo, tries, bite, green, garden, hose, zoo",
+    "clues_en": [
+      "Small body, enough attitude for the whole enclosure",
+      "The sprinkler became a personal enemy"
+    ]
+  },
+  {
+    "card": "013-meme.webp",
+    "scene": "Белый улыбающийся кот отбивает ритм лапами на двух больших барабанах-планетах среди звёзд.",
+    "keywords": "Bongo Cat, бонго-кот, белый кот, барабаны, лапы, планеты, космос",
+    "clues": [
+      "У соседей опять репетиция на всю галактику",
+      "Когда настроение само нашло себе ударные"
+    ],
+    "title_en": "Bongo Cat",
+    "scene_en": "A smiling white cat taps a rhythm on two planet-sized drums among the stars.",
+    "keywords_en": "bongo, cat, smiling, white, taps, rhythm, planet, sized, drums, among, stars",
+    "clues_en": [
+      "The neighbors are rehearsing across the whole galaxy again",
+      "The mood found its own percussion"
+    ]
+  },
+  {
+    "card": "014-meme.webp",
+    "scene": "Кот с неестественно широко открытой пастью вскрикивает перед будильником в спальне.",
+    "keywords": "Popcat, попкэт, кот, открытая пасть, крик, будильник, спальня",
+    "clues": [
+      "Пять минут сна закончились очень громко",
+      "Когда утро ответило за тебя"
+    ],
+    "title_en": "Popcat",
+    "scene_en": "A cat with an unnaturally wide-open mouth yells at an alarm clock in a bedroom.",
+    "keywords_en": "popcat, cat, unnaturally, wide, open, mouth, yells, alarm, clock, bedroom",
+    "clues_en": [
+      "Five more minutes ended very loudly",
+      "Morning answered the question for you"
+    ]
+  },
+  {
+    "card": "015-meme.webp",
+    "scene": "Четыре разных кота нависают над кроватью и внимательно смотрят на проснувшегося человека в перевёрнутой комнате.",
+    "keywords": "Наташа вставай, коты Наташа, четыре кота, кровать, утро, перевёрнутая комната",
+    "clues": [
+      "Дом уже упал, а ты всё ещё спишь",
+      "Совет директоров требует открыть глаза немедленно"
+    ],
+    "title_en": "Wake Up Natasha",
+    "scene_en": "Four cats loom over a bed and stare at a waking person in an upside-down room.",
+    "keywords_en": "wake, natasha, four, cats, loom, bed, stare, waking, person, upside, room",
+    "clues_en": [
+      "The house has fallen and you are still asleep",
+      "The board of directors demands open eyes at once"
+    ]
+  },
+  {
+    "card": "016-meme.webp",
+    "scene": "Малыш с победно сжатым кулаком стоит в воде и держит песочный замок на фоне настоящего замка.",
+    "keywords": "Success Kid, успешный малыш, ребёнок, кулак, песочный замок, море, победа",
+    "clues": [
+      "Когда построил дворец до обеда и ещё успел искупаться",
+      "План на день выполнен с первого кулачка"
+    ],
+    "title_en": "Success Kid",
+    "scene_en": "A toddler clenches a triumphant fist in the water while holding a sandcastle before a real castle.",
+    "keywords_en": "success, kid, toddler, clenches, triumphant, fist, water, holding, sandcastle, before, real, castle",
+    "clues_en": [
+      "Built a palace before lunch and still went swimming",
+      "The day's plan succeeded with one tiny fist"
+    ]
+  },
+  {
+    "card": "017-meme.webp",
+    "scene": "Девочка с загадочной улыбкой смотрит в камеру, пока за её спиной горит причудливый замок из тостов.",
+    "keywords": "Disaster Girl, девочка-катастрофа, девочка, улыбка, пожар, горящий замок, тосты",
+    "clues": [
+      "Когда сказала, что завтрак будет с огоньком",
+      "Лицо человека, который точно ничего не трогал"
+    ],
+    "title_en": "Disaster Girl",
+    "scene_en": "A smiling girl looks at the camera while a strange castle made of toast burns behind her.",
+    "keywords_en": "disaster, girl, smiling, looks, camera, strange, castle, made, toast, burns",
+    "clues_en": [
+      "She did say breakfast would be exciting",
+      "The face of someone who definitely touched nothing"
+    ]
+  },
+  {
+    "card": "018-meme.webp",
+    "scene": "Девочка в оранжевом платье косо смотрит на семейный автомобиль, у которого внезапно выросли паучьи ноги.",
+    "keywords": "Side Eye Chloe, Хлоя косой взгляд, девочка, автомобиль, паучьи лапы, удивление",
+    "clues": [
+      "Когда родители назвали это обычной поездкой",
+      "Вопросов больше, чем свободных мест в машине"
+    ],
+    "title_en": "Side Eye Chloe",
+    "scene_en": "A girl in an orange dress eyes a family car that has sprouted spider legs.",
+    "keywords_en": "side, eye, chloe, girl, orange, dress, eyes, family, car, has, sprouted, spider, legs",
+    "clues_en": [
+      "The parents called this a normal road trip",
+      "More questions than empty seats in the car"
+    ]
+  },
+  {
+    "card": "019-meme.webp",
+    "scene": "Седой мужчина с натянутой улыбкой сидит за столом на офисном кресле, которое превратилось в колючий кактус.",
+    "keywords": "Hide the Pain Harold, Гарольд скрывающий боль, седой мужчина, улыбка, кактус, офис, кресло",
+    "clues": [
+      "Когда работа нравится особенно остро",
+      "Улыбка согласилась, спина ещё не решила"
+    ],
+    "title_en": "Hide the Pain Harold",
+    "scene_en": "A gray-haired man forces a smile at a desk while his office chair turns into a prickly cactus.",
+    "keywords_en": "hide, pain, harold, gray, haired, man, forces, smile, desk, office, chair, turns, prickly, cactus",
+    "clues_en": [
+      "He really enjoys his job, particularly the sharp bits",
+      "His smile agreed; his back has not decided"
+    ]
+  },
+  {
+    "card": "020-meme.webp",
+    "scene": "Седой режиссёр в пустом кинотеатре восхищённо разводит руками перед экраном с фильмом о танцующем чайнике.",
+    "keywords": "Absolute Cinema, абсолютное кино, режиссёр, кинотеатр, экран, танцующий чайник, восторг",
+    "clues": [
+      "Когда бюджет ушёл на один гениальный кадр",
+      "Зрителей нет, но шедевр уже состоялся"
+    ],
+    "title_en": "Absolute Cinema",
+    "scene_en": "A gray-haired director gestures with awe at a film of a dancing kettle in an empty cinema.",
+    "keywords_en": "absolute, cinema, gray, haired, director, gestures, awe, film, dancing, kettle, empty",
+    "clues_en": [
+      "The entire budget went into one brilliant shot",
+      "No audience yet, but the masterpiece is complete"
+    ]
+  },
+  {
+    "card": "021-meme.webp",
+    "scene": "Плюшевая обезьянка в жёлтом костюме подозрительно косится в сторону, пока позади рушится громадный торт.",
+    "keywords": "Monkey Puppet Side Eye, обезьянка косой взгляд, кукла, жёлтый костюм, торт, подозрение",
+    "clues": [
+      "Когда услышал шум за спиной и решил не уточнять",
+      "Я ничего не видел, особенно крем на потолке"
+    ],
+    "title_en": "Side-Eye Monkey Puppet",
+    "scene_en": "A plush monkey in a yellow suit glances sideways as a giant cake collapses behind it.",
+    "keywords_en": "side, eye, monkey, puppet, plush, yellow, suit, glances, sideways, cake, collapses",
+    "clues_en": [
+      "He heard a noise behind him and chose not to ask",
+      "I saw nothing, especially the icing on the ceiling"
+    ]
+  },
+  {
+    "card": "022-meme.webp",
+    "scene": "Хитро улыбающийся мужчина касается виска под дырявой крышей и держит зонт прямо внутри комнаты.",
+    "keywords": "Roll Safe, парень у виска, хитрый план, мужчина, зонт, дырявая крыша, дождь",
+    "clues": [
+      "Проблемы с крышей нет, если улица уже дома",
+      "Гениальное решение появилось на третьей протечке"
+    ],
+    "title_en": "Roll Safe",
+    "scene_en": "A sly man taps his temple beneath a leaking roof and holds an umbrella indoors.",
+    "keywords_en": "roll, safe, sly, man, taps, temple, beneath, leaking, roof, holds, umbrella, indoors",
+    "clues_en": [
+      "There is no roof problem if outdoors is already inside",
+      "The brilliant solution came after the third leak"
+    ]
+  },
+  {
+    "card": "023-meme.webp",
+    "scene": "Крошечный хомяк с огромными печальными глазами играет на скрипке в пустом зале старого вокзала.",
+    "keywords": "Sad Hamster, грустный хомяк, хомяк, слёзы, скрипка, вокзал, одиночество",
+    "clues": [
+      "Когда твой поезд ушёл, а оркестр остался",
+      "Самая печальная мелодия на самой маленькой платформе"
+    ],
+    "title_en": "Sad Hamster",
+    "scene_en": "A tiny hamster with enormous sorrowful eyes plays violin in an empty old train station.",
+    "keywords_en": "sad, hamster, sorrowful, eyes, plays, violin, empty, train, station",
+    "clues_en": [
+      "His train left but the orchestra remained",
+      "The saddest tune on the smallest platform"
+    ]
+  },
+  {
+    "card": "024-meme.webp",
+    "scene": "Взволнованный исследователь разводит руки перед гигантской пирамидой из телевизоров, над которой парит тарелка.",
+    "keywords": "Ancient Aliens, древние пришельцы, исследователь, пирамида, телевизоры, НЛО, теория",
+    "clues": [
+      "Когда пульт исчез и объяснение нашлось само",
+      "Наука просила доказательства, а получила антенну"
+    ],
+    "title_en": "Ancient Aliens",
+    "scene_en": "An excited researcher spreads his hands before a giant pyramid of televisions with a flying saucer above.",
+    "keywords_en": "ancient, aliens, excited, researcher, spreads, hands, before, pyramid, televisions, flying, saucer",
+    "clues_en": [
+      "The remote vanished and the explanation found itself",
+      "Science asked for proof and got an antenna"
+    ]
+  },
+  {
+    "card": "025-meme.webp",
+    "scene": "Детектив в комнате с доской улик и красными нитями пытается раскрыть дело об одной пропавшей носке.",
+    "keywords": "Conspiracy Board, доска заговоров, детектив, красные нити, улики, пропавшая носка",
+    "clues": [
+      "Стирка уже закончилась, расследование только началось",
+      "Все подозреваемые были в одном ящике"
+    ],
+    "title_en": "Conspiracy Board",
+    "scene_en": "A detective follows red strings on an evidence board to solve the case of a missing sock.",
+    "keywords_en": "conspiracy, board, detective, follows, red, strings, evidence, solve, case, missing, sock",
+    "clues_en": [
+      "Laundry is done; the investigation has just begun",
+      "Every suspect was in the same drawer"
+    ]
+  },
+  {
+    "card": "026-meme.webp",
+    "scene": "Человек указывает на лампу, пролетающую над городской улицей, будто принимает её за птицу.",
+    "keywords": "Is This a Pigeon, это голубь, человек указывает пальцем, летающая лампа, птица, город",
+    "clues": [
+      "Когда контрольная по биологии была слишком давно",
+      "Летает — значит, наверное, живое"
+    ],
+    "title_en": "Is This a Pigeon?",
+    "scene_en": "A person points at a flying lamp over a city street, mistaking it for a bird.",
+    "keywords_en": "pigeon, person, points, flying, lamp, city, street, mistaking, bird",
+    "clues_en": [
+      "The biology test was a long time ago",
+      "If it flies, it must be alive, probably"
+    ]
+  },
+  {
+    "card": "027-meme.webp",
+    "scene": "Озадаченная женщина смотрит на чайник без ручки, пока вокруг её головы висят формулы, фигуры и ложки.",
+    "keywords": "Confused Math Lady, женщина с формулами, задумчивость, чайник, ложки, геометрия",
+    "clues": [
+      "Задача со звёздочкой появилась на кухне",
+      "Когда ответ вроде есть, но за него не ухватиться"
+    ],
+    "title_en": "Confused Math Lady",
+    "scene_en": "A puzzled woman studies a handleless kettle while formulas, shapes and spoons float around her head.",
+    "keywords_en": "confused, math, lady, puzzled, woman, studies, handleless, kettle, formulas, shapes, spoons, float, head",
+    "clues_en": [
+      "An advanced problem appeared in the kitchen",
+      "The answer is there, but there is nothing to grab"
+    ]
+  },
+  {
+    "card": "028-meme.webp",
+    "scene": "Один и тот же нарисованный человечек на трёх кадрах сперва пугается, затем успокаивается и снова пугается ожившего тостера.",
+    "keywords": "Panik Kalm Panik, паника спокойствие паника, человечек, тостер, три кадра",
+    "clues": [
+      "Я всё исправил. Кажется. Нет, не исправил",
+      "Каждая новая проверка делает результат хуже"
+    ],
+    "title_en": "Panik Kalm Panik",
+    "scene_en": "Three panels show the same drawn figure fearing, then trusting, then fearing a living toaster.",
+    "keywords_en": "panik, kalm, panels, show, same, drawn, figure, fearing, then, trusting, living, toaster",
+    "clues_en": [
+      "I fixed it. I think. No, I did not",
+      "Every new check makes the result worse"
+    ]
+  },
+  {
+    "card": "029-meme.webp",
+    "scene": "Седой мужчина в тёплых варежках и маске сидит один на складном стуле посреди роскошного бала.",
+    "keywords": "Bernie Mittens, Берни Сандерс в варежках, седой мужчина, складной стул, бал, маска",
+    "clues": [
+      "Пришёл на праздник со своим уровнем комфорта",
+      "Дресс-код сдался перед здравым смыслом"
+    ],
+    "title_en": "Bernie in Mittens",
+    "scene_en": "An elderly man in warm mittens and a mask sits alone on a folding chair at a fancy ball.",
+    "keywords_en": "bernie, mittens, elderly, man, warm, mask, sits, alone, folding, chair, fancy, ball",
+    "clues_en": [
+      "He brought his own level of comfort to the party",
+      "The dress code surrendered to common sense"
+    ]
+  },
+  {
+    "card": "030-meme.webp",
+    "scene": "Упрямый игрок сидит за столом с огромной горой карт, хотя мог бы просто закрыть открытое окно.",
+    "keywords": "UNO Draw 25, уно возьми 25, карточная игра, игрок, гора карт, окно, упрямство",
+    "clues": [
+      "Когда проще взять ещё двадцать проблем, чем решить одну",
+      "Руки заняты, принцип всё ещё свободен"
+    ],
+    "title_en": "UNO Draw 25",
+    "scene_en": "A stubborn player sits behind a huge pile of cards instead of simply closing an open window.",
+    "keywords_en": "uno, draw, stubborn, player, sits, huge, pile, cards, simply, closing, open, window",
+    "clues_en": [
+      "Taking twenty more problems seemed easier than solving one",
+      "His hands are full, but his principles are free"
+    ]
+  },
+  {
+    "card": "031-meme.webp",
+    "scene": "Взволнованный супергерой не может выбрать между двумя огромными кнопками с солнцем и луной.",
+    "keywords": "Two Buttons, две кнопки, потный супергерой, выбор, солнце, луна",
+    "clues": [
+      "Когда оба варианта кажутся неправильным временем суток",
+      "На собеседовании спросили, кто ты утром и вечером"
+    ],
+    "title_en": "Two Buttons",
+    "scene_en": "A nervous superhero cannot choose between two enormous buttons bearing the sun and moon.",
+    "keywords_en": "buttons, nervous, superhero, cannot, choose, bearing, sun, moon",
+    "clues_en": [
+      "Both choices seem like the wrong time of day",
+      "The interview asked who he is in the morning and evening"
+    ]
+  },
+  {
+    "card": "032-meme.webp",
+    "scene": "Мальчик уверенно танцует на носу лодки, которая мчится через огромные волны, пока другие едва справляются с греблей.",
+    "keywords": "фарм ауры, aura farming, танец на лодке, мальчик, волны, гребцы, океан",
+    "clues": [
+      "Когда у команды аврал, а у тебя собственный клип",
+      "Чем сильнее качает, тем увереннее поза"
+    ],
+    "title_en": "Aura Farming",
+    "scene_en": "A boy dances confidently on the prow of a boat amid huge waves while everyone else struggles to row.",
+    "keywords_en": "aura, farming, boy, dances, confidently, prow, boat, amid, huge, waves, everyone, else, struggles, row",
+    "clues_en": [
+      "The crew is in crisis and he is filming his own music video",
+      "The rougher the waves, the stronger the pose"
+    ]
+  },
+  {
+    "card": "033-meme.webp",
+    "scene": "Путник пытается пролезть в крошечную дверь величественного магазина среди каменных стен и узких ступеней.",
+    "keywords": "One Does Not Simply, просто так не войти, путник, маленькая дверь, магазин, порог",
+    "clues": [
+      "Инструкция звучала легко до знакомства с входом",
+      "Когда ключ нашёлся, а размер дверей забыли указать"
+    ],
+    "title_en": "One Does Not Simply",
+    "scene_en": "A traveler struggles to enter a tiny door in a grand stone shop with narrow steps.",
+    "keywords_en": "does, not, simply, traveler, struggles, enter, door, grand, stone, shop, narrow, steps",
+    "clues_en": [
+      "The instructions sounded easy until he saw the entrance",
+      "The key was found; nobody mentioned the door's size"
+    ]
+  },
+  {
+    "card": "034-meme.webp",
+    "scene": "Девушка с чрезмерно пристальным взглядом лежит в постели и внимательно следит за часами будильника.",
+    "keywords": "Overly Attached Girlfriend, навязчивая девушка, пристальный взгляд, будильник, часы, спальня",
+    "clues": [
+      "Я просто проверяю, почему ты не ответил в 7:01",
+      "Даже время попросило немного личного пространства"
+    ],
+    "title_en": "Overly Attached Girlfriend",
+    "scene_en": "A girl with an intense stare lies in bed watching an alarm clock closely.",
+    "keywords_en": "overly, attached, girlfriend, girl, intense, stare, lies, bed, watching, alarm, clock, closely",
+    "clues_en": [
+      "I am only checking why you did not reply at 7:01",
+      "Even time asked for a little personal space"
+    ]
+  },
+  {
+    "card": "035-meme.webp",
+    "scene": "Серое складчатое существо с длинным носом терпеливо сидит на стуле среди множества часов в пустом зале.",
+    "keywords": "Ждун, Homunculus Loxodontus, серое существо, длинный нос, ожидание, стул, часы",
+    "clues": [
+      "Заявка принята, ответ будет в следующем тысячелетии",
+      "Когда очередь давно стала частью интерьера"
+    ],
+    "title_en": "The Waiting One",
+    "scene_en": "A gray wrinkled creature with a long nose waits among many clocks in an empty hall.",
+    "keywords_en": "waiting, gray, wrinkled, creature, long, nose, waits, among, many, clocks, empty, hall, homunculus, loxodontus",
+    "clues_en": [
+      "Your request is accepted; the answer comes next millennium",
+      "The queue has become part of the furniture"
+    ]
+  },
+  {
+    "card": "036-meme.webp",
+    "scene": "Пушистый рыжий кот в бумажном колпаке машет волшебной палочкой, и билеты взлетают над очередью.",
+    "keywords": "кот Вжух, вжух, рыжий кот, волшебная палочка, билеты, очередь, касса",
+    "clues": [
+      "Когда билет закончился, а чудо только началось",
+      "Очередь исчезла быстрее, чем кассир нашёл сдачу"
+    ],
+    "title_en": "Magic Ginger Cat",
+    "scene_en": "A fluffy orange cat in a paper hat waves a wand as tickets fly above a queue.",
+    "keywords_en": "magic, ginger, cat, fluffy, orange, paper, hat, waves, wand, tickets, fly, queue",
+    "clues_en": [
+      "The tickets ran out just as the magic began",
+      "The line vanished faster than the cashier found change"
+    ]
+  },
+  {
+    "card": "037-meme.webp",
+    "scene": "Белый нарисованный человечек с широко открытым ртом заглядывает в холодильник, где вместо еды сияет целая галактика.",
+    "keywords": "Ничоси, удивлённый человечек, белый персонаж, холодильник, галактика, планеты, восторг",
+    "clues": [
+      "Когда в поисках ужина нашёл новую вселенную",
+      "Открываешь дверцу на секунду, зависаешь на эпоху"
+    ],
+    "title_en": "What a Surprise",
+    "scene_en": "A white cartoon figure gapes into a refrigerator that contains an entire glowing galaxy.",
+    "keywords_en": "what, surprise, white, cartoon, figure, gapes, refrigerator, contains, entire, glowing, galaxy",
+    "clues_en": [
+      "Went looking for dinner and found a new universe",
+      "Opened the door for a second; stared for an era"
+    ]
+  },
+  {
+    "card": "038-meme.webp",
+    "scene": "Зелёный раптор задумчиво сидит в обсерватории перед огромным яйцом и звёздным окном.",
+    "keywords": "Philosoraptor, философораптор, раптор, динозавр, яйцо, обсерватория, звёзды",
+    "clues": [
+      "Если сначала была скорлупа, кто придумал завтрак",
+      "Мысль настолько глубокая, что до неё не долетает свет"
+    ],
+    "title_en": "Philosoraptor",
+    "scene_en": "A green raptor ponders a huge egg in an observatory before a starry window.",
+    "keywords_en": "philosoraptor, green, raptor, ponders, huge, egg, observatory, before, starry, window",
+    "clues_en": [
+      "If the shell came first, who invented breakfast?",
+      "A thought so deep that light cannot reach it"
+    ]
+  },
+  {
+    "card": "039-meme.webp",
+    "scene": "Маленькая принцесса с короной сидит невозмутимо, хотя вокруг неё плачут придворные и падает люстра.",
+    "keywords": "Queen Never Cry, королева не плачет, младенец, принцесса, корона, придворные, люстра",
+    "clues": [
+      "Во дворце паника, у руководства тихий час",
+      "Когда проблемы есть у всех, кроме главной"
+    ],
+    "title_en": "Queen Never Cry",
+    "scene_en": "A little crowned princess sits calmly as courtiers weep and a chandelier falls.",
+    "keywords_en": "queen, never, cry, crowned, princess, sits, calmly, courtiers, weep, chandelier, falls",
+    "clues_en": [
+      "Panic in the palace; management is taking a nap",
+      "Everyone has a problem except the person in charge"
+    ]
+  },
+  {
+    "card": "040-meme.webp",
+    "scene": "Седой стрелок в белой футболке с рукой в кармане спокойно целится на турнире в парящие мыльные пузыри.",
+    "keywords": "Turkish Shooter, турецкий стрелок, Юсуф Дикеч, пистолет, футболка, пузырь, турнир",
+    "clues": [
+      "Когда пришёл без подготовки и всё равно попал",
+      "Одна рука работает, другая отдыхает"
+    ],
+    "title_en": "Turkish Shooter",
+    "scene_en": "A gray-haired marksman casually aims at floating soap bubbles with one hand in his pocket.",
+    "keywords_en": "turkish, shooter, gray, haired, marksman, casually, aims, floating, soap, bubbles, hand, pocket",
+    "clues_en": [
+      "Showed up unprepared and still hit the target",
+      "One hand works; the other is on vacation"
+    ]
+  },
+  {
+    "card": "041-meme.webp",
+    "scene": "Маленькая красная пушистая кукла радостно раскинула руки перед горящими офисными принтерами и взрывами.",
+    "keywords": "Elmo Fire, Элмо в огне, красная кукла, пожар, принтеры, офис, радость",
+    "clues": [
+      "Пятница наконец дошла до отдела печати",
+      "Когда ошибка в отчёте уже не имеет значения"
+    ],
+    "title_en": "Elmo Fire",
+    "scene_en": "A little red fuzzy puppet spreads its arms joyfully before burning office printers.",
+    "keywords_en": "elmo, fire, red, fuzzy, puppet, spreads, arms, joyfully, before, burning, office, printers",
+    "clues_en": [
+      "Friday finally reached the printing department",
+      "The report's error no longer matters"
+    ]
+  },
+  {
+    "card": "042-meme.webp",
+    "scene": "Воин в красном плаще с силой сталкивает в пропасть громадный будильник вместо врага.",
+    "keywords": "This is Sparta, это Спарта, воин, будильник, пинок, пропасть, красный плащ",
+    "clues": [
+      "Утро получило решительный отказ",
+      "Когда кнопки отложить уже недостаточно"
+    ],
+    "title_en": "This Is Sparta",
+    "scene_en": "A red-cloaked warrior kicks an enormous alarm clock into a chasm instead of an enemy.",
+    "keywords_en": "sparta, red, cloaked, warrior, kicks, alarm, clock, chasm, enemy",
+    "clues_en": [
+      "Morning received a very firm refusal",
+      "The snooze button was no longer enough"
+    ]
+  },
+  {
+    "card": "043-meme.webp",
+    "scene": "Бурундук резко поворачивается к зрителям на сцене маленького театра, словно услышал неожиданный секрет.",
+    "keywords": "Dramatic Chipmunk, драматичный бурундук, бурундук, сцена, театр, резкий взгляд",
+    "clues": [
+      "Когда за спиной произнесли твоё имя",
+      "Пауза длилась секунду, эффект — целую вечность"
+    ],
+    "title_en": "Dramatic Chipmunk",
+    "scene_en": "A chipmunk turns sharply toward the audience on a tiny theater stage as if it heard a secret.",
+    "keywords_en": "dramatic, chipmunk, turns, sharply, toward, audience, theater, stage, heard, secret",
+    "clues_en": [
+      "Someone said his name behind his back",
+      "The pause lasted one second; the effect lasted ages"
+    ]
+  },
+  {
+    "card": "044-meme.webp",
+    "scene": "Девочка с косичками радостно бежит по улице, прижимая к груди стопку оживших книг с большими глазами.",
+    "keywords": "Ermahgerd, эрмагёрд, девочка, косички, книги, восторг, улица",
+    "clues": [
+      "Когда библиотека наконец выпустила продолжение",
+      "Счастье весит больше, чем весь рюкзак"
+    ],
+    "title_en": "Ermahgerd",
+    "scene_en": "A pigtailed girl runs happily down the street carrying a stack of living books with big eyes.",
+    "keywords_en": "ermahgerd, pigtailed, girl, runs, happily, street, carrying, stack, living, books, big, eyes",
+    "clues_en": [
+      "The library finally released the sequel",
+      "Happiness weighs more than her backpack"
+    ]
+  },
+  {
+    "card": "045-meme.webp",
+    "scene": "Четверо носильщиков в чёрных костюмах танцуют с гробом по нотному мосту под оранжевым небом.",
+    "keywords": "Coffin Dance, танец с гробом, носильщики, чёрные костюмы, музыка, мост, танец",
+    "clues": [
+      "Когда финал оказался ритмичнее всей вечеринки",
+      "Слишком торжественный выход из чата"
+    ],
+    "title_en": "Coffin Dance",
+    "scene_en": "Four pallbearers in black suits dance with a coffin across a musical bridge beneath an orange sky.",
+    "keywords_en": "coffin, dance, four, pallbearers, black, suits, musical, bridge, beneath, orange, sky",
+    "clues_en": [
+      "The finale had more rhythm than the whole party",
+      "A dramatic departure from the chat"
+    ]
+  },
+  {
+    "card": "046-meme.webp",
+    "scene": "Огромный мускулистый пёс с пакетами продуктов идёт рядом с маленьким робким псом на городской улице.",
+    "keywords": "Buff Doge vs Cheems, качок Доге и Чимс, собаки, мускулы, пакеты продуктов, контраст",
+    "clues": [
+      "Один несёт все покупки, второй моральную поддержку",
+      "Когда вчера и сегодня по-разному ходят в магазин"
+    ],
+    "title_en": "Buff Doge vs Cheems",
+    "scene_en": "A muscular dog carries all the groceries beside a small timid dog on a city street.",
+    "keywords_en": "buff, doge, cheems, muscular, dog, carries, groceries, timid, city, street",
+    "clues_en": [
+      "One carries the bags; the other offers moral support",
+      "Yesterday and today shop very differently"
+    ]
+  },
+  {
+    "card": "047-meme.webp",
+    "scene": "Деловой манекен торжествует за ресторанным столом перед графиком роста, построенным из макарон.",
+    "keywords": "Stonks, стонкс, манекен, бизнес, график роста, макароны, деньги",
+    "clues": [
+      "Инвестиции в ужин неожиданно пошли вверх",
+      "Финансовый отчёт пахнет сыром"
+    ],
+    "title_en": "Stonks",
+    "scene_en": "A business mannequin celebrates at a restaurant table before a rising graph made of pasta.",
+    "keywords_en": "stonks, business, mannequin, celebrates, restaurant, table, before, rising, graph, made, pasta",
+    "clues_en": [
+      "The dinner investment unexpectedly went up",
+      "The financial report smells like cheese"
+    ]
+  },
+  {
+    "card": "048-meme.webp",
+    "scene": "На конвейере фабрики треугольников внезапно появляется большой синий шар, изумляя рабочих.",
+    "keywords": "Circle in Triangle Factory, круг на фабрике треугольников, конвейер, синий шар, фигуры, рабочие",
+    "clues": [
+      "Когда прошёл собеседование не в тот отдел",
+      "Каждый продукт идеален, кроме самого интересного"
+    ],
+    "title_en": "Circle in Triangle Factory",
+    "scene_en": "A large blue sphere appears on a conveyor in a triangle factory, baffling the workers.",
+    "keywords_en": "circle, triangle, factory, blue, sphere, appears, conveyor, baffling, workers",
+    "clues_en": [
+      "A candidate showed up for the wrong department",
+      "Every product was perfect except the most interesting one"
+    ]
+  },
+  {
+    "card": "049-meme.webp",
+    "scene": "Две огромные мускулистые руки сцепляются над столом переговоров, под которым внезапно извергается вулкан.",
+    "keywords": "Epic Handshake, эпическое рукопожатие, руки, сила, стол, вулкан, союз",
+    "clues": [
+      "Нашли общий язык и сломали переговорную",
+      "Когда компромисс оказался слишком горячим"
+    ],
+    "title_en": "Epic Handshake",
+    "scene_en": "Two massive muscular hands clasp across a negotiating table above an erupting volcano.",
+    "keywords_en": "epic, handshake, massive, muscular, hands, clasp, negotiating, table, erupting, volcano",
+    "clues_en": [
+      "They found common ground and broke the meeting room",
+      "The compromise was much too hot"
+    ]
+  },
+  {
+    "card": "050-meme.webp",
+    "scene": "Круглый енот вертится как волчок на зеркальном диско-шаре, пока вокруг стоят серьёзные лесные звери.",
+    "keywords": "Pedro Raccoon, енот Педро, енот, танец, диско-шар, лесные звери, вечеринка",
+    "clues": [
+      "Когда ты единственный услышал музыку",
+      "Вечеринка началась без согласования с лесом"
+    ],
+    "title_en": "Pedro Raccoon",
+    "scene_en": "A round raccoon spins like a top on a mirrored disco ball while serious forest animals watch.",
+    "keywords_en": "pedro, raccoon, round, spins, top, mirrored, disco, ball, serious, forest, animals, watch",
+    "clues_en": [
+      "He was the only one who heard the music",
+      "The party began without consulting the forest"
+    ]
+  },
+  {
+    "card": "051-meme.webp",
+    "scene": "Сурок на горной вершине кричит в огромный бронзовый чайник под ярким небом.",
+    "keywords": "Screaming Marmot, кричащий сурок, сурок, гора, чайник, крик, Альпы",
+    "clues": [
+      "Когда вода закипела раньше терпения",
+      "Объявление для всей долины без микрофона"
+    ],
+    "title_en": "Screaming Marmot",
+    "scene_en": "A marmot screams into a giant bronze kettle atop a mountain beneath a bright sky.",
+    "keywords_en": "screaming, marmot, screams, bronze, kettle, atop, mountain, beneath, bright, sky",
+    "clues_en": [
+      "The water boiled before his patience did",
+      "An announcement for the entire valley without a microphone"
+    ]
+  },
+  {
+    "card": "052-meme.webp",
+    "scene": "Маленькая панда чихает так сильно, что рядом рушится высокая бамбуковая башня.",
+    "keywords": "Sneezing Panda, чихающая панда, панда, чих, бамбук, башня, падение",
+    "clues": [
+      "Самый короткий способ отменить строительство",
+      "Будь здоров — сказала вся деревня"
+    ],
+    "title_en": "Sneezing Panda",
+    "scene_en": "A little panda sneezes so hard that a tall bamboo tower collapses beside it.",
+    "keywords_en": "sneezing, panda, sneezes, hard, tall, bamboo, tower, collapses",
+    "clues_en": [
+      "The shortest way to cancel construction",
+      "The whole village said bless you"
+    ]
+  },
+  {
+    "card": "053-meme.webp",
+    "scene": "Танцующий малыш задаёт ритм параду строгих роботов на городской площади под красным солнцем.",
+    "keywords": "Dancing Baby, танцующий малыш, младенец, роботы, парад, танец, город",
+    "clues": [
+      "Они получили команду маршировать, а выучили джайв",
+      "Самый маленький хореограф взял смену под контроль"
+    ],
+    "title_en": "Dancing Baby",
+    "scene_en": "A dancing toddler sets the rhythm for a parade of stern robots in a city square.",
+    "keywords_en": "dancing, baby, toddler, sets, rhythm, parade, stern, robots, city, square",
+    "clues_en": [
+      "They were told to march and learned to jive",
+      "The smallest choreographer took over the shift"
+    ]
+  },
+  {
+    "card": "054-meme.webp",
+    "scene": "Разъярённый скелет в броне бьёт мечом по щиту, разбрасывая вокруг тарелки и ложки.",
+    "keywords": "Skeleton Banging Shield, скелет бьёт по щиту, скелет, броня, меч, щит, тарелки",
+    "clues": [
+      "Когда позвали ужинать слишком торжественно",
+      "Соседи снизу уже выучили этот ритм"
+    ],
+    "title_en": "Skeleton Banging Shield",
+    "scene_en": "An angry armored skeleton bangs a sword on its shield, scattering plates and spoons.",
+    "keywords_en": "skeleton, banging, shield, angry, armored, bangs, sword, scattering, plates, spoons",
+    "clues_en": [
+      "Someone called everyone to dinner too formally",
+      "The downstairs neighbors already know the rhythm"
+    ]
+  },
+  {
+    "card": "055-meme.webp",
+    "scene": "Зелёная кукольная лягушка пьёт чай на театральном балконе и смотрит на город, охваченный сплетнями.",
+    "keywords": "Kermit Sipping Tea, лягушонок Кермит пьёт чай, лягушка, чашка, театр, сплетни",
+    "clues": [
+      "Я ничего не утверждаю, просто завариваю факты",
+      "Когда всё видишь и остаёшься зрителем"
+    ],
+    "title_en": "Kermit Sipping Tea",
+    "scene_en": "A green puppet frog drinks tea on a theater balcony above a city buzzing with gossip.",
+    "keywords_en": "kermit, sipping, tea, green, puppet, frog, drinks, theater, balcony, city, buzzing, gossip",
+    "clues_en": [
+      "I am not making claims; I am brewing facts",
+      "He saw everything and stayed in the audience"
+    ]
+  }
 ]

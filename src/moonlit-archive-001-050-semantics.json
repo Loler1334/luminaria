@@ -1,52 +1,852 @@
 [
-  {"card":"001-card.webp","title":"Радужный мост","scene":"Белое крылатое существо летит над радужным мостом среди планет, пока из облаков за ним наблюдает огромное око.","keywords":"крылья, белое существо, радужный мост, планеты, облака, огромное око, небо","clues":["На переправе сегодня проверяют даже мысли","Кто-то слишком внимательно следит за полётами"]},
-  {"card":"002-card.webp","title":"Дождливый город","scene":"Женщина с прозрачным зонтом идёт по мокрой городской улице, где огни отражаются в лужах и дождь смягчает силуэты домов.","keywords":"женщина, прозрачный зонт, дождь, город, мокрая улица, лужи, отражения","clues":["Прогноз обещал встречу с собственным отражением","Город решил сегодня говорить только шёпотом"]},
-  {"card":"003-card.webp","title":"Неоновый гонщик","scene":"Мотоциклист мчится на похожем на дракона неоновом байке через яркий розово-зелёный город будущего.","keywords":"мотоциклист, неоновый байк, дракон, город, розовый, зелёный, скорость","clues":["Такси снова слишком буквально поняло слово огонь","На этом маршруте правила дорожного движения сдаются первыми"]},
-  {"card":"004-card.webp","title":"Огненная гора и кристалл","scene":"Над тёмным морем сталкиваются красный извергающийся вулкан и высокая серебристая кристальная башня.","keywords":"вулкан, красная лава, кристальная башня, тёмное море, огонь, скалы","clues":["Соседи снова спорят о температуре в комнате","Один берег разгорячился, другой держит лицо"]},
-  {"card":"005-card.webp","title":"Садовник облаков","scene":"Человек на крыше поливает из ведра облака в форме птиц, парящие над городом, а из окна за ним наблюдают.","keywords":"крыша, человек, ведро, полив, облака-птицы, город, окно","clues":["У погоды появился очень старательный садовник","Крылья требуют ухода чаще, чем комнатные растения"]},
-  {"card":"006-card.webp","title":"Шахматное поле","scene":"На чёрно-белом поле стоят огромная коронованная шахматная фигура и красный шатёр со спящим человеком.","keywords":"шахматы, чёрно-белое поле, корона, фигура, красный шатёр, спящий человек","clues":["Королевство поставило партию на паузу ради сна","Даже пешка иногда мечтает о короне"]},
-  {"card":"007-card.webp","title":"Зубастый цветок в пещере","scene":"В глубокой пещере вырос огромный зубастый цветок-гриб, вокруг которого собрались зрители и лежат кости.","keywords":"пещера, зубастый цветок, гриб, зрители, скелеты, кости, пасть","clues":["Ботанический кружок опять забыл правила безопасности","На это представление лучше не покупать места у сцены"]},
-  {"card":"008-card.webp","title":"Орк в космосе","scene":"Зелёный орк в космическом шлеме плывёт среди астероидов; внутри его скафандра сияет маленькая планета.","keywords":"орк, космонавт, шлем, скафандр, маленькая планета, астероиды, космос","clues":["Багаж на орбиту оказался куда тяжелее нормы","Внутренний мир сегодня прошёл техосмотр"]},
-  {"card":"009-card.webp","title":"Дракон на лунном шаре","scene":"Маленький красный дракон сидит на золотом воздушном шаре в форме луны среди звёзд и небесных серпов.","keywords":"красный дракон, золотой лунный шар, звёзды, полумесяц, небо","clues":["Первый полёт получился удивительно тихим","Когда домик на небе наконец научился летать"]},
-  {"card":"010-card.webp","title":"Пикник на луне","scene":"Дети и кролики устроили пикник на фиолетовом лунном камне под огромной планетой с кольцами.","keywords":"дети, кролики, пикник, лунный камень, фиолетовый, кольцевая планета","clues":["На выходных соседняя планета зовёт на чай","Скатерть забыли, зато вид из окна отменный"]},
-  {"card":"011-card.webp","title":"Улитка в соборе","scene":"Человек верхом на огромной улитке едет по залу старинного собора, мимо арок и подвешенной птичьей клетки.","keywords":"улитка, всадник, собор, арки, птичья клетка, медленная поездка","clues":["Опоздание здесь считается частью паломничества","Экспресс прибудет сразу после следующего века"]},
-  {"card":"012-card.webp","title":"Подземный поезд грибов","scene":"Паровоз прибывает на подземную станцию, освещённую огромными светящимися грибами; пассажиры ждут у платформы.","keywords":"паровоз, подземная станция, светящиеся грибы, пассажиры, платформа, пещера","clues":["На этой ветке расписание составляют споры","Последняя остановка там, где светят шляпки"]},
-  {"card":"013-card.webp","title":"Крепость среди звёзд","scene":"Мрачная каменная крепость стоит на парящем обломке скалы посреди звёздной галактики.","keywords":"каменная крепость, летающий остров, скала, галактика, звёзды, космос","clues":["Соседи снизу снова жалуются на гравитацию","Адрес есть, а дороги к нему никто не нашёл"]},
-  {"card":"014-card.webp","title":"Волшебный вокзал","scene":"Пёстрая толпа собирается у поезда на ярко освещённом вокзале с высоким сводом и разноцветными вывесками.","keywords":"вокзал, поезд, толпа, свод, вывески, чемоданы, путешествие","clues":["Все направления открыты, кроме привычного","Время отправления написано мелом на чуде"]},
-  {"card":"015-card.webp","title":"Великанова тропа","scene":"Несколько волшебников стоят на длинном языке гигантского каменного лица над сказочным пейзажем и далёким светом.","keywords":"волшебники, огромное лицо, язык, каменная голова, сказочный пейзаж, свет","clues":["Путь к истине оказался слишком разговорчивым","Пешеходная дорожка сегодня явно что-то скрывает"]},
-  {"card":"016-card.webp","title":"Орк-пекарь","scene":"Орк-повар держит громадную румяную выпечку в форме дракона над заснеженной деревней.","keywords":"орк, повар, пекарь, выпечка, дракон, зимняя деревня, снег","clues":["Ужин решил сначала научиться дышать огнём","В этой пекарне корочка считается подвигом"]},
-  {"card":"017-card.webp","title":"Слон-гора и колокол","scene":"Белый зверь с зелёной гривой звонит в бронзовый колокол перед заснеженной горой, похожей на синего слона.","keywords":"белый зверь, зелёная грива, колокол, снежная гора, синий слон, облака","clues":["Будильник для горных вершин оказался слишком маленьким","Тихий час закончился на другом конце долины"]},
-  {"card":"018-card.webp","title":"Спящий ледяной гигант","scene":"Огромный синий ледяной зверь спит среди гор и узорчатого снега, словно сама зима свернулась клубком.","keywords":"синий гигант, ледяной зверь, сон, горы, снег, зима, узоры","clues":["Весна пока не решается его будить","Самая большая подушка на свете снова замёрзла"]},
-  {"card":"019-card.webp","title":"Корабль над звёздным морем","scene":"Зелёный орк и светловолосый спутник плывут на длинном корабле под ночным небом над сияющим космическим морем.","keywords":"орк, светловолосый спутник, длинный корабль, парус, море, звёзды, космос","clues":["Навигатор велел держаться второй звезды слева","Солёный ветер внезапно пахнет метеоритами"]},
-  {"card":"020-card.webp","title":"Дракон-библиотекарь","scene":"Красный дракон уснул, обвившись вокруг книжных полок, пока рядом человек спокойно читает при свете лампы.","keywords":"красный дракон, книги, библиотека, полки, читающий человек, лампа, сон","clues":["Тише, здесь даже пожар соблюдает тишину","Просроченную книгу лучше вернуть до пробуждения"]},
-  {"card":"021-card.webp","title":"Самурай и белый лис","scene":"Воин с мечом встречает большого белого многохвостого лиса на ночной улице японского города под полной луной.","keywords":"самурай, меч, белый лис, много хвостов, луна, японская улица, ночь","clues":["Дуэль отменили ради очень старого знакомства","У этого незнакомца слишком много способов попрощаться"]},
-  {"card":"022-card.webp","title":"Полет на лунной бабочке","scene":"Синяя крылатая бабочка несёт мальчика над полем цветов, где вдали видны сказочные планеты.","keywords":"синяя бабочка, мотылёк, мальчик, полёт, цветочное поле, планеты","clues":["Билет туда продают только во сне","Самый лёгкий транспорт оказался размером с дом"]},
-  {"card":"023-card.webp","title":"Астроном и кот","scene":"Пожилой астроном с телескопом смотрит на светящиеся созвездия, а рядом сидит кот.","keywords":"астроном, телескоп, кот, звёзды, созвездия, небо, ночь","clues":["Помощник уже вычислил, где завтра будет ужин","Ответ в небе нашёлся раньше вопроса"]},
-  {"card":"024-card.webp","title":"Королева оригами","scene":"Белая королева сидит на троне из острых складчатых форм посреди светлой равнины под тёмным затмением.","keywords":"королева, белое платье, складчатый трон, оригами, затмение, равнина, красная ткань","clues":["Королевский указ сложили вчетверо","Даже солнце здесь боится помять костюм"]},
-  {"card":"025-card.webp","title":"Светящийся хлеб","scene":"Женщина несёт сияющую буханку по тёмной улице, а у её ног крадётся чёрный кот.","keywords":"женщина, светящийся хлеб, буханка, тёмная улица, чёрный кот, ночь","clues":["За этим ужином можно идти без фонаря","Соседи попросили оставить кусочек рассвета"]},
-  {"card":"026-card.webp","title":"Каменный великан с облаком","scene":"Покрытый мхом каменный великан держит маленькую дождевую тучу над цветами, пока рядом играют дети.","keywords":"каменный великан, мох, маленькая туча, дождь, цветы, дети","clues":["Самый большой садовник поливает точечно","Погоду сегодня носят в ладони"]},
-  {"card":"027-card.webp","title":"Лунный воин","scene":"Чёрно-белый воин с копьём стоит на серпе луны над спящей женщиной среди облаков.","keywords":"воин, копьё, полумесяц, луна, спящая женщина, облака, чёрно-белый","clues":["Охрана снов снова вышла в ночную смену","Страж поднялся туда, где заканчиваются лестницы"]},
-  {"card":"028-card.webp","title":"Лес под плащом","scene":"Женщина в тёмном плаще распахивает его, открывая внутри крошечный освещённый лес с деревьями.","keywords":"женщина, плащ, миниатюрный лес, деревья, свет, секрет","clues":["В карманах места не хватило для весны","Гардероб снова оказался шире мира"]},
-  {"card":"029-card.webp","title":"Гость в пасти чудовища","scene":"Тёмная фигура в красном стоит у раскрытой пасти огромного ночного чудовища с длинными зубами.","keywords":"ночное чудовище, пасть, длинные зубы, тёмная фигура, красная одежда, ночь","clues":["Вход бесплатный, но выход надо заслужить","Самая неудачная дверь в этом городе"]},
-  {"card":"030-card.webp","title":"Огр плетёт сияющую косу","scene":"Зелёный великан у фьорда заплетает длинную синюю косу, сияющую на фоне северных огней.","keywords":"зелёный великан, огр, синяя коса, плетение, фьорд, северное сияние","clues":["Утренние сборы растянулись на целый фьорд","Парикмахерская принимает клиентов размером с гору"]},
-  {"card":"031-card.webp","title":"Ведьма на ложке","scene":"Ведьма летит на огромной ложке над замёрзшим озером под луной и заснеженными вершинами.","keywords":"ведьма, огромная ложка, полёт, замёрзшее озеро, луна, снег","clues":["Для супа сегодня понадобится небо","Столовый прибор ушёл в самостоятельное путешествие"]},
-  {"card":"032-card.webp","title":"Тени в детской","scene":"В комнате мать обнимает детей, пока их тени на стенах превращаются в высоких причудливых чудовищ.","keywords":"мать, дети, спальня, тени, чудовища, стены, страх","clues":["Перед сном воображение опять не выключили","Свет погас, и у семейного портрета появились когти"]},
-  {"card":"033-card.webp","title":"Дракон за чаем","scene":"Маленький зелёный дракон пьёт чай с мышонком за уютным столом в деревенском доме.","keywords":"зелёный дракон, мышь, чай, стол, уютный дом, чашки","clues":["На этот визит хватило одной чашки и смелости","Самый горячий гость обещал дуть осторожно"]},
-  {"card":"034-card.webp","title":"Пустая сцена","scene":"На почти пустой тёмной сцене остались театральные маски и одинокий башмак под слабым светом рампы.","keywords":"театр, тёмная сцена, маски, башмак, рампа, пустота","clues":["Занавес закрыли, а чей-то выход забыли","Аплодисменты уже кончились, загадка ещё нет"]},
-  {"card":"035-card.webp","title":"Луна в кресле-качалке","scene":"Улыбающийся круглый лунный житель сидит в кресле-качалке рядом с мышами и телескопом среди звёзд.","keywords":"улыбающаяся луна, кресло-качалка, мыши, телескоп, звёзды, ночь","clues":["Бабушка небосвода опять не хочет спать","Наблюдатель сам стал самым круглым объектом"]},
-  {"card":"036-card.webp","title":"Лента для дождевой тучи","scene":"Человек среди зелёного луга поднимает длинную красную ленту к маленькой дождевой туче, рядом пасутся овцы.","keywords":"человек, красная лента, дождевая туча, луг, овцы, дождь","clues":["Подарок небу завернули прямо на пастбище","Дождь сегодня решили уговорить по-хорошему"]},
-  {"card":"037-card.webp","title":"Всадница с фонарём","scene":"Женщина в красном плаще едет на тёмной лошади через ночной лес, освещая дорогу фонарём.","keywords":"женщина, красный плащ, лошадь, фонарь, ночной лес, деревья","clues":["Последний огонёк выбрал дорогу без указателей","В темноте её узнают раньше, чем слышат копыта"]},
-  {"card":"038-card.webp","title":"Музыкальная карусель чудовищ","scene":"Грифон, огр и дракон играют на инструментах, стоя на круглой музыкальной подставке среди облаков.","keywords":"грифон, огр, дракон, музыкальные инструменты, карусель, подставка, облака","clues":["Ансамбль репетировал до изобретения тишины","Каждый музыкант здесь умеет немного рычать"]},
-  {"card":"039-card.webp","title":"Великан под чёрным плащом","scene":"Огромный коронованный человек в чёрном плаще укрывает маленькую женщину с белым зонтом на снежном берегу.","keywords":"великан, корона, чёрный плащ, женщина, белый зонт, снег, берег","clues":["Самая большая крыша уместилась на плечах","Зонтик пожаловался, что его снова опередили"]},
-  {"card":"040-card.webp","title":"Коса северного сияния","scene":"Зелёная великанша сидит у фьорда и заплетает длинные синие волосы, похожие на поток света в небе.","keywords":"великанша, зелёная кожа, синие волосы, коса, фьорд, северное сияние","clues":["На причёску ушёл весь вечер и половина неба","В этой долине ветер работает стилистом"]},
-  {"card":"041-card.webp","title":"Ледяные музыканты","scene":"Синий великан с барабаном играет напротив прозрачного голубого музыканта в заснеженной долине.","keywords":"ледяной великан, барабан, голубой призрак, музыканты, снег, горы","clues":["Репетиция звучала так громко, что замёрз воздух","Один играет громко, второй похож на эхо"]},
-  {"card":"042-card.webp","title":"Поле пустых стульев","scene":"На пустынном поле стоят десятки пустых стульев, среди них выделяется один синий; рядом лежат музыкальные вещи.","keywords":"пустые стулья, синий стул, поле, скрипка, сапоги, одиночество","clues":["Все места заняты отсутствием","Оркестр ушёл, а публика так и не пришла"]},
-  {"card":"043-card.webp","title":"Чашки с облаками","scene":"На цветущем лугу стоят маленькие чашки и цветы, а над посудой клубятся крошечные облака.","keywords":"чашки, облака, луг, цветы, чай, маленькие тучи","clues":["К чаю подали прогноз погоды","В этом кафе всегда немного пасмурно"]},
-  {"card":"044-card.webp","title":"Лавка теней","scene":"Волшебник стоит среди цветного ночного рынка, где между фонарями и тканями висят странные человеческие силуэты.","keywords":"волшебник, рынок, фонари, ткани, висячие силуэты, тени, ночь","clues":["Здесь продают то, что обычно ходит за тобой","После закрытия лавки никто не бросает тень"]},
-  {"card":"045-card.webp","title":"Зверь в библиотеке","scene":"Огромный мохнатый зверь читает книги в библиотеке с астрономическими приборами, пока рядом стоит бронированный страж.","keywords":"мохнатый зверь, книги, библиотека, астрономия, броня, страж","clues":["Читательский билет у него размером с дверь","Тишину здесь охраняют очень убедительно"]},
-  {"card":"046-card.webp","title":"Фиолетовый лесной гость","scene":"Светящееся фиолетовое существо прячется среди деревьев, а из темноты за ним следят многочисленные глаза.","keywords":"фиолетовое существо, свет, лес, деревья, глаза, темнота","clues":["Наблюдателей здесь оказалось больше, чем деревьев","Один светлячок нечаянно раскрыл секрет леса"]},
-  {"card":"047-card.webp","title":"Сани через снег","scene":"Женщина едет на санях, запряжённых оленями, через зимний лес и замёрзшее озеро под бледным небом.","keywords":"женщина, сани, олени, снег, зимний лес, озеро, путешествие","clues":["Зимнее такси снова выбрало короткий путь через лес","Следы на льду ведут туда, где ещё горит свет"]},
-  {"card":"048-card.webp","title":"Синий кузнец","scene":"Огромный синий великан работает у красной кузнечной печи, а рядом ждёт рыжий волк.","keywords":"синий великан, кузнец, красная печь, огонь, кузница, рыжий волк","clues":["Кто-то заказал искру размером с дверь","Подмастерье сегодня особенно пушистый"]},
-  {"card":"049-card.webp","title":"Гора с живым сердцем","scene":"Гигантская каменная фигура с башнями на плечах возвышается над ущельем, а в её трещинах светится красная лава.","keywords":"каменный гигант, гора, башни, лава, трещины, маленький человек","clues":["Старая крепость наконец встала размять ноги","Снаружи камень, внутри слишком горячие новости"]},
-  {"card":"050-card.webp","title":"Улиточная карета","scene":"Лис или маленький путник встречает в осеннем лесу светящуюся карету с раковиной улитки.","keywords":"улитка, раковина, карета, лис, путник, осенний лес, свет","clues":["Медленная доставка уже почти сказочно близко","Карету нашли, осталось уговорить её поторопиться"]}
+  {
+    "card": "001-card.webp",
+    "title": "Радужный мост",
+    "scene": "Белое крылатое существо летит над радужным мостом среди планет, пока из облаков за ним наблюдает огромное око.",
+    "keywords": "крылья, белое существо, радужный мост, планеты, облака, огромное око, небо",
+    "clues": [
+      "На переправе сегодня проверяют даже мысли",
+      "Кто-то слишком внимательно следит за полётами"
+    ],
+    "title_en": "Rainbow Bridge",
+    "scene_en": "A white winged creature flies above a rainbow bridge among planets while a giant eye watches from the clouds.",
+    "keywords_en": "winged creature, rainbow bridge, planets, clouds, giant eye, sky",
+    "clues_en": [
+      "At this crossing even thoughts are inspected",
+      "Someone is watching the flights a little too closely"
+    ]
+  },
+  {
+    "card": "002-card.webp",
+    "title": "Дождливый город",
+    "scene": "Женщина с прозрачным зонтом идёт по мокрой городской улице, где огни отражаются в лужах и дождь смягчает силуэты домов.",
+    "keywords": "женщина, прозрачный зонт, дождь, город, мокрая улица, лужи, отражения",
+    "clues": [
+      "Прогноз обещал встречу с собственным отражением",
+      "Город решил сегодня говорить только шёпотом"
+    ],
+    "title_en": "Rainy City",
+    "scene_en": "A woman with a transparent umbrella walks down a wet city street as lights reflect in puddles and rain softens the buildings.",
+    "keywords_en": "woman, clear umbrella, rain, city, wet street, puddles, reflections",
+    "clues_en": [
+      "The forecast promised a meeting with your reflection",
+      "The city decided to speak in whispers today"
+    ]
+  },
+  {
+    "card": "003-card.webp",
+    "title": "Неоновый гонщик",
+    "scene": "Мотоциклист мчится на похожем на дракона неоновом байке через яркий розово-зелёный город будущего.",
+    "keywords": "мотоциклист, неоновый байк, дракон, город, розовый, зелёный, скорость",
+    "clues": [
+      "Такси снова слишком буквально поняло слово огонь",
+      "На этом маршруте правила дорожного движения сдаются первыми"
+    ],
+    "title_en": "Neon Rider",
+    "scene_en": "A motorcyclist races on a dragon-shaped neon bike through a bright pink and green futuristic city.",
+    "keywords_en": "motorcycle, neon bike, dragon, future city, pink, green, speed",
+    "clues_en": [
+      "The taxi took the word fire far too literally again",
+      "Traffic rules surrender first on this route"
+    ]
+  },
+  {
+    "card": "004-card.webp",
+    "title": "Огненная гора и кристалл",
+    "scene": "Над тёмным морем сталкиваются красный извергающийся вулкан и высокая серебристая кристальная башня.",
+    "keywords": "вулкан, красная лава, кристальная башня, тёмное море, огонь, скалы",
+    "clues": [
+      "Соседи снова спорят о температуре в комнате",
+      "Один берег разгорячился, другой держит лицо"
+    ],
+    "title_en": "Fire Mountain and Crystal",
+    "scene_en": "A red erupting volcano and a tall silver crystal tower face each other across a dark sea.",
+    "keywords_en": "volcano, red lava, crystal tower, dark sea, fire, rocks",
+    "clues_en": [
+      "The neighbors are arguing about the room temperature again",
+      "One shore is furious; the other keeps a cool face"
+    ]
+  },
+  {
+    "card": "005-card.webp",
+    "title": "Садовник облаков",
+    "scene": "Человек на крыше поливает из ведра облака в форме птиц, парящие над городом, а из окна за ним наблюдают.",
+    "keywords": "крыша, человек, ведро, полив, облака-птицы, город, окно",
+    "clues": [
+      "У погоды появился очень старательный садовник",
+      "Крылья требуют ухода чаще, чем комнатные растения"
+    ],
+    "title_en": "Cloud Gardener",
+    "scene_en": "A person on a roof waters bird-shaped clouds with a bucket above a city while someone watches from a window.",
+    "keywords_en": "roof, person, bucket, watering, bird clouds, city, window",
+    "clues_en": [
+      "The weather hired a very diligent gardener",
+      "Wings need more care than houseplants"
+    ]
+  },
+  {
+    "card": "006-card.webp",
+    "title": "Шахматное поле",
+    "scene": "На чёрно-белом поле стоят огромная коронованная шахматная фигура и красный шатёр со спящим человеком.",
+    "keywords": "шахматы, чёрно-белое поле, корона, фигура, красный шатёр, спящий человек",
+    "clues": [
+      "Королевство поставило партию на паузу ради сна",
+      "Даже пешка иногда мечтает о короне"
+    ],
+    "title_en": "Chessboard Field",
+    "scene_en": "An enormous crowned chess piece and a red tent with a sleeping person stand on a black-and-white chessboard.",
+    "keywords_en": "chessboard, black and white field, crown, chess piece, red tent, sleeping person",
+    "clues_en": [
+      "The kingdom paused the game for a nap",
+      "Even a pawn sometimes dreams of a crown"
+    ]
+  },
+  {
+    "card": "007-card.webp",
+    "title": "Зубастый цветок в пещере",
+    "scene": "В глубокой пещере вырос огромный зубастый цветок-гриб, вокруг которого собрались зрители и лежат кости.",
+    "keywords": "пещера, зубастый цветок, гриб, зрители, скелеты, кости, пасть",
+    "clues": [
+      "Ботанический кружок опять забыл правила безопасности",
+      "На это представление лучше не покупать места у сцены"
+    ],
+    "title_en": "Toothy Flower in a Cave",
+    "scene_en": "An enormous carnivorous flower shaped like a mushroom grows in a deep cave among spectators and scattered bones.",
+    "keywords_en": "cave, toothy flower, mushroom, spectators, skeletons, bones, mouth",
+    "clues_en": [
+      "The botany club forgot the safety rules again",
+      "Best not buy a front-row seat for this show"
+    ]
+  },
+  {
+    "card": "008-card.webp",
+    "title": "Орк в космосе",
+    "scene": "Зелёный орк в космическом шлеме плывёт среди астероидов; внутри его скафандра сияет маленькая планета.",
+    "keywords": "орк, космонавт, шлем, скафандр, маленькая планета, астероиды, космос",
+    "clues": [
+      "Багаж на орбиту оказался куда тяжелее нормы",
+      "Внутренний мир сегодня прошёл техосмотр"
+    ],
+    "title_en": "Orc in Space",
+    "scene_en": "A green orc in a space helmet floats among asteroids with a small glowing planet inside his suit.",
+    "keywords_en": "green orc, space helmet, asteroids, spacesuit, glowing planet",
+    "clues_en": [
+      "The baggage allowance for orbit was surprisingly strict",
+      "His inner world passed its inspection today"
+    ]
+  },
+  {
+    "card": "009-card.webp",
+    "title": "Дракон на лунном шаре",
+    "scene": "Маленький красный дракон сидит на золотом воздушном шаре в форме луны среди звёзд и небесных серпов.",
+    "keywords": "красный дракон, золотой лунный шар, звёзды, полумесяц, небо",
+    "clues": [
+      "Первый полёт получился удивительно тихим",
+      "Когда домик на небе наконец научился летать"
+    ],
+    "title_en": "Dragon on a Moon Balloon",
+    "scene_en": "A tiny red dragon rides a golden balloon shaped like the moon among stars and crescents.",
+    "keywords_en": "red dragon, moon balloon, stars, crescents, golden balloon, sky",
+    "clues_en": [
+      "The first flight was strangely quiet",
+      "The little house in the sky finally learned to fly"
+    ]
+  },
+  {
+    "card": "010-card.webp",
+    "title": "Пикник на луне",
+    "scene": "Дети и кролики устроили пикник на фиолетовом лунном камне под огромной планетой с кольцами.",
+    "keywords": "дети, кролики, пикник, лунный камень, фиолетовый, кольцевая планета",
+    "clues": [
+      "На выходных соседняя планета зовёт на чай",
+      "Скатерть забыли, зато вид из окна отменный"
+    ],
+    "title_en": "Picnic on the Moon",
+    "scene_en": "Children and rabbits picnic on a purple lunar rock beneath a huge ringed planet.",
+    "keywords_en": "children, rabbits, picnic, purple moon rock, ringed planet, space",
+    "clues_en": [
+      "The neighboring planet invited us for tea this weekend",
+      "We forgot the tablecloth, but the view is excellent"
+    ]
+  },
+  {
+    "card": "011-card.webp",
+    "title": "Улитка в соборе",
+    "scene": "Человек верхом на огромной улитке едет по залу старинного собора, мимо арок и подвешенной птичьей клетки.",
+    "keywords": "улитка, всадник, собор, арки, птичья клетка, медленная поездка",
+    "clues": [
+      "Опоздание здесь считается частью паломничества",
+      "Экспресс прибудет сразу после следующего века"
+    ],
+    "title_en": "Snail in the Cathedral",
+    "scene_en": "A person rides an enormous snail through an old cathedral past arches and a hanging birdcage.",
+    "keywords_en": "giant snail, rider, cathedral, arches, birdcage, pilgrimage",
+    "clues_en": [
+      "Being late is part of the pilgrimage here",
+      "The express arrives sometime next century"
+    ]
+  },
+  {
+    "card": "012-card.webp",
+    "title": "Подземный поезд грибов",
+    "scene": "Паровоз прибывает на подземную станцию, освещённую огромными светящимися грибами; пассажиры ждут у платформы.",
+    "keywords": "паровоз, подземная станция, светящиеся грибы, пассажиры, платформа, пещера",
+    "clues": [
+      "На этой ветке расписание составляют споры",
+      "Последняя остановка там, где светят шляпки"
+    ],
+    "title_en": "Underground Mushroom Train",
+    "scene_en": "A steam train arrives at an underground station lit by huge glowing mushrooms while passengers wait on the platform.",
+    "keywords_en": "steam train, underground station, glowing mushrooms, passengers, platform",
+    "clues_en": [
+      "The timetable on this line is written in spores",
+      "Last stop: where the caps glow"
+    ]
+  },
+  {
+    "card": "013-card.webp",
+    "title": "Крепость среди звёзд",
+    "scene": "Мрачная каменная крепость стоит на парящем обломке скалы посреди звёздной галактики.",
+    "keywords": "каменная крепость, летающий остров, скала, галактика, звёзды, космос",
+    "clues": [
+      "Соседи снизу снова жалуются на гравитацию",
+      "Адрес есть, а дороги к нему никто не нашёл"
+    ],
+    "title_en": "Fortress Among the Stars",
+    "scene_en": "A dark stone fortress stands on a floating rock in the middle of a starry galaxy.",
+    "keywords_en": "fortress, floating rock, stars, galaxy, dark stone castle",
+    "clues_en": [
+      "The neighbors downstairs complained about gravity again",
+      "There is an address, but nobody found the road"
+    ]
+  },
+  {
+    "card": "014-card.webp",
+    "title": "Волшебный вокзал",
+    "scene": "Пёстрая толпа собирается у поезда на ярко освещённом вокзале с высоким сводом и разноцветными вывесками.",
+    "keywords": "вокзал, поезд, толпа, свод, вывески, чемоданы, путешествие",
+    "clues": [
+      "Все направления открыты, кроме привычного",
+      "Время отправления написано мелом на чуде"
+    ],
+    "title_en": "Magic Train Station",
+    "scene_en": "A colorful crowd gathers by a train in a brightly lit station with a high vaulted roof and many signs.",
+    "keywords_en": "train station, train, crowd, vaulted roof, signs, luggage, travel",
+    "clues_en": [
+      "Every destination is open except the familiar one",
+      "The departure time was chalked on a miracle"
+    ]
+  },
+  {
+    "card": "015-card.webp",
+    "title": "Великанова тропа",
+    "scene": "Несколько волшебников стоят на длинном языке гигантского каменного лица над сказочным пейзажем и далёким светом.",
+    "keywords": "волшебники, огромное лицо, язык, каменная голова, сказочный пейзаж, свет",
+    "clues": [
+      "Путь к истине оказался слишком разговорчивым",
+      "Пешеходная дорожка сегодня явно что-то скрывает"
+    ],
+    "title_en": "Giant's Path",
+    "scene_en": "Several wizards stand on the long tongue of a giant stone face above a fairy-tale landscape.",
+    "keywords_en": "wizards, giant face, tongue, stone head, fantasy landscape, light",
+    "clues_en": [
+      "The road to truth proved very talkative",
+      "This footpath is clearly hiding something"
+    ]
+  },
+  {
+    "card": "016-card.webp",
+    "title": "Орк-пекарь",
+    "scene": "Орк-повар держит громадную румяную выпечку в форме дракона над заснеженной деревней.",
+    "keywords": "орк, повар, пекарь, выпечка, дракон, зимняя деревня, снег",
+    "clues": [
+      "Ужин решил сначала научиться дышать огнём",
+      "В этой пекарне корочка считается подвигом"
+    ],
+    "title_en": "Orc Baker",
+    "scene_en": "An orc chef holds an enormous browned dragon-shaped pastry above a snowy village.",
+    "keywords_en": "orc, chef, baker, pastry, dragon, snowy village, winter",
+    "clues_en": [
+      "Dinner decided to learn fire breathing first",
+      "In this bakery a crust counts as a heroic feat"
+    ]
+  },
+  {
+    "card": "017-card.webp",
+    "title": "Слон-гора и колокол",
+    "scene": "Белый зверь с зелёной гривой звонит в бронзовый колокол перед заснеженной горой, похожей на синего слона.",
+    "keywords": "белый зверь, зелёная грива, колокол, снежная гора, синий слон, облака",
+    "clues": [
+      "Будильник для горных вершин оказался слишком маленьким",
+      "Тихий час закончился на другом конце долины"
+    ],
+    "title_en": "Elephant Mountain and Bell",
+    "scene_en": "A white beast with a green mane rings a bronze bell before a snowy mountain shaped like a blue elephant.",
+    "keywords_en": "white beast, green mane, bell, snowy mountain, blue elephant, clouds",
+    "clues_en": [
+      "The alarm clock for mountain peaks was far too small",
+      "Quiet time ended on the far side of the valley"
+    ]
+  },
+  {
+    "card": "018-card.webp",
+    "title": "Спящий ледяной гигант",
+    "scene": "Огромный синий ледяной зверь спит среди гор и узорчатого снега, словно сама зима свернулась клубком.",
+    "keywords": "синий гигант, ледяной зверь, сон, горы, снег, зима, узоры",
+    "clues": [
+      "Весна пока не решается его будить",
+      "Самая большая подушка на свете снова замёрзла"
+    ],
+    "title_en": "Sleeping Ice Giant",
+    "scene_en": "An enormous blue icy beast sleeps among snowy patterned mountains as though winter curled up for a nap.",
+    "keywords_en": "blue ice giant, sleeping beast, mountains, patterned snow, winter",
+    "clues_en": [
+      "Spring still does not dare wake him",
+      "The world's largest pillow froze again"
+    ]
+  },
+  {
+    "card": "019-card.webp",
+    "title": "Корабль над звёздным морем",
+    "scene": "Зелёный орк и светловолосый спутник плывут на длинном корабле под ночным небом над сияющим космическим морем.",
+    "keywords": "орк, светловолосый спутник, длинный корабль, парус, море, звёзды, космос",
+    "clues": [
+      "Навигатор велел держаться второй звезды слева",
+      "Солёный ветер внезапно пахнет метеоритами"
+    ],
+    "title_en": "Ship Above the Starry Sea",
+    "scene_en": "A green orc and a blond companion sail a long ship beneath the night sky across a glowing cosmic sea.",
+    "keywords_en": "green orc, blond companion, ship, starry sea, night sky, space",
+    "clues_en": [
+      "The navigator said to follow the second star on the left",
+      "The salty wind suddenly smelled of meteorites"
+    ]
+  },
+  {
+    "card": "020-card.webp",
+    "title": "Дракон-библиотекарь",
+    "scene": "Красный дракон уснул, обвившись вокруг книжных полок, пока рядом человек спокойно читает при свете лампы.",
+    "keywords": "красный дракон, книги, библиотека, полки, читающий человек, лампа, сон",
+    "clues": [
+      "Тише, здесь даже пожар соблюдает тишину",
+      "Просроченную книгу лучше вернуть до пробуждения"
+    ],
+    "title_en": "Dragon Librarian",
+    "scene_en": "A red dragon sleeps curled around bookshelves while a person reads quietly beside a lamp.",
+    "keywords_en": "red dragon, library, bookshelves, person reading, lamp, sleep",
+    "clues_en": [
+      "Even the fire obeys the silence rule here",
+      "Return the overdue book before he wakes"
+    ]
+  },
+  {
+    "card": "021-card.webp",
+    "title": "Самурай и белый лис",
+    "scene": "Воин с мечом встречает большого белого многохвостого лиса на ночной улице японского города под полной луной.",
+    "keywords": "самурай, меч, белый лис, много хвостов, луна, японская улица, ночь",
+    "clues": [
+      "Дуэль отменили ради очень старого знакомства",
+      "У этого незнакомца слишком много способов попрощаться"
+    ],
+    "title_en": "Samurai and White Fox",
+    "scene_en": "A sword-bearing warrior meets a large white fox with many tails on a moonlit Japanese city street.",
+    "keywords_en": "samurai, sword, white fox, many tails, Japanese street, full moon",
+    "clues_en": [
+      "The duel was canceled for an old acquaintance",
+      "This stranger has too many ways to say goodbye"
+    ]
+  },
+  {
+    "card": "022-card.webp",
+    "title": "Полет на лунной бабочке",
+    "scene": "Синяя крылатая бабочка несёт мальчика над полем цветов, где вдали видны сказочные планеты.",
+    "keywords": "синяя бабочка, мотылёк, мальчик, полёт, цветочное поле, планеты",
+    "clues": [
+      "Билет туда продают только во сне",
+      "Самый лёгкий транспорт оказался размером с дом"
+    ],
+    "title_en": "Flight on a Moon Butterfly",
+    "scene_en": "A large blue butterfly carries a boy above a field of flowers with fantastic planets in the distance.",
+    "keywords_en": "blue butterfly, boy, flight, flowers, fantasy planets, sky",
+    "clues_en": [
+      "Tickets are sold only in dreams",
+      "The lightest vehicle turned out to be the size of a house"
+    ]
+  },
+  {
+    "card": "023-card.webp",
+    "title": "Астроном и кот",
+    "scene": "Пожилой астроном с телескопом смотрит на светящиеся созвездия, а рядом сидит кот.",
+    "keywords": "астроном, телескоп, кот, звёзды, созвездия, небо, ночь",
+    "clues": [
+      "Помощник уже вычислил, где завтра будет ужин",
+      "Ответ в небе нашёлся раньше вопроса"
+    ],
+    "title_en": "Astronomer and Cat",
+    "scene_en": "An elderly astronomer looks through a telescope at glowing constellations while a cat sits beside him.",
+    "keywords_en": "old astronomer, telescope, constellations, cat, stars",
+    "clues_en": [
+      "The assistant already calculated tomorrow's dinner",
+      "The answer appeared in the sky before the question"
+    ]
+  },
+  {
+    "card": "024-card.webp",
+    "title": "Королева оригами",
+    "scene": "Белая королева сидит на троне из острых складчатых форм посреди светлой равнины под тёмным затмением.",
+    "keywords": "королева, белое платье, складчатый трон, оригами, затмение, равнина, красная ткань",
+    "clues": [
+      "Королевский указ сложили вчетверо",
+      "Даже солнце здесь боится помять костюм"
+    ],
+    "title_en": "Origami Queen",
+    "scene_en": "A white queen sits on a throne of sharp folded shapes on a pale plain beneath a dark eclipse.",
+    "keywords_en": "queen, origami, folded throne, white plain, eclipse, paper",
+    "clues_en": [
+      "The royal decree was folded into quarters",
+      "Even the sun is afraid of wrinkling its suit here"
+    ]
+  },
+  {
+    "card": "025-card.webp",
+    "title": "Светящийся хлеб",
+    "scene": "Женщина несёт сияющую буханку по тёмной улице, а у её ног крадётся чёрный кот.",
+    "keywords": "женщина, светящийся хлеб, буханка, тёмная улица, чёрный кот, ночь",
+    "clues": [
+      "За этим ужином можно идти без фонаря",
+      "Соседи попросили оставить кусочек рассвета"
+    ],
+    "title_en": "Glowing Bread",
+    "scene_en": "A woman carries a luminous loaf through a dark street while a black cat creeps by her feet.",
+    "keywords_en": "woman, glowing bread, loaf, dark street, black cat, light",
+    "clues_en": [
+      "You can find dinner without a lantern",
+      "The neighbors asked for a slice of dawn"
+    ]
+  },
+  {
+    "card": "026-card.webp",
+    "title": "Каменный великан с облаком",
+    "scene": "Покрытый мхом каменный великан держит маленькую дождевую тучу над цветами, пока рядом играют дети.",
+    "keywords": "каменный великан, мох, маленькая туча, дождь, цветы, дети",
+    "clues": [
+      "Самый большой садовник поливает точечно",
+      "Погоду сегодня носят в ладони"
+    ],
+    "title_en": "Stone Giant with a Cloud",
+    "scene_en": "A moss-covered stone giant holds a small rain cloud above flowers while children play nearby.",
+    "keywords_en": "stone giant, moss, rain cloud, flowers, children, garden",
+    "clues_en": [
+      "The biggest gardener waters one spot at a time",
+      "Someone is carrying the weather in a palm"
+    ]
+  },
+  {
+    "card": "027-card.webp",
+    "title": "Лунный воин",
+    "scene": "Чёрно-белый воин с копьём стоит на серпе луны над спящей женщиной среди облаков.",
+    "keywords": "воин, копьё, полумесяц, луна, спящая женщина, облака, чёрно-белый",
+    "clues": [
+      "Охрана снов снова вышла в ночную смену",
+      "Страж поднялся туда, где заканчиваются лестницы"
+    ],
+    "title_en": "Moon Warrior",
+    "scene_en": "A black-and-white warrior with a spear stands on a crescent moon above a sleeping woman among clouds.",
+    "keywords_en": "warrior, spear, crescent moon, sleeping woman, clouds",
+    "clues_en": [
+      "The dream guard is on the night shift again",
+      "The watchman climbed where ladders end"
+    ]
+  },
+  {
+    "card": "028-card.webp",
+    "title": "Лес под плащом",
+    "scene": "Женщина в тёмном плаще распахивает его, открывая внутри крошечный освещённый лес с деревьями.",
+    "keywords": "женщина, плащ, миниатюрный лес, деревья, свет, секрет",
+    "clues": [
+      "В карманах места не хватило для весны",
+      "Гардероб снова оказался шире мира"
+    ],
+    "title_en": "Forest Beneath a Cloak",
+    "scene_en": "A woman opens her dark cloak to reveal a tiny illuminated forest growing inside it.",
+    "keywords_en": "woman, dark cloak, miniature forest, trees, light",
+    "clues_en": [
+      "There was no room for spring in her pockets",
+      "The wardrobe turned out to be wider than the world"
+    ]
+  },
+  {
+    "card": "029-card.webp",
+    "title": "Гость в пасти чудовища",
+    "scene": "Тёмная фигура в красном стоит у раскрытой пасти огромного ночного чудовища с длинными зубами.",
+    "keywords": "ночное чудовище, пасть, длинные зубы, тёмная фигура, красная одежда, ночь",
+    "clues": [
+      "Вход бесплатный, но выход надо заслужить",
+      "Самая неудачная дверь в этом городе"
+    ],
+    "title_en": "Visitor in the Monster's Mouth",
+    "scene_en": "A dark figure in red stands before the open jaws of an enormous nocturnal monster with long teeth.",
+    "keywords_en": "figure in red, monster, open mouth, teeth, night, dark",
+    "clues_en": [
+      "Admission is free; getting out must be earned",
+      "The least inviting doorway in town"
+    ]
+  },
+  {
+    "card": "030-card.webp",
+    "title": "Огр плетёт сияющую косу",
+    "scene": "Зелёный великан у фьорда заплетает длинную синюю косу, сияющую на фоне северных огней.",
+    "keywords": "зелёный великан, огр, синяя коса, плетение, фьорд, северное сияние",
+    "clues": [
+      "Утренние сборы растянулись на целый фьорд",
+      "Парикмахерская принимает клиентов размером с гору"
+    ],
+    "title_en": "Ogre Braids a Glowing Plait",
+    "scene_en": "A green giant beside a fjord braids a long blue glowing plait beneath the northern lights.",
+    "keywords_en": "green ogre, giant, blue braid, fjord, northern lights, hair",
+    "clues_en": [
+      "Getting ready in the morning took an entire fjord",
+      "This salon serves mountain-sized customers"
+    ]
+  },
+  {
+    "card": "031-card.webp",
+    "title": "Ведьма на ложке",
+    "scene": "Ведьма летит на огромной ложке над замёрзшим озером под луной и заснеженными вершинами.",
+    "keywords": "ведьма, огромная ложка, полёт, замёрзшее озеро, луна, снег",
+    "clues": [
+      "Для супа сегодня понадобится небо",
+      "Столовый прибор ушёл в самостоятельное путешествие"
+    ],
+    "title_en": "Witch on a Spoon",
+    "scene_en": "A witch flies on an enormous spoon above a frozen lake beneath the moon and snowy peaks.",
+    "keywords_en": "witch, giant spoon, frozen lake, moon, snowy mountains, flight",
+    "clues_en": [
+      "Today's soup calls for the whole sky",
+      "A piece of cutlery went traveling by itself"
+    ]
+  },
+  {
+    "card": "032-card.webp",
+    "title": "Тени в детской",
+    "scene": "В комнате мать обнимает детей, пока их тени на стенах превращаются в высоких причудливых чудовищ.",
+    "keywords": "мать, дети, спальня, тени, чудовища, стены, страх",
+    "clues": [
+      "Перед сном воображение опять не выключили",
+      "Свет погас, и у семейного портрета появились когти"
+    ],
+    "title_en": "Shadows in the Nursery",
+    "scene_en": "A mother hugs her children in a room while their wall shadows become tall strange monsters.",
+    "keywords_en": "mother, children, nursery, shadows, wall, monsters, hug",
+    "clues_en": [
+      "Nobody turned off the imagination at bedtime",
+      "The lights went out and the family portrait grew claws"
+    ]
+  },
+  {
+    "card": "033-card.webp",
+    "title": "Дракон за чаем",
+    "scene": "Маленький зелёный дракон пьёт чай с мышонком за уютным столом в деревенском доме.",
+    "keywords": "зелёный дракон, мышь, чай, стол, уютный дом, чашки",
+    "clues": [
+      "На этот визит хватило одной чашки и смелости",
+      "Самый горячий гость обещал дуть осторожно"
+    ],
+    "title_en": "Dragon at Tea",
+    "scene_en": "A tiny green dragon drinks tea with a mouse at a cozy table in a village house.",
+    "keywords_en": "green dragon, mouse, tea, table, cozy house, village",
+    "clues_en": [
+      "One cup and a little courage were enough for this visit",
+      "The hottest guest promised to blow gently"
+    ]
+  },
+  {
+    "card": "034-card.webp",
+    "title": "Пустая сцена",
+    "scene": "На почти пустой тёмной сцене остались театральные маски и одинокий башмак под слабым светом рампы.",
+    "keywords": "театр, тёмная сцена, маски, башмак, рампа, пустота",
+    "clues": [
+      "Занавес закрыли, а чей-то выход забыли",
+      "Аплодисменты уже кончились, загадка ещё нет"
+    ],
+    "title_en": "Empty Stage",
+    "scene_en": "Theater masks and a lonely shoe remain on an almost empty dark stage under a dim spotlight.",
+    "keywords_en": "empty stage, theater masks, lone shoe, spotlight, darkness",
+    "clues_en": [
+      "The curtain fell, but someone forgot an exit",
+      "The applause ended; the mystery did not"
+    ]
+  },
+  {
+    "card": "035-card.webp",
+    "title": "Луна в кресле-качалке",
+    "scene": "Улыбающийся круглый лунный житель сидит в кресле-качалке рядом с мышами и телескопом среди звёзд.",
+    "keywords": "улыбающаяся луна, кресло-качалка, мыши, телескоп, звёзды, ночь",
+    "clues": [
+      "Бабушка небосвода опять не хочет спать",
+      "Наблюдатель сам стал самым круглым объектом"
+    ],
+    "title_en": "Moon in a Rocking Chair",
+    "scene_en": "A smiling round moon dweller sits in a rocking chair among mice and a telescope beneath the stars.",
+    "keywords_en": "moon face, rocking chair, mice, telescope, stars",
+    "clues_en": [
+      "Grandmother of the night sky refuses to sleep again",
+      "The observer became the roundest object himself"
+    ]
+  },
+  {
+    "card": "036-card.webp",
+    "title": "Лента для дождевой тучи",
+    "scene": "Человек среди зелёного луга поднимает длинную красную ленту к маленькой дождевой туче, рядом пасутся овцы.",
+    "keywords": "человек, красная лента, дождевая туча, луг, овцы, дождь",
+    "clues": [
+      "Подарок небу завернули прямо на пастбище",
+      "Дождь сегодня решили уговорить по-хорошему"
+    ],
+    "title_en": "Ribbon for a Rain Cloud",
+    "scene_en": "A person in a green meadow lifts a long red ribbon toward a small rain cloud while sheep graze nearby.",
+    "keywords_en": "person, red ribbon, rain cloud, meadow, sheep, gift",
+    "clues_en": [
+      "They wrapped a present for the sky in the pasture",
+      "Today they tried asking the rain nicely"
+    ]
+  },
+  {
+    "card": "037-card.webp",
+    "title": "Всадница с фонарём",
+    "scene": "Женщина в красном плаще едет на тёмной лошади через ночной лес, освещая дорогу фонарём.",
+    "keywords": "женщина, красный плащ, лошадь, фонарь, ночной лес, деревья",
+    "clues": [
+      "Последний огонёк выбрал дорогу без указателей",
+      "В темноте её узнают раньше, чем слышат копыта"
+    ],
+    "title_en": "Rider with a Lantern",
+    "scene_en": "A woman in a red cloak rides a dark horse through a forest at night, lighting the path with a lantern.",
+    "keywords_en": "woman, red cloak, dark horse, lantern, night forest, rider",
+    "clues_en": [
+      "The last little light chose a road without signs",
+      "In the dark they recognize her before the hoofbeats"
+    ]
+  },
+  {
+    "card": "038-card.webp",
+    "title": "Музыкальная карусель чудовищ",
+    "scene": "Грифон, огр и дракон играют на инструментах, стоя на круглой музыкальной подставке среди облаков.",
+    "keywords": "грифон, огр, дракон, музыкальные инструменты, карусель, подставка, облака",
+    "clues": [
+      "Ансамбль репетировал до изобретения тишины",
+      "Каждый музыкант здесь умеет немного рычать"
+    ],
+    "title_en": "Musical Carousel of Monsters",
+    "scene_en": "A griffin, an ogre and a dragon play instruments on a round musical platform among clouds.",
+    "keywords_en": "griffin, ogre, dragon, instruments, carousel, music, clouds",
+    "clues_en": [
+      "The band rehearsed before silence was invented",
+      "Every musician here knows how to growl a little"
+    ]
+  },
+  {
+    "card": "039-card.webp",
+    "title": "Великан под чёрным плащом",
+    "scene": "Огромный коронованный человек в чёрном плаще укрывает маленькую женщину с белым зонтом на снежном берегу.",
+    "keywords": "великан, корона, чёрный плащ, женщина, белый зонт, снег, берег",
+    "clues": [
+      "Самая большая крыша уместилась на плечах",
+      "Зонтик пожаловался, что его снова опередили"
+    ],
+    "title_en": "Giant Beneath a Black Cloak",
+    "scene_en": "A crowned giant in a black cloak shelters a small woman with a white umbrella on a snowy shore.",
+    "keywords_en": "giant, crown, black cloak, woman, white umbrella, snow, shore",
+    "clues_en": [
+      "The largest roof fit across his shoulders",
+      "The umbrella complained that someone got there first again"
+    ]
+  },
+  {
+    "card": "040-card.webp",
+    "title": "Коса северного сияния",
+    "scene": "Зелёная великанша сидит у фьорда и заплетает длинные синие волосы, похожие на поток света в небе.",
+    "keywords": "великанша, зелёная кожа, синие волосы, коса, фьорд, северное сияние",
+    "clues": [
+      "На причёску ушёл весь вечер и половина неба",
+      "В этой долине ветер работает стилистом"
+    ],
+    "title_en": "Northern Lights Braid",
+    "scene_en": "A green giantess sits beside a fjord braiding long blue hair that resembles a ribbon of light in the sky.",
+    "keywords_en": "green giantess, blue braid, fjord, northern lights, hair",
+    "clues_en": [
+      "The hairstyle took all evening and half the sky",
+      "In this valley the wind works as a stylist"
+    ]
+  },
+  {
+    "card": "041-card.webp",
+    "title": "Ледяные музыканты",
+    "scene": "Синий великан с барабаном играет напротив прозрачного голубого музыканта в заснеженной долине.",
+    "keywords": "ледяной великан, барабан, голубой призрак, музыканты, снег, горы",
+    "clues": [
+      "Репетиция звучала так громко, что замёрз воздух",
+      "Один играет громко, второй похож на эхо"
+    ],
+    "title_en": "Ice Musicians",
+    "scene_en": "A blue giant plays a drum opposite a transparent blue musician in a snowy valley.",
+    "keywords_en": "blue giant, drum, transparent musician, snowy valley, music",
+    "clues_en": [
+      "The rehearsal was so loud it froze the air",
+      "One plays loudly; the other looks like an echo"
+    ]
+  },
+  {
+    "card": "042-card.webp",
+    "title": "Поле пустых стульев",
+    "scene": "На пустынном поле стоят десятки пустых стульев, среди них выделяется один синий; рядом лежат музыкальные вещи.",
+    "keywords": "пустые стулья, синий стул, поле, скрипка, сапоги, одиночество",
+    "clues": [
+      "Все места заняты отсутствием",
+      "Оркестр ушёл, а публика так и не пришла"
+    ],
+    "title_en": "Field of Empty Chairs",
+    "scene_en": "Dozens of empty chairs stand in a barren field, one blue chair among them and musical objects nearby.",
+    "keywords_en": "empty chairs, blue chair, barren field, musical objects, orchestra",
+    "clues_en": [
+      "Every seat is taken by absence",
+      "The orchestra left and the audience never came"
+    ]
+  },
+  {
+    "card": "043-card.webp",
+    "title": "Чашки с облаками",
+    "scene": "На цветущем лугу стоят маленькие чашки и цветы, а над посудой клубятся крошечные облака.",
+    "keywords": "чашки, облака, луг, цветы, чай, маленькие тучи",
+    "clues": [
+      "К чаю подали прогноз погоды",
+      "В этом кафе всегда немного пасмурно"
+    ],
+    "title_en": "Cups of Clouds",
+    "scene_en": "Small cups and flowers sit in a blooming meadow while tiny clouds curl above the dishes.",
+    "keywords_en": "cups, clouds, flowers, meadow, tea, dishes",
+    "clues_en": [
+      "The weather forecast came with the tea",
+      "The cafe is always a little overcast"
+    ]
+  },
+  {
+    "card": "044-card.webp",
+    "title": "Лавка теней",
+    "scene": "Волшебник стоит среди цветного ночного рынка, где между фонарями и тканями висят странные человеческие силуэты.",
+    "keywords": "волшебник, рынок, фонари, ткани, висячие силуэты, тени, ночь",
+    "clues": [
+      "Здесь продают то, что обычно ходит за тобой",
+      "После закрытия лавки никто не бросает тень"
+    ],
+    "title_en": "Shadow Shop",
+    "scene_en": "A wizard stands in a colorful night market where strange human silhouettes hang between lanterns and fabrics.",
+    "keywords_en": "wizard, night market, shadows, silhouettes, lanterns, fabrics",
+    "clues_en": [
+      "Here they sell what usually follows you",
+      "After closing time nobody casts a shadow"
+    ]
+  },
+  {
+    "card": "045-card.webp",
+    "title": "Зверь в библиотеке",
+    "scene": "Огромный мохнатый зверь читает книги в библиотеке с астрономическими приборами, пока рядом стоит бронированный страж.",
+    "keywords": "мохнатый зверь, книги, библиотека, астрономия, броня, страж",
+    "clues": [
+      "Читательский билет у него размером с дверь",
+      "Тишину здесь охраняют очень убедительно"
+    ],
+    "title_en": "Beast in the Library",
+    "scene_en": "A huge furry beast reads among books and astronomy instruments while an armored guard stands nearby.",
+    "keywords_en": "furry beast, library, books, astronomy instruments, armored guard",
+    "clues_en": [
+      "His library card is the size of a door",
+      "Silence is guarded very convincingly here"
+    ]
+  },
+  {
+    "card": "046-card.webp",
+    "title": "Фиолетовый лесной гость",
+    "scene": "Светящееся фиолетовое существо прячется среди деревьев, а из темноты за ним следят многочисленные глаза.",
+    "keywords": "фиолетовое существо, свет, лес, деревья, глаза, темнота",
+    "clues": [
+      "Наблюдателей здесь оказалось больше, чем деревьев",
+      "Один светлячок нечаянно раскрыл секрет леса"
+    ],
+    "title_en": "Purple Forest Visitor",
+    "scene_en": "A glowing purple creature hides among trees while many eyes watch it from the dark.",
+    "keywords_en": "purple creature, glowing forest, trees, many eyes, darkness",
+    "clues_en": [
+      "There were more watchers than trees",
+      "One firefly accidentally gave away the forest's secret"
+    ]
+  },
+  {
+    "card": "047-card.webp",
+    "title": "Сани через снег",
+    "scene": "Женщина едет на санях, запряжённых оленями, через зимний лес и замёрзшее озеро под бледным небом.",
+    "keywords": "женщина, сани, олени, снег, зимний лес, озеро, путешествие",
+    "clues": [
+      "Зимнее такси снова выбрало короткий путь через лес",
+      "Следы на льду ведут туда, где ещё горит свет"
+    ],
+    "title_en": "Sleigh Through the Snow",
+    "scene_en": "A woman rides a reindeer-drawn sleigh through a winter forest and across a frozen lake beneath a pale sky.",
+    "keywords_en": "woman, sleigh, reindeer, winter forest, frozen lake, snow",
+    "clues_en": [
+      "The winter taxi took the shortcut through the woods again",
+      "Tracks on the ice lead to the last lit window"
+    ]
+  },
+  {
+    "card": "048-card.webp",
+    "title": "Синий кузнец",
+    "scene": "Огромный синий великан работает у красной кузнечной печи, а рядом ждёт рыжий волк.",
+    "keywords": "синий великан, кузнец, красная печь, огонь, кузница, рыжий волк",
+    "clues": [
+      "Кто-то заказал искру размером с дверь",
+      "Подмастерье сегодня особенно пушистый"
+    ],
+    "title_en": "Blue Blacksmith",
+    "scene_en": "An enormous blue giant works at a red forge while a red wolf waits nearby.",
+    "keywords_en": "blue giant, blacksmith, forge, red furnace, red wolf",
+    "clues_en": [
+      "Someone ordered a spark the size of a door",
+      "The apprentice is particularly fluffy today"
+    ]
+  },
+  {
+    "card": "049-card.webp",
+    "title": "Гора с живым сердцем",
+    "scene": "Гигантская каменная фигура с башнями на плечах возвышается над ущельем, а в её трещинах светится красная лава.",
+    "keywords": "каменный гигант, гора, башни, лава, трещины, маленький человек",
+    "clues": [
+      "Старая крепость наконец встала размять ноги",
+      "Снаружи камень, внутри слишком горячие новости"
+    ],
+    "title_en": "Mountain with a Living Heart",
+    "scene_en": "A giant stone figure with towers on its shoulders rises above a gorge with red lava glowing in its cracks.",
+    "keywords_en": "stone giant, towers, gorge, lava, mountain, glowing cracks",
+    "clues_en": [
+      "The old fortress finally got up to stretch its legs",
+      "Stone on the outside, fiery news within"
+    ]
+  },
+  {
+    "card": "050-card.webp",
+    "title": "Улиточная карета",
+    "scene": "Лис или маленький путник встречает в осеннем лесу светящуюся карету с раковиной улитки.",
+    "keywords": "улитка, раковина, карета, лис, путник, осенний лес, свет",
+    "clues": [
+      "Медленная доставка уже почти сказочно близко",
+      "Карету нашли, осталось уговорить её поторопиться"
+    ],
+    "title_en": "Snail Carriage",
+    "scene_en": "A fox or small traveler meets a glowing carriage with a snail shell in an autumn forest.",
+    "keywords_en": "snail carriage, shell, fox, traveler, glowing carriage, autumn forest",
+    "clues_en": [
+      "The slow delivery is almost magically close",
+      "We found the carriage; now persuade it to hurry"
+    ]
+  }
 ]

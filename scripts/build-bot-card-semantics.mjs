@@ -22,7 +22,7 @@ for (const card of memeSemantics) {
       || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
     throw new Error(`Invalid curated Meme Chaos card: ${card.card}`);
   }
-  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+  cards.set(card.card, { ...existing, ...card });
 }
 const cosmicSemantics = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(new URL(`src/cosmic-absurdity-${range}-semantics.json`, root), 'utf8')));
@@ -39,7 +39,7 @@ for (const card of cosmicSemantics) {
       || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
     throw new Error(`Invalid curated Cosmic Absurdity card: ${card.card}`);
   }
-  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+  cards.set(card.card, { ...existing, ...card });
 }
 const everydaySemantics = ['001-055', '056-110'].flatMap(range =>
   JSON.parse(fs.readFileSync(new URL(`src/everyday-absurd-${range}-semantics.json`, root), 'utf8')));
@@ -55,7 +55,7 @@ for (const card of everydaySemantics) {
       || card.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
     throw new Error(`Invalid curated Everyday Absurdity card: ${card.card}`);
   }
-  cards.set(card.card, { ...existing, scene: card.scene, keywords: card.keywords, clues: card.clues });
+  cards.set(card.card, { ...existing, ...card });
 }
 const fantasy = new URL('public/deck-candidates/fantasy-anthology/', root);
 for (const file of (fs.existsSync(fantasy) ? fs.readdirSync(fantasy) : []).sort()) {
@@ -125,23 +125,45 @@ for (const override of JSON.parse(fs.readFileSync(new URL('src/bot-clue-override
       || override.clues.some(clue => !clue.trim() || clue.toLowerCase() === existing.title.toLowerCase())) {
     throw new Error(`Invalid clue override: ${override.card}`);
   }
-  cards.set(override.card, { ...existing, keywords: override.keywords, clues: override.clues });
+  cards.set(override.card, { ...existing, ...override });
 }
 const literal = value => `'${String(value).replaceAll("'", "''")}'`;
+const englishFields = ['title_en', 'scene_en', 'keywords_en'];
+const hasCyrillic = value => /[\u0400-\u04ff]/u.test(value);
+const requireEnglish = process.argv.includes('--require-english');
+let englishCount = 0;
+for (const [id, card] of cards) {
+  const supplied = englishFields.some(field => card[field] !== undefined) || card.clues_en !== undefined;
+  if (!supplied) {
+    if (requireEnglish) throw new Error(`Missing English semantics: ${id}`);
+    continue;
+  }
+  if (englishFields.some(field => typeof card[field] !== 'string'
+      || card[field].trim().length < (field === 'title_en' ? 2 : 20)
+      || hasCyrillic(card[field]))) {
+    throw new Error(`Incomplete English title, scene or keywords: ${id}`);
+  }
+  if (!Array.isArray(card.clues_en) || card.clues_en.length < 2
+      || card.clues_en.some(clue => typeof clue !== 'string' || clue.trim().length < 12
+        || hasCyrillic(clue) || clue.toLowerCase() === card.title_en.toLowerCase())) {
+    throw new Error(`Incomplete English clues: ${id}`);
+  }
+  englishCount++;
+}
 const rows = [...cards].sort(([a], [b]) => a.localeCompare(b))
-  .map(([id, { title, scene, keywords, clues }]) => `  (${literal(id)}, ${literal(title)}, ${literal(scene)}, ${literal(keywords)}, ARRAY[${clues.map(literal).join(', ')}]::text[])`);
+  .map(([id, { title, scene, keywords, clues, title_en, scene_en, keywords_en, clues_en }]) => `  (${literal(id)}, ${literal(title)}, ${literal(scene)}, ${literal(keywords)}, ARRAY[${clues.map(literal).join(', ')}]::text[], ${title_en === undefined ? 'NULL' : literal(title_en)}, ${scene_en === undefined ? 'NULL' : literal(scene_en)}, ${keywords_en === undefined ? 'NULL' : literal(keywords_en)}, ${clues_en === undefined ? 'NULL' : `ARRAY[${clues_en.map(literal).join(', ')}]::text[]`})`);
 const sql = [
   '-- Descriptions of published cards, generated from tracked card manifests and curated semantics.',
   '-- Rebuild with node scripts/build-bot-card-semantics.mjs when those sources change.',
   'begin;',
   "set local lock_timeout = '2s';",
   "set local statement_timeout = '30s';",
-  'insert into public.luminaria_bot_card_semantics(card_id, title, scene, keywords, clues) values',
+  'insert into public.luminaria_bot_card_semantics(card_id, title, scene, keywords, clues, title_en, scene_en, keywords_en, clues_en) values',
   `${rows.join(',\n')}`,
-  'on conflict (card_id) do update set title = excluded.title, scene = excluded.scene, keywords = excluded.keywords, clues = excluded.clues;',
+  'on conflict (card_id) do update set title = excluded.title, scene = excluded.scene, keywords = excluded.keywords, clues = excluded.clues, title_en = excluded.title_en, scene_en = excluded.scene_en, keywords_en = excluded.keywords_en, clues_en = excluded.clues_en;',
   'commit;',
   ''
 ].join('\n');
 const destination = new URL('supabase/bot-card-semantics-data.sql', root);
 fs.writeFileSync(destination, sql);
-console.log(`Wrote ${cards.size} card descriptions to ${path.basename(destination.pathname)}`);
+console.log(`Wrote ${cards.size} card descriptions (${englishCount} complete in English) to ${path.basename(destination.pathname)}`);

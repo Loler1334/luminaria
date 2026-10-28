@@ -1,35 +1,563 @@
 [
-  {"card":"051-card.webp","title":"Пчела с планеты-мёда","scene":"Старик собирает мёд из улья, похожего на маленькую планету, над которой кружит гигантская пчела.","keywords":"старик, мёд, улей, планета, огромная пчела, соты","clues":["На завтрак хватит одной капли целой вселенной","Пчеловодство вышло далеко за пределы сада"]},
-  {"card":"052-card.webp","title":"Парад драконов","scene":"Яркие драконы проходят праздничным парадом по улице парящего города под солнцем и разноцветными бабочками.","keywords":"драконы, парад, праздник, город, солнце, бабочки, яркие краски","clues":["Праздничный салют сегодня дышит сам","Улица решила надеть все цвета сразу"]},
-  {"card":"053-card.webp","title":"Викинг и мировой змей","scene":"Бородатый викинг заплетает длинное зелёное тело огромного змея на заснеженном берегу.","keywords":"викинг, борода, мировой змей, зелёная чешуя, коса, снег, берег","clues":["С таким клиентом парикмахер пропустит обед","Самая длинная причёска в северных легендах"]},
-  {"card":"054-card.webp","title":"Домик-раковина","scene":"Небольшой освещённый дом в форме морской раковины плывёт по тихому морю под огромной луной.","keywords":"дом, морская раковина, море, луна, окна, ночь, плавучий дом","clues":["Адрес меняется с каждым приливом","Когда переезд доверили течению"]},
-  {"card":"055-card.webp","title":"Пойманный закат","scene":"Путник держит сияющую раму с закатом посреди оживлённой сумеречной улицы, где видны часы и прохожие.","keywords":"путник, рамка, светящийся закат, улица, часы, прохожие, сумерки","clues":["Он унёс домой последние пять минут вечера","Время пришлось вставить в рамку"]},
-  {"card":"056-card.webp","title":"Кит над кораблём","scene":"Длинный корабль викингов плывёт по ледяному морю под огромным парящим китом, за которым сияет ночное небо.","keywords":"кит, корабль викингов, ледяное море, лодка, звёзды, небо","clues":["Небо сегодня решило проверить глубину","Моряки посмотрели вверх и забыли про компас"]},
-  {"card":"057-card.webp","title":"Лавка на астероиде","scene":"Маленькая лавка с дымящейся трубой стоит на отдельном астероиде; у входа видны волшебник и сказочное существо.","keywords":"лавка, маленький дом, астероид, космос, труба, волшебник, существо","clues":["Доставка за пределы орбиты оплачивается отдельно","Единственный магазин, где соседей нет даже в телескоп"]},
-  {"card":"058-card.webp","title":"Сад внутри великана","scene":"Спящий каменный великан лежит у замка, а в полости его груди маленькие люди устроили зелёный сад.","keywords":"каменный великан, сон, сад, люди, грудь, замок, мох","clues":["Лучшее место для огорода нашлось у самого сердца","Хозяин проснётся и очень удивится урожаю"]},
-  {"card":"059-card.webp","title":"Комната под водой","scene":"Обычная спальня с кроватью стала подводным миром, где между мебелью плавают медузы и рыбы.","keywords":"спальня, кровать, подводный мир, медузы, рыбы, мебель, вода","clues":["Перед сном окно забыли закрыть от океана","Будильник теперь звенит где-то на дне"]},
-  {"card":"061-card.webp","title":"Буря в бутылке","scene":"Светловолосая женщина стоит у стеклянной бутылки, в которой бушует маленькое море с грозой.","keywords":"женщина, стеклянная бутылка, буря, море, гроза, тёмная комната","clues":["Погода поместилась на полке, характер — нет","Открывать только в случае затянувшейся тишины"]},
-  {"card":"062-card.webp","title":"Олень с замком в рогах","scene":"Фигура в капюшоне протягивает огонь белому оленю, в чьих огромных рогах стоит маленький замок.","keywords":"белый олень, замок, рога, человек в капюшоне, свеча, луна, лес","clues":["На экскурсию в этот дворец лучше взять морковь","Огонёк указал дорогу туда, где нет тропы"]},
-  {"card":"064-card.webp","title":"Деревья внутри хранительницы","scene":"Прозрачная женщина стоит в лунном лесу, а сквозь её тело видны деревья и ветви, будто она сама часть чащи.","keywords":"прозрачная женщина, деревья внутри, лес, луна, ветви, дух природы","clues":["Её можно увидеть, если перестать искать","Корни помнят то, что забыли люди"]},
-  {"card":"065-card.webp","title":"Двери в лесу","scene":"Ребёнок в красном плаще стоит перед богато украшенной дверью среди деревьев и других таинственных входов.","keywords":"ребёнок, красный плащ, двери, лес, ключи, загадочный вход","clues":["На прогулку вышли, а вернуться можно в другой мир","Нужный выход спрятался среди слишком многих ответов"]},
-  {"card":"066-card.webp","title":"Булочная облаков","scene":"На уютном рынке пекари продают пышные облака как хлеб среди корзин, прилавков и тёплого света.","keywords":"булочная, облака, хлеб, пекарь, рынок, корзины, выпечка","clues":["К завтраку взяли что-нибудь воздушное","Свежая партия скоро принесёт дождь"]},
-  {"card":"067-card.webp","title":"Звёздный кролик над рынком","scene":"Огромный светящийся кролик из звёзд парит над шумным цветным рынком и праздничными столами.","keywords":"кролик, созвездие, звёзды, рынок, праздник, столы, ночной город","clues":["Покупатели забыли список, увидев небо","Сегодня на ярмарке продают даже удачу"]},
-  {"card":"068-card.webp","title":"Кукловод над битвой","scene":"Маска кукловода и тонкие нити возвышаются над маленькими вооружёнными фигурами, сражающимися на сцене у воды.","keywords":"кукловод, маска, нити, марионетки, воины, битва, вода","clues":["Герои спорят, кто первым перережет сценарий","Война оказалась репетицией чужих рук"]},
-  {"card":"069-card.webp","title":"Рыба с крепостью","scene":"Гигантская золотая рыба несёт на спине целую крепость, а маленький человек наблюдает с берега.","keywords":"золотая рыба, крепость, замок, спина рыбы, берег, человек, вода","clues":["Замок решил уплыть от налогов","Рыбак поймал бы её, но где хранить такую находку"]},
-  {"card":"070-card.webp","title":"Подводные сёстры","scene":"Две светлые женщины держатся за руки под водой, а над ними светится громадная медуза.","keywords":"две женщины, подводный мир, руки, медуза, свет, море","clues":["На глубине тоже нужен тот, кто не отпустит руку","Самый тихий разговор состоялся под куполом"]},
-  {"card":"071-card.webp","title":"Кит-дом среди звёзд","scene":"Огромный кит плывёт в космосе, а внутри его прозрачного тела видны целые комнаты и маленькие жители.","keywords":"кит, космос, дом внутри кита, комнаты, люди, звёзды, корабль","clues":["В этом доме переезд случается во сне","Соседи говорят, что их район иногда поёт"]},
-  {"card":"072-card.webp","title":"Всадник на неоновой рыбе","scene":"Гонщик летит по киберпанковому городу верхом на гигантском карпе кои среди неоновых вывесок.","keywords":"гонщик, карп кои, большая рыба, неоновый город, киберпанк, вывески","clues":["Общественный транспорт снова сбежал из аквариума","На этом маршруте пробки случаются в воздухе"]},
-  {"card":"073-card.webp","title":"Семейный портрет с тайной","scene":"Старинная семья позирует для мрачного чёрно-белого портрета в комнате, над которой нависает странный скелет.","keywords":"семья, старинный портрет, чёрно-белая фотография, дети, скелет, комната","clues":["Семейный альбом лучше открывать при свете","Лишний родственник снова попал в кадр"]},
-  {"card":"074-card.webp","title":"Кит между планетами","scene":"Огромный синий кит плывёт между звёздами и планетами, а вокруг него летят белые птицы.","keywords":"синий кит, космос, планеты, звёзды, белые птицы, полёт","clues":["Океан закончился, а путешествие — нет","Кто-то слишком буквально попросил больше простора"]},
-  {"card":"075-card.webp","title":"Королевский пир призраков","scene":"Нарядная женщина в розовом сидит за роскошным столом с кубками и цветами среди бледных придворных и причудливых существ.","keywords":"женщина в розовом, королевский пир, стол, кубки, цветы, придворные, дворец","clues":["На этом приёме соседей по столу лучше не расспрашивать","Праздник затянулся на несколько эпох"]},
-  {"card":"103-card.webp","title":"Тень под красным солнцем","scene":"Худой человек стоит под красным солнцем на тёмной улице, пока другая фигура склоняется над огромной чёрной тенью.","keywords":"красное солнце, тёмная улица, человек, чёрная тень, силуэт, тревога","clues":["Полдень почему-то ведёт себя как полночь","Не всё, что следует за тобой, хочет отстать"]},
-  {"card":"104-card.webp","title":"Окно в подводный мир","scene":"Среди зелёного луга стоит круглое зеркало-портал, за которым виден голубой океан с кораллами и морскими существами.","keywords":"круглый портал, зеркало, подводный мир, океан, кораллы, луг, черепаха","clues":["Прогулка по лугу внезапно потребовала ласты","По ту сторону стекла погода совсем другая"]},
-  {"card":"105-card.webp","title":"Замок на обеденном столе","scene":"За красным праздничным столом стоят тарелка с миниатюрным замком и странные гости в синем готическом зале.","keywords":"миниатюрный замок, тарелка, красная скатерть, готический зал, гости, пир","clues":["Королевство подали с гарниром","Официант предупреждал не трогать башни"]},
-  {"card":"106-card.webp","title":"Девушка и стеклянный волк","scene":"Девушка в зелёном платье протягивает руки к прозрачному волку, внутри которого виден заснеженный лес.","keywords":"девушка, стеклянный волк, прозрачное тело, зимний лес внутри, снег, миска","clues":["Он прозрачный, но его намерения ещё загадка","Зима нашла себе четыре лапы"]},
-  {"card":"107-card.webp","title":"Живое солнце над руинами","scene":"Улыбающееся огромное солнце сияет над мрачными руинами, а внизу сидит белый кролик.","keywords":"улыбающееся солнце, руины, тёмный город, белый кролик, свет, небо","clues":["Даже конец света сегодня выглядит слишком бодрым","Кто-то забыл сказать утру, что город спит"]},
-  {"card":"108-card.webp","title":"Рыбак у бесконечной лестницы","scene":"Тёмный рыбак стоит по колено в воде с удочкой перед каменной лестницей, уходящей спиралью в облака.","keywords":"рыбак, удочка, вода, каменная лестница, облака, спираль, руины","clues":["Он так долго ждал клёва, что дорога выросла вверх","Здесь можно поймать ответ или подняться за ним"]},
-  {"card":"109-card.webp","title":"Замок под лоскутным одеялом","scene":"Каменный замок с жёлтыми окнами укрыт большим узорчатым одеялом, а рядом дремлет тёмный дракон.","keywords":"замок, узорчатое одеяло, дракон, ночь, светящиеся окна, сон","clues":["Даже крепости иногда мёрзнут по ночам","Охранник наконец разрешил всем поспать"]},
-  {"card":"110-card.webp","title":"Олень из зеркала","scene":"Светящийся белый олень выходит из высокого зеркала среди тёмного леса, а рядом стоит путешественник.","keywords":"белый олень, зеркало, портал, лес, путешественник, рога, отражение","clues":["Отражение первым решилось сделать шаг","В этой чаще выход находится по ту сторону"]},
-  {"card":"111-card.webp","title":"Трон огромного мотылька","scene":"Человек в плаще стоит перед каменным троном, где восседает огромный белый мотылёк с раскинутыми крыльями.","keywords":"гигантский мотылёк, трон, крылья, человек в плаще, каменный зал","clues":["Корону забыли, зато плащ виден издалека","На аудиенцию сегодня лучше не брать свечу"]},
-  {"card":"112-card.webp","title":"Лиса на небесной лестнице","scene":"Рыжая лиса поднимается по светящейся голубой лестнице к золотому замку на вершине скалы среди грозовых облаков.","keywords":"рыжая лиса, светящаяся лестница, замок, скала, грозовые облака, молния","clues":["К вершине ведёт дорога только для самых хитрых","Последняя ступень обещает больше, чем первая"]}
+  {
+    "card": "051-card.webp",
+    "title": "Пчела с планеты-мёда",
+    "scene": "Старик собирает мёд из улья, похожего на маленькую планету, над которой кружит гигантская пчела.",
+    "keywords": "старик, мёд, улей, планета, огромная пчела, соты",
+    "clues": [
+      "На завтрак хватит одной капли целой вселенной",
+      "Пчеловодство вышло далеко за пределы сада"
+    ],
+    "title_en": "Bee from the Honey Planet",
+    "scene_en": "An old man gathers honey from a hive shaped like a small planet while a giant bee circles overhead.",
+    "keywords_en": "old man, honey, hive, tiny planet, giant bee, honeycomb",
+    "clues_en": [
+      "One drop of the universe is plenty for breakfast",
+      "Beekeeping has gone far beyond the garden"
+    ]
+  },
+  {
+    "card": "052-card.webp",
+    "title": "Парад драконов",
+    "scene": "Яркие драконы проходят праздничным парадом по улице парящего города под солнцем и разноцветными бабочками.",
+    "keywords": "драконы, парад, праздник, город, солнце, бабочки, яркие краски",
+    "clues": [
+      "Праздничный салют сегодня дышит сам",
+      "Улица решила надеть все цвета сразу"
+    ],
+    "title_en": "Dragon Parade",
+    "scene_en": "Bright dragons march in a festive parade through a floating city beneath the sun and colorful butterflies.",
+    "keywords_en": "dragons, parade, floating city, sun, butterflies, festival, bright colors",
+    "clues_en": [
+      "The fireworks learned to breathe on their own",
+      "The street put on every color at once"
+    ]
+  },
+  {
+    "card": "053-card.webp",
+    "title": "Викинг и мировой змей",
+    "scene": "Бородатый викинг заплетает длинное зелёное тело огромного змея на заснеженном берегу.",
+    "keywords": "викинг, борода, мировой змей, зелёная чешуя, коса, снег, берег",
+    "clues": [
+      "С таким клиентом парикмахер пропустит обед",
+      "Самая длинная причёска в северных легендах"
+    ],
+    "title_en": "Viking and the World Serpent",
+    "scene_en": "A bearded Viking braids the long green body of a huge serpent on a snowy shore.",
+    "keywords_en": "Viking, beard, world serpent, green scales, braid, snow, shore",
+    "clues_en": [
+      "The hairdresser will miss lunch with this client",
+      "The longest hairstyle in northern legend"
+    ]
+  },
+  {
+    "card": "054-card.webp",
+    "title": "Домик-раковина",
+    "scene": "Небольшой освещённый дом в форме морской раковины плывёт по тихому морю под огромной луной.",
+    "keywords": "дом, морская раковина, море, луна, окна, ночь, плавучий дом",
+    "clues": [
+      "Адрес меняется с каждым приливом",
+      "Когда переезд доверили течению"
+    ],
+    "title_en": "Shell House",
+    "scene_en": "A small illuminated house shaped like a seashell floats on a calm sea beneath an enormous moon.",
+    "keywords_en": "house, seashell, sea, moon, windows, night, floating home",
+    "clues_en": [
+      "The address changes with every tide",
+      "When the current handled the move"
+    ]
+  },
+  {
+    "card": "055-card.webp",
+    "title": "Пойманный закат",
+    "scene": "Путник держит сияющую раму с закатом посреди оживлённой сумеречной улицы, где видны часы и прохожие.",
+    "keywords": "путник, рамка, светящийся закат, улица, часы, прохожие, сумерки",
+    "clues": [
+      "Он унёс домой последние пять минут вечера",
+      "Время пришлось вставить в рамку"
+    ],
+    "title_en": "Captured Sunset",
+    "scene_en": "A traveler holds a glowing frame containing a sunset on a busy twilight street with clocks and passersby.",
+    "keywords_en": "traveler, frame, sunset, street, clocks, people, twilight",
+    "clues_en": [
+      "He brought home the last five minutes of evening",
+      "Time had to be put in a frame"
+    ]
+  },
+  {
+    "card": "056-card.webp",
+    "title": "Кит над кораблём",
+    "scene": "Длинный корабль викингов плывёт по ледяному морю под огромным парящим китом, за которым сияет ночное небо.",
+    "keywords": "кит, корабль викингов, ледяное море, лодка, звёзды, небо",
+    "clues": [
+      "Небо сегодня решило проверить глубину",
+      "Моряки посмотрели вверх и забыли про компас"
+    ],
+    "title_en": "Whale Above the Ship",
+    "scene_en": "A long Viking ship sails across an icy sea beneath a huge floating whale and a glowing night sky.",
+    "keywords_en": "whale, Viking ship, icy sea, boat, stars, night sky",
+    "clues_en": [
+      "Today the sky decided to measure the depths",
+      "The sailors looked up and forgot the compass"
+    ]
+  },
+  {
+    "card": "057-card.webp",
+    "title": "Лавка на астероиде",
+    "scene": "Маленькая лавка с дымящейся трубой стоит на отдельном астероиде; у входа видны волшебник и сказочное существо.",
+    "keywords": "лавка, маленький дом, астероид, космос, труба, волшебник, существо",
+    "clues": [
+      "Доставка за пределы орбиты оплачивается отдельно",
+      "Единственный магазин, где соседей нет даже в телескоп"
+    ],
+    "title_en": "Shop on an Asteroid",
+    "scene_en": "A tiny shop with a smoking chimney sits alone on an asteroid while a wizard and a strange creature wait by the entrance.",
+    "keywords_en": "shop, tiny house, asteroid, space, chimney, wizard, creature",
+    "clues_en": [
+      "Delivery beyond orbit costs extra",
+      "The only shop whose neighbors need a telescope"
+    ]
+  },
+  {
+    "card": "058-card.webp",
+    "title": "Сад внутри великана",
+    "scene": "Спящий каменный великан лежит у замка, а в полости его груди маленькие люди устроили зелёный сад.",
+    "keywords": "каменный великан, сон, сад, люди, грудь, замок, мох",
+    "clues": [
+      "Лучшее место для огорода нашлось у самого сердца",
+      "Хозяин проснётся и очень удивится урожаю"
+    ],
+    "title_en": "Garden Inside a Giant",
+    "scene_en": "A sleeping stone giant lies by a castle while tiny people tend a green garden in a hollow in his chest.",
+    "keywords_en": "stone giant, sleep, garden, little people, chest, castle, moss",
+    "clues_en": [
+      "The best place for a garden was close to the heart",
+      "The owner will be surprised by the harvest"
+    ]
+  },
+  {
+    "card": "059-card.webp",
+    "title": "Комната под водой",
+    "scene": "Обычная спальня с кроватью стала подводным миром, где между мебелью плавают медузы и рыбы.",
+    "keywords": "спальня, кровать, подводный мир, медузы, рыбы, мебель, вода",
+    "clues": [
+      "Перед сном окно забыли закрыть от океана",
+      "Будильник теперь звенит где-то на дне"
+    ],
+    "title_en": "Underwater Room",
+    "scene_en": "An ordinary bedroom with a bed has become an underwater world where jellyfish and fish swim between the furniture.",
+    "keywords_en": "bedroom, bed, underwater, jellyfish, fish, furniture, water",
+    "clues_en": [
+      "Someone forgot to close the window against the ocean",
+      "The alarm clock now rings somewhere on the seabed"
+    ]
+  },
+  {
+    "card": "061-card.webp",
+    "title": "Буря в бутылке",
+    "scene": "Светловолосая женщина стоит у стеклянной бутылки, в которой бушует маленькое море с грозой.",
+    "keywords": "женщина, стеклянная бутылка, буря, море, гроза, тёмная комната",
+    "clues": [
+      "Погода поместилась на полке, характер — нет",
+      "Открывать только в случае затянувшейся тишины"
+    ],
+    "title_en": "Storm in a Bottle",
+    "scene_en": "A blond woman stands beside a glass bottle containing a tiny stormy sea and thunderclouds.",
+    "keywords_en": "woman, glass bottle, storm, tiny sea, thunder, dark room",
+    "clues_en": [
+      "The weather fit on a shelf, but its temper did not",
+      "Open only if the silence goes on too long"
+    ]
+  },
+  {
+    "card": "062-card.webp",
+    "title": "Олень с замком в рогах",
+    "scene": "Фигура в капюшоне протягивает огонь белому оленю, в чьих огромных рогах стоит маленький замок.",
+    "keywords": "белый олень, замок, рога, человек в капюшоне, свеча, луна, лес",
+    "clues": [
+      "На экскурсию в этот дворец лучше взять морковь",
+      "Огонёк указал дорогу туда, где нет тропы"
+    ],
+    "title_en": "Deer with a Castle in Its Antlers",
+    "scene_en": "A hooded figure offers a flame to a white deer whose enormous antlers hold a small castle.",
+    "keywords_en": "white deer, castle, antlers, hooded figure, candle, moon, forest",
+    "clues_en": [
+      "Bring a carrot for the palace tour",
+      "A small light showed the way where there was no path"
+    ]
+  },
+  {
+    "card": "064-card.webp",
+    "title": "Деревья внутри хранительницы",
+    "scene": "Прозрачная женщина стоит в лунном лесу, а сквозь её тело видны деревья и ветви, будто она сама часть чащи.",
+    "keywords": "прозрачная женщина, деревья внутри, лес, луна, ветви, дух природы",
+    "clues": [
+      "Её можно увидеть, если перестать искать",
+      "Корни помнят то, что забыли люди"
+    ],
+    "title_en": "Trees Within the Guardian",
+    "scene_en": "A translucent woman stands in a moonlit forest with trees and branches visible through her body as though she belongs to the woods.",
+    "keywords_en": "transparent woman, forest guardian, trees, branches, moonlight, woodland",
+    "clues_en": [
+      "You can see her when you stop looking",
+      "The roots remember what people forgot"
+    ]
+  },
+  {
+    "card": "065-card.webp",
+    "title": "Двери в лесу",
+    "scene": "Ребёнок в красном плаще стоит перед богато украшенной дверью среди деревьев и других таинственных входов.",
+    "keywords": "ребёнок, красный плащ, двери, лес, ключи, загадочный вход",
+    "clues": [
+      "На прогулку вышли, а вернуться можно в другой мир",
+      "Нужный выход спрятался среди слишком многих ответов"
+    ],
+    "title_en": "Doors in the Forest",
+    "scene_en": "A child in a red cloak stands before an ornate door among trees and other mysterious entrances.",
+    "keywords_en": "child, red cloak, ornate door, forest, trees, portals",
+    "clues_en": [
+      "A walk outside could end in another world",
+      "The right exit hid among too many answers"
+    ]
+  },
+  {
+    "card": "066-card.webp",
+    "title": "Булочная облаков",
+    "scene": "На уютном рынке пекари продают пышные облака как хлеб среди корзин, прилавков и тёплого света.",
+    "keywords": "булочная, облака, хлеб, пекарь, рынок, корзины, выпечка",
+    "clues": [
+      "К завтраку взяли что-нибудь воздушное",
+      "Свежая партия скоро принесёт дождь"
+    ],
+    "title_en": "Cloud Bakery",
+    "scene_en": "Bakers at a cozy market sell fluffy clouds like bread among baskets, stalls and warm lights.",
+    "keywords_en": "bakery, bakers, cloud bread, market, baskets, stalls, warm light",
+    "clues_en": [
+      "Something light and airy for breakfast",
+      "The fresh batch may bring rain"
+    ]
+  },
+  {
+    "card": "067-card.webp",
+    "title": "Звёздный кролик над рынком",
+    "scene": "Огромный светящийся кролик из звёзд парит над шумным цветным рынком и праздничными столами.",
+    "keywords": "кролик, созвездие, звёзды, рынок, праздник, столы, ночной город",
+    "clues": [
+      "Покупатели забыли список, увидев небо",
+      "Сегодня на ярмарке продают даже удачу"
+    ],
+    "title_en": "Starry Rabbit Above the Market",
+    "scene_en": "An enormous glowing rabbit made of stars floats above a busy colorful market and festive tables.",
+    "keywords_en": "star rabbit, glowing rabbit, market, stars, festival, tables",
+    "clues_en": [
+      "The shoppers forgot their lists when they looked up",
+      "Even luck is for sale at this fair"
+    ]
+  },
+  {
+    "card": "068-card.webp",
+    "title": "Кукловод над битвой",
+    "scene": "Маска кукловода и тонкие нити возвышаются над маленькими вооружёнными фигурами, сражающимися на сцене у воды.",
+    "keywords": "кукловод, маска, нити, марионетки, воины, битва, вода",
+    "clues": [
+      "Герои спорят, кто первым перережет сценарий",
+      "Война оказалась репетицией чужих рук"
+    ],
+    "title_en": "Puppeteer Above the Battle",
+    "scene_en": "A puppeteer's mask and fine strings loom over tiny armed figures fighting on a stage beside water.",
+    "keywords_en": "puppeteer, mask, strings, puppets, battle, stage, water",
+    "clues_en": [
+      "The heroes argued over who would cut the script first",
+      "The war was a rehearsal in someone else's hands"
+    ]
+  },
+  {
+    "card": "069-card.webp",
+    "title": "Рыба с крепостью",
+    "scene": "Гигантская золотая рыба несёт на спине целую крепость, а маленький человек наблюдает с берега.",
+    "keywords": "золотая рыба, крепость, замок, спина рыбы, берег, человек, вода",
+    "clues": [
+      "Замок решил уплыть от налогов",
+      "Рыбак поймал бы её, но где хранить такую находку"
+    ],
+    "title_en": "Fish Carrying a Fortress",
+    "scene_en": "A giant golden fish carries an entire fortress on its back while a small person watches from shore.",
+    "keywords_en": "golden fish, fortress, castle, shore, small person, water",
+    "clues_en": [
+      "The castle swam away from its taxes",
+      "A fisherman would catch it, but where would he put it"
+    ]
+  },
+  {
+    "card": "070-card.webp",
+    "title": "Подводные сёстры",
+    "scene": "Две светлые женщины держатся за руки под водой, а над ними светится громадная медуза.",
+    "keywords": "две женщины, подводный мир, руки, медуза, свет, море",
+    "clues": [
+      "На глубине тоже нужен тот, кто не отпустит руку",
+      "Самый тихий разговор состоялся под куполом"
+    ],
+    "title_en": "Sisters Underwater",
+    "scene_en": "Two fair-haired women hold hands underwater beneath a huge glowing jellyfish.",
+    "keywords_en": "two sisters, women, hands, underwater, glowing jellyfish, sea",
+    "clues_en": [
+      "Even down here you need someone who will not let go",
+      "The quietest conversation happened under the dome"
+    ]
+  },
+  {
+    "card": "071-card.webp",
+    "title": "Кит-дом среди звёзд",
+    "scene": "Огромный кит плывёт в космосе, а внутри его прозрачного тела видны целые комнаты и маленькие жители.",
+    "keywords": "кит, космос, дом внутри кита, комнаты, люди, звёзды, корабль",
+    "clues": [
+      "В этом доме переезд случается во сне",
+      "Соседи говорят, что их район иногда поёт"
+    ],
+    "title_en": "Whale House Among the Stars",
+    "scene_en": "A huge whale swims through space with rooms and tiny residents visible inside its transparent body.",
+    "keywords_en": "whale, space, transparent body, rooms, people, stars, house",
+    "clues_en": [
+      "In this house you move while you sleep",
+      "The neighbors say their district sometimes sings"
+    ]
+  },
+  {
+    "card": "072-card.webp",
+    "title": "Всадник на неоновой рыбе",
+    "scene": "Гонщик летит по киберпанковому городу верхом на гигантском карпе кои среди неоновых вывесок.",
+    "keywords": "гонщик, карп кои, большая рыба, неоновый город, киберпанк, вывески",
+    "clues": [
+      "Общественный транспорт снова сбежал из аквариума",
+      "На этом маршруте пробки случаются в воздухе"
+    ],
+    "title_en": "Rider on a Neon Fish",
+    "scene_en": "A rider flies through a cyberpunk city on a giant koi carp among neon signs.",
+    "keywords_en": "rider, koi carp, giant fish, cyberpunk city, neon signs, flying",
+    "clues_en": [
+      "Public transport escaped from the aquarium again",
+      "Traffic jams happen in the air on this route"
+    ]
+  },
+  {
+    "card": "073-card.webp",
+    "title": "Семейный портрет с тайной",
+    "scene": "Старинная семья позирует для мрачного чёрно-белого портрета в комнате, над которой нависает странный скелет.",
+    "keywords": "семья, старинный портрет, чёрно-белая фотография, дети, скелет, комната",
+    "clues": [
+      "Семейный альбом лучше открывать при свете",
+      "Лишний родственник снова попал в кадр"
+    ],
+    "title_en": "Family Portrait with a Secret",
+    "scene_en": "An old-fashioned family poses for a gloomy black-and-white portrait beneath a strange looming skeleton.",
+    "keywords_en": "family portrait, black and white, family, skeleton, gloomy room",
+    "clues_en": [
+      "Open the family album with the lights on",
+      "An extra relative made it into the picture again"
+    ]
+  },
+  {
+    "card": "074-card.webp",
+    "title": "Кит между планетами",
+    "scene": "Огромный синий кит плывёт между звёздами и планетами, а вокруг него летят белые птицы.",
+    "keywords": "синий кит, космос, планеты, звёзды, белые птицы, полёт",
+    "clues": [
+      "Океан закончился, а путешествие — нет",
+      "Кто-то слишком буквально попросил больше простора"
+    ],
+    "title_en": "Whale Between Planets",
+    "scene_en": "A huge blue whale swims among stars and planets while white birds fly around it.",
+    "keywords_en": "blue whale, planets, stars, white birds, space, sky",
+    "clues_en": [
+      "The ocean ended, but the journey did not",
+      "Someone asked a little too literally for more room"
+    ]
+  },
+  {
+    "card": "075-card.webp",
+    "title": "Королевский пир призраков",
+    "scene": "Нарядная женщина в розовом сидит за роскошным столом с кубками и цветами среди бледных придворных и причудливых существ.",
+    "keywords": "женщина в розовом, королевский пир, стол, кубки, цветы, придворные, дворец",
+    "clues": [
+      "На этом приёме соседей по столу лучше не расспрашивать",
+      "Праздник затянулся на несколько эпох"
+    ],
+    "title_en": "Royal Feast of Ghosts",
+    "scene_en": "A finely dressed woman in pink sits at a lavish table with goblets and flowers among pale courtiers and strange creatures.",
+    "keywords_en": "woman in pink, royal feast, goblets, flowers, ghosts, courtiers, banquet",
+    "clues_en": [
+      "Do not ask too much about your dinner companions",
+      "The celebration lasted several centuries"
+    ]
+  },
+  {
+    "card": "103-card.webp",
+    "title": "Тень под красным солнцем",
+    "scene": "Худой человек стоит под красным солнцем на тёмной улице, пока другая фигура склоняется над огромной чёрной тенью.",
+    "keywords": "красное солнце, тёмная улица, человек, чёрная тень, силуэт, тревога",
+    "clues": [
+      "Полдень почему-то ведёт себя как полночь",
+      "Не всё, что следует за тобой, хочет отстать"
+    ],
+    "title_en": "Shadow Beneath a Red Sun",
+    "scene_en": "A thin person stands under a red sun on a dark street while another figure bends over an enormous black shadow.",
+    "keywords_en": "red sun, dark street, person, enormous shadow, figure",
+    "clues_en": [
+      "For some reason noon is behaving like midnight",
+      "Not everything that follows you wants to be left behind"
+    ]
+  },
+  {
+    "card": "104-card.webp",
+    "title": "Окно в подводный мир",
+    "scene": "Среди зелёного луга стоит круглое зеркало-портал, за которым виден голубой океан с кораллами и морскими существами.",
+    "keywords": "круглый портал, зеркало, подводный мир, океан, кораллы, луг, черепаха",
+    "clues": [
+      "Прогулка по лугу внезапно потребовала ласты",
+      "По ту сторону стекла погода совсем другая"
+    ],
+    "title_en": "Window into the Underwater World",
+    "scene_en": "A round mirror portal stands in a green meadow and opens onto a blue ocean full of coral and sea creatures.",
+    "keywords_en": "mirror portal, meadow, ocean, coral, sea creatures, round window",
+    "clues_en": [
+      "A stroll through the meadow suddenly called for flippers",
+      "The weather is different on the other side of the glass"
+    ]
+  },
+  {
+    "card": "105-card.webp",
+    "title": "Замок на обеденном столе",
+    "scene": "За красным праздничным столом стоят тарелка с миниатюрным замком и странные гости в синем готическом зале.",
+    "keywords": "миниатюрный замок, тарелка, красная скатерть, готический зал, гости, пир",
+    "clues": [
+      "Королевство подали с гарниром",
+      "Официант предупреждал не трогать башни"
+    ],
+    "title_en": "Castle on the Dinner Table",
+    "scene_en": "A plate holding a miniature castle sits on a red banquet table among strange guests in a blue Gothic hall.",
+    "keywords_en": "miniature castle, dinner table, plate, banquet, Gothic hall, guests",
+    "clues_en": [
+      "The kingdom came with a side dish",
+      "The waiter warned us not to touch the towers"
+    ]
+  },
+  {
+    "card": "106-card.webp",
+    "title": "Девушка и стеклянный волк",
+    "scene": "Девушка в зелёном платье протягивает руки к прозрачному волку, внутри которого виден заснеженный лес.",
+    "keywords": "девушка, стеклянный волк, прозрачное тело, зимний лес внутри, снег, миска",
+    "clues": [
+      "Он прозрачный, но его намерения ещё загадка",
+      "Зима нашла себе четыре лапы"
+    ],
+    "title_en": "Girl and Glass Wolf",
+    "scene_en": "A girl in a green dress reaches toward a transparent wolf with a snowy forest visible inside it.",
+    "keywords_en": "girl, green dress, transparent wolf, glass wolf, snowy forest",
+    "clues_en": [
+      "You can see through him, but not his intentions",
+      "Winter has found itself four paws"
+    ]
+  },
+  {
+    "card": "107-card.webp",
+    "title": "Живое солнце над руинами",
+    "scene": "Улыбающееся огромное солнце сияет над мрачными руинами, а внизу сидит белый кролик.",
+    "keywords": "улыбающееся солнце, руины, тёмный город, белый кролик, свет, небо",
+    "clues": [
+      "Даже конец света сегодня выглядит слишком бодрым",
+      "Кто-то забыл сказать утру, что город спит"
+    ],
+    "title_en": "Living Sun Above the Ruins",
+    "scene_en": "A huge smiling sun shines above gloomy ruins while a white rabbit sits below.",
+    "keywords_en": "smiling sun, ruins, white rabbit, morning, sunlight",
+    "clues_en": [
+      "Even the end of the world looks far too cheerful today",
+      "Someone forgot to tell morning that the city was asleep"
+    ]
+  },
+  {
+    "card": "108-card.webp",
+    "title": "Рыбак у бесконечной лестницы",
+    "scene": "Тёмный рыбак стоит по колено в воде с удочкой перед каменной лестницей, уходящей спиралью в облака.",
+    "keywords": "рыбак, удочка, вода, каменная лестница, облака, спираль, руины",
+    "clues": [
+      "Он так долго ждал клёва, что дорога выросла вверх",
+      "Здесь можно поймать ответ или подняться за ним"
+    ],
+    "title_en": "Fisherman at the Endless Staircase",
+    "scene_en": "A dark fisherman stands knee-deep in water with a fishing rod before a stone staircase spiraling into the clouds.",
+    "keywords_en": "fisherman, fishing rod, water, stone staircase, spiral, clouds",
+    "clues_en": [
+      "He waited so long for a bite that the road grew upward",
+      "Catch the answer here or climb up to find it"
+    ]
+  },
+  {
+    "card": "109-card.webp",
+    "title": "Замок под лоскутным одеялом",
+    "scene": "Каменный замок с жёлтыми окнами укрыт большим узорчатым одеялом, а рядом дремлет тёмный дракон.",
+    "keywords": "замок, узорчатое одеяло, дракон, ночь, светящиеся окна, сон",
+    "clues": [
+      "Даже крепости иногда мёрзнут по ночам",
+      "Охранник наконец разрешил всем поспать"
+    ],
+    "title_en": "Castle Beneath a Patchwork Quilt",
+    "scene_en": "A stone castle with yellow windows hides under a large patterned quilt while a dark dragon dozes nearby.",
+    "keywords_en": "castle, quilt, blanket, yellow windows, sleeping dragon, night",
+    "clues_en": [
+      "Even fortresses get cold at night",
+      "The guard finally let everyone sleep"
+    ]
+  },
+  {
+    "card": "110-card.webp",
+    "title": "Олень из зеркала",
+    "scene": "Светящийся белый олень выходит из высокого зеркала среди тёмного леса, а рядом стоит путешественник.",
+    "keywords": "белый олень, зеркало, портал, лес, путешественник, рога, отражение",
+    "clues": [
+      "Отражение первым решилось сделать шаг",
+      "В этой чаще выход находится по ту сторону"
+    ],
+    "title_en": "Deer from the Mirror",
+    "scene_en": "A glowing white deer steps out of a tall mirror in a dark forest beside a traveler.",
+    "keywords_en": "white deer, mirror, glowing antlers, dark forest, traveler",
+    "clues_en": [
+      "The reflection was the first to take a step",
+      "In these woods the exit lies on the other side"
+    ]
+  },
+  {
+    "card": "111-card.webp",
+    "title": "Трон огромного мотылька",
+    "scene": "Человек в плаще стоит перед каменным троном, где восседает огромный белый мотылёк с раскинутыми крыльями.",
+    "keywords": "гигантский мотылёк, трон, крылья, человек в плаще, каменный зал",
+    "clues": [
+      "Корону забыли, зато плащ виден издалека",
+      "На аудиенцию сегодня лучше не брать свечу"
+    ],
+    "title_en": "Throne of the Giant Moth",
+    "scene_en": "A cloaked person stands before a stone throne occupied by an enormous white moth with outstretched wings.",
+    "keywords_en": "giant moth, stone throne, cloaked person, white wings, audience",
+    "clues_en": [
+      "They forgot the crown, but the cloak can be seen for miles",
+      "Best not bring a candle to this audience"
+    ]
+  },
+  {
+    "card": "112-card.webp",
+    "title": "Лиса на небесной лестнице",
+    "scene": "Рыжая лиса поднимается по светящейся голубой лестнице к золотому замку на вершине скалы среди грозовых облаков.",
+    "keywords": "рыжая лиса, светящаяся лестница, замок, скала, грозовые облака, молния",
+    "clues": [
+      "К вершине ведёт дорога только для самых хитрых",
+      "Последняя ступень обещает больше, чем первая"
+    ],
+    "title_en": "Fox on the Stairway to the Sky",
+    "scene_en": "A red fox climbs a glowing blue staircase toward a golden castle on a cliff amid storm clouds.",
+    "keywords_en": "red fox, blue staircase, golden castle, cliff, storm clouds",
+    "clues_en": [
+      "Only the cleverest find the road to the top",
+      "The last step promises more than the first"
+    ]
+  }
 ]

@@ -14,7 +14,7 @@ const prepare=extract('async function prepareNextLiveRound(){','async function a
     vm.createContext(state);vm.runInContext(reset+load,state);state.resetLiveParty();
     assert.equal(state.liveStorytellerId,null);assert.equal(state.liveRoundNumber,1);assert.equal(state.liveHandCache.length,0);
     let release;
-    const query={select(){return this},eq(){return this},order(){return this},limit(){return this},maybeSingle(){return new Promise(resolve=>release=resolve)}};
+    const query={select(){return this},eq(){return this},order(){return this},limit(){return this},maybeSingle(){return new Promise(resolve=>release=resolve)},single(){return Promise.resolve({data:{id:'room',status:'playing',awaiting_storyteller:false}})}};
     state.supabase={from:()=>query};
     const pending=state.loadLiveRound();state.resetLiveParty();release({data:{id:'stale',phase:'submitting',storyteller_id:'wrong'}});
     assert.equal(await pending,null);assert.equal(state.liveRound,null);

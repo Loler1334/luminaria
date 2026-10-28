@@ -10,11 +10,11 @@ assert.equal(unquoteStoryClues('Он увидел «сонную улитку» 
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
-let member=true,finished=true,aiCalls=0,providedClues,persistedStory=null,providedTokenLimit=0,providedPrompt='';
+let member=true,finished=true,roomLanguage=null,aiCalls=0,providedClues,persistedStory=null,providedTokenLimit=0,providedPrompt='';
 const fetcher=async(url,options={})=>{
   if(url.endsWith('/auth/v1/user'))return Response.json({id:'user'});
   if(url.includes('room_players?'))return Response.json(member?[{user_id:'user'}]:[]);
-  if(url.includes('rooms?'))return Response.json([{status:finished?'finished':'playing'}]);
+  if(url.includes('rooms?'))return Response.json([{status:finished?'finished':'playing',language:roomLanguage}]);
   if(url.includes('rounds?'))return Response.json(rounds);
   if(url.includes('luminaria_deck_state'))return Response.json([{remaining_cards:finished?0:10}]);
   if(url.includes('/finale_stories?'))return Response.json(persistedStory?.finalRoundId===rounds.at(-1).id?[{story:persistedStory.story}]:[]);
@@ -49,6 +49,15 @@ const englishEnv={AI:{async run(model,{messages}){assert(messages[0].content.inc
 const englishResult=await handleStory(request(),englishEnv,config,{fetcher,cache});
 assert.equal(englishResult.status,200);
 assert((await englishResult.json()).story.startsWith('Under the moon'));
+store.clear();persistedStory=null;
+roomLanguage='en';
+for(const round of rounds)round.clue='Лунный лес';
+let roomPrompt='';
+const roomEnglish=await handleStory(request(),{AI:{async run(model,{messages}){roomPrompt=messages[0].content;return {response:'A short story without all the clues.'}}}},config,{fetcher,cache});
+assert.equal(roomEnglish.status,503);
+assert(roomPrompt.includes('in English'));
+roomLanguage=null;
+for(const round of rounds)round.clue='Moonlit forest';
 console.log('PASS: story authorization, compact adaptive length, all clues sent, canonical cross-client story, shared cache, concurrency and fallback handling.');
 
 // A cut-off or oversized draft must be rewritten, never persisted as-is.

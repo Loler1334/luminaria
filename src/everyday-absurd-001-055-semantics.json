@@ -1,57 +1,882 @@
 [
-  {"card":"001-abs.webp","scene":"Девушка открывает холодильник и видит внутри море с волнами; на краю полки спокойно сидит рыба в костюме с портфелем.","keywords":"холодильник море волны вода рыба костюм портфель девушка кухня завтрак","clues":["Утро началось с прилива на кухне","На работу сегодня можно уплыть"]},
-  {"card":"002-abs.webp","scene":"Покупатели стоят у кассы с корзинами, а по ленте вместо продуктов едут сердитые дождевые облака.","keywords":"магазин супермаркет касса кассовая лента облака дождь покупатели корзины продавец","clues":["Погоду пробили отдельным чеком","Очередь задержалась из-за осадков"]},
-  {"card":"003-abs.webp","scene":"Переполненный автобус растянулся вверх бесконечной лестницей; пассажиры сидят на ступенях между дверями и окнами.","keywords":"автобус салон пассажиры лестница ступеньки общественный транспорт дорога","clues":["Следующая остановка где-то этажом выше","Проезд оплачивается после подъёма"]},
-  {"card":"004-abs.webp","scene":"Мужчина с лейкой поливает балконный кактус, на котором вместо колючек выросла плотная автомобильная пробка.","keywords":"кактус балкон лейка машина автомобили пробка дорожное движение растение дом","clues":["Даже поливать приходится по расписанию движения","Здесь затор вырос прямо в горшке"]},
-  {"card":"005-abs.webp","scene":"Офисный работник тянется к убегающим часам на ножках за стеклянной стеной высотного здания.","keywords":"дедлайн срок часы будильник ноги офис работа мужчина стекло высотка погоня","clues":["Сроки опять быстрее сотрудников","Поймать время руками не получилось"]},
-  {"card":"006-abs.webp","scene":"Девочка смотрит в огромную стиральную машину, внутри которой семья ужинает за накрытым столом среди вращающейся воды.","keywords":"прачечная стиральная машина барабан семья ужин стол девочка вода бельё","clues":["Семейный вечер поставили на отжим","На ужин лучше не приходить в белом"]},
-  {"card":"007-abs.webp","scene":"На почте пожилая женщина показывает отделению самостоятельную тёмную тень, а рядом ждёт юноша с посылкой.","keywords":"почта почтовое отделение тень женщина посылка коробка очередь письмо","clues":["Отправитель пришёл отдельно от себя","Эту посылку не завернёшь в бумагу"]},
-  {"card":"008-abs.webp","scene":"Парикмахерша стрижёт клиенту голову, на которой вырос живой куст с ветками и листьями.","keywords":"парикмахерская причёска волосы куст изгородь ветки листья ножницы зеркало клиент","clues":["Стрижка внезапно стала садовыми работами","Весна наступила прямо на макушке"]},
-  {"card":"009-abs.webp","scene":"Жилец на наружной лестнице пытается открыть дверь гигантским золотым ключом, пока рядом наблюдает кот.","keywords":"ключ золотой огромный дверь подъезд лестница дом мужчина кот замочная скважина","clues":["Для этой двери потребуется помощь грузчиков","Путь домой неожиданно стал тяжёлым"]},
-  {"card":"010-abs.webp","scene":"Двое взрослых заглядывают в огромную тарелку супа, где вместо овощей плавает освещённый миниатюрный город.","keywords":"суп тарелка ложка город дома улицы еда кухня мужчина женщина","clues":["На обед подали целый район","Тут даже бульвару не хватает соли"]},
-  {"card":"011-abs.webp","scene":"Пожилой ботаник стоит у лифта рядом с подсолнухом в галстуке; за открытыми дверями видны разные времена года.","keywords":"лифт ботаник подсолнух цветок галстук двери этажи весна зима времена года","clues":["Каждый этаж одет не по сезону","Сосед опять придержал дверь листьями"]},
-  {"card":"012-abs.webp","scene":"Пекарь лежит в стоматологическом кресле с открытым ртом, а встревоженный зуб осматривает его через лупу.","keywords":"стоматолог дантист зуб пекарь кресло лупа рот больница хлеб","clues":["Пациента проверяет тот, кого обычно проверяют","На приёме поменялись местами с диагнозом"]},
-  {"card":"013-abs.webp","scene":"Ночная библиотекарша бережно ставит в банку тишину, пока подросток пытается вернуть грозовую тучу, спрятанную под курткой.","keywords":"библиотека библиотекарь подросток книги тишина банка гроза туча молния","clues":["Возврат просрочили до первой грозы","В читальном зале снова слишком громко"]},
-  {"card":"014-abs.webp","scene":"Худой мужчина поднимает крошечную гантель в зале, но его огромная тень поднимает всю стойку с тяжестями.","keywords":"спортзал фитнес гантель тренер мужчина тень сила штанга зеркало","clues":["Здесь нагрузку берёт на себя отражение","Самая скромная тренировка удивила стены"]},
-  {"card":"015-abs.webp","scene":"Хмурый пекарь месит облако в пекарне, а над улицей уже летит огромная буханка с крошками-птицами.","keywords":"пекарня пекарь тесто облако хлеб булка буханка птицы рассвет окно","clues":["Аромат поднялся выше крыши","Сегодня выпечка не захотела лежать на прилавке"]},
-  {"card":"016-abs.webp","scene":"Регулировщик останавливает поток офисных кресел на колёсиках у пешеходного перехода, пока прохожий ждёт зелёного света.","keywords":"переход зебра регулировщик кресла офисные стулья колёсики знак стоп дорога прохожий","clues":["Обеденный перерыв выехал без сотрудников","Стулья опять заняли всю полосу"]},
-  {"card":"017-abs.webp","scene":"Пожилая женщина получает из банкомата светящиеся полоски вчерашнего заката и складывает их в сумку.","keywords":"банк банкомат женщина пенсионерка деньги закат вчера солнце свет сумка","clues":["Сбережения выдали вчерашним вечером","На счёте неожиданно нашлось немного света"]},
-  {"card":"018-abs.webp","scene":"Из киноэкрана в зал льётся водопад, зрители раскрывают зонты, а работник пытается вытереть воду шваброй.","keywords":"кинотеатр экран фильм вода водопад дождь зрители зонты попкорн швабра","clues":["Этот сеанс лучше смотреть в плаще","Спецэффекты дошли до последнего ряда"]},
-  {"card":"019-abs.webp","scene":"Флорист вручает покупателю букет из маленьких дверей, за каждой из которых виден отдельный сад.","keywords":"цветочный магазин флорист букет маленькие двери сад цветы покупатель перчатки","clues":["В подарок можно выбрать собственный сад","За каждым лепестком оказалось новое место"]},
-  {"card":"020-abs.webp","scene":"Сапожник прибивает новую подошву к потёртой радуге и сушит её рядом с грязным ботинком.","keywords":"сапожник ремонт обуви радуга подошва ботинок молоток мастерская","clues":["После дождя понадобился ремонт неба","Даже ярким вещам иногда нужна новая подошва"]},
-  {"card":"021-abs.webp","scene":"Фармацевт выдаёт женщине в бумажном стаканчике час сна; посетительница прижимает к себе подушку больше себя.","keywords":"аптека фармацевт лекарство сон подушка женщина бумажный стаканчик усталость","clues":["Один час отдыха отпускают без рецепта","Покупательница принесла собственную постель"]},
-  {"card":"022-abs.webp","scene":"Спасатель у бассейна свистит процессии ванн с людьми внутри, синхронно плывущих по дорожкам.","keywords":"бассейн спасатель свисток ванны купание синхронное плавание вода люди","clues":["Соревнование перенесли из ванной комнаты","За нарушение дорожки сегодня оштрафуют сантехнику"]},
-  {"card":"023-abs.webp","scene":"Огромная раскрытая книга затягивает продавщицу внутрь страницы, а покупатели держат её за ноги между стеллажами.","keywords":"книжный магазин библиотека книга продавщица страницы ветер покупатели стеллажи","clues":["Сюжет слишком увлёк даже продавца","Последнюю страницу пришлось спасать всем магазином"]},
-  {"card":"024-abs.webp","scene":"Грозовое облако на крошечной машине въезжает на автомойку и выезжает оттуда сияющим солнцем.","keywords":"автомойка машина автомобиль облако гроза дождь солнце щётки работник","clues":["После мойки прогноз резко улучшился","Эта машина привезла плохую погоду"]},
-  {"card":"025-abs.webp","scene":"На рынке торговец продаёт банки, внутри которых шепчут крошечные рты; покупательница слушает одну у прилавка.","keywords":"рынок торговец банка стеклянная банка сплетни рот шёпот покупательница овощи","clues":["Новости уже расфасовали по банкам","Этот товар лучше не открывать при соседях"]},
-  {"card":"026-abs.webp","scene":"Уставший скрипач ждёт на перроне поезда из соединённых будильников, который ведёт сонная черепаха в фуражке.","keywords":"вокзал перрон поезд будильники часы черепаха проводник скрипач чемодан","clues":["Расписание движется, но очень неспешно","На этот рейс лучше не ставить будильник"]},
-  {"card":"027-abs.webp","scene":"Портной пытается справиться с гигантской молнией-застёжкой, которая разделила мастерскую на лето и снежную зиму.","keywords":"портной ателье молния застёжка зима снег лето одежда шитьё ткань","clues":["Одним движением сменили сезон","Примерочная не договорилась с погодой"]},
-  {"card":"028-abs.webp","scene":"Официант подаёт салат, в котором маленькие офисные дома спорят за последний зелёный лист.","keywords":"ресторан официант салат тарелка город дома офисные здания зелень лист ужин","clues":["За гарнир разгорелся городской спор","На тарелке сегодня очень тесно"]},
-  {"card":"029-abs.webp","scene":"Мастер открыл смартфон, и из него вылетела стая бумажных птиц-мыслей к изумлённой хозяйке.","keywords":"ремонт смартфон телефон мастерская бумажные птицы мысли экран женщина инструменты","clues":["Непрочитанное наконец вырвалось наружу","В памяти устройства оказалось слишком много крыльев"]},
-  {"card":"030-abs.webp","scene":"На мокрой остановке женщина стоит под огромным зонтом, а скамейка рядом уходит прочь на резиновых сапогах.","keywords":"автобусная остановка дождь зонтик женщина скамейка резиновые сапоги лужа","clues":["Место ожидания устало ждать первым","Под таким дождём даже мебель ушла домой"]},
-  {"card":"031-abs.webp","scene":"В зоомагазине продавец подбирает поводок воспитанному перекати-полю, пока собака оплачивает покупку костью.","keywords":"зоомагазин продавец собака поводок кость перекати-поле прилавок питомец","clues":["Покупатель сегодня сам приносит оплату","Самый послушный питомец катится без лап"]},
-  {"card":"032-abs.webp","scene":"Учитель гонится по коридору за контрольной, сложившейся в бумажный самолёт; следом бегут ластики.","keywords":"школа учитель коридор контрольная бумажный самолётик ластики тетрадь экзамен","clues":["Работа сама сбежала с проверки","Сегодня оценки летят быстрее учеников"]},
-  {"card":"033-abs.webp","scene":"Бариста наливает кофе, а из бумажного стакана вылезает крошечный сонный человек в тапочках.","keywords":"кофейня бариста кофе эспрессо стакан понедельник сонный человек тапочки","clues":["Начало недели опять вылезло из чашки","Заказ бодрости пришёл с задержкой"]},
-  {"card":"034-abs.webp","scene":"Садовник заглядывает в сарай и видит улиток на ковровой дорожке: одна в короне, остальные собрались на церемонию.","keywords":"садовник сарай улитки корона трон церемония ковёр сад","clues":["Самую медленную коронацию дождались не все","Во дворце наконец выбрали терпеливого правителя"]},
-  {"card":"035-abs.webp","scene":"В строительном магазине лестницы с глазами и руками спорят друг с другом, пока покупатель решает, какую взять.","keywords":"хозяйственный магазин лестницы стремянки покупатель инструменты глаза руки спор","clues":["Выбор высоты вызвал настоящий скандал","Полки поссорились из-за верхней ступени"]},
-  {"card":"036-abs.webp","scene":"Таксист смотрит в зеркало заднего вида и видит там вчерашних пассажиров на далёкой улице.","keywords":"такси водитель зеркало заднего вида пассажиры вчера машина город вечер","clues":["Поездка закончилась, а прощание всё ещё идёт","В этом зеркале тариф считают за прошлое"]},
-  {"card":"037-abs.webp","scene":"Гардеробщица принимает пальто, из карманов которого высыпается целая зима со снежинками.","keywords":"гардероб пальто старик служащая вешалка снег зима карманы","clues":["На хранение сдали целый сезон","В карманах нашлась погода похолоднее"]},
-  {"card":"038-abs.webp","scene":"Пара раскладывает плед для пикника, а кусок газона на ножках сворачивается и просится с ними домой.","keywords":"пикник плед трава газон пара парк корзина живой кусок земли","clues":["После прогулки домой захотела сама поляна","Место для отдыха оказалось очень общительным"]},
-  {"card":"039-abs.webp","scene":"Секретарша копирует скрепку, а из аппарата маршируют всё новые скрепки с лицами и руками.","keywords":"офис копир ксерокс скрепка скрепки секретарша бумага принтер","clues":["Тираж оказался слишком самостоятельным","Одна канцелярская мелочь собрала целую армию"]},
-  {"card":"040-abs.webp","scene":"Продавец у моря кладёт закат в вафельный рожок, пока голуби спорят за последние светящиеся капли.","keywords":"мороженое рожок продавец закат солнце море набережная голуби","clues":["Последнюю порцию вечера разобрали у воды","Птицы тоже захотели попробовать сумерки"]},
-  {"card":"041-abs.webp","scene":"Грузчик несёт коробку с целой миниатюрной квартирой внутри; крошечный жилец держит ему дверь.","keywords":"переезд грузчик коробка квартира миниатюрный дом мебель жилец дверь лестница","clues":["Квартиру удалось унести в одних руках","Хозяин попросил не трясти прихожую"]},
-  {"card":"042-abs.webp","scene":"Женщина зашивает дырку в сумочке, из которой строем убегают пуговицы с ножками.","keywords":"швея сумка сумочка игла нитка дырка пуговицы маленькие человечки","clues":["Все мелочи решили покинуть карман","Починка превратилась в массовый побег"]},
-  {"card":"043-abs.webp","scene":"Покупательница выбирает рыбу на рынке, но большая рыба на льду указывает плавником прямо на неё.","keywords":"рыбный рынок продавец покупательница рыба прилавок лёд плавник спор","clues":["Покупку выбирают с обеих сторон прилавка","У этого товара есть собственное мнение"]},
-  {"card":"044-abs.webp","scene":"На крыше электрик распутывает спутниковые тарелки с лицами; над ними кружат облачка с велосипедами из их снов.","keywords":"крыша электрик антенны спутниковые тарелки провода лица сон велосипед облака","clues":["Соседние крыши опять подслушали друг друга","Даже антеннам снится дорога"]},
-  {"card":"045-abs.webp","scene":"Ребёнок оседлал маленький велосипед с огромными колёсами-пончиками, а мастер серьёзно проверяет давление.","keywords":"веломагазин велосипед колёса пончики ребёнок мастер насос шины","clues":["Эта поездка выглядит слишком сладкой","На шиномонтаже неожиданно пахнет глазурью"]},
-  {"card":"046-abs.webp","scene":"В больничной очереди рядом с пациенткой сидят цифры на стульях в шарфах, ожидая своего вызова.","keywords":"поликлиника очередь цифры числа пациентка стулья шарфы зал ожидания","clues":["Даже номер устал ждать приёма","Место в очереди заняло отдельное кресло"]},
-  {"card":"047-abs.webp","scene":"Садовник у фонтана отступает от каменных рыб, которые выплёвывают разноцветные зонты вместо воды.","keywords":"парк фонтан садовник каменные рыбы зонты вода прохожие","clues":["Вода пришла с собственной защитой от дождя","Прогулка потребовала сразу несколько куполов"]},
-  {"card":"048-abs.webp","scene":"Продавец билетов в цирке вручает прохожему маленькую дверь вместо билета, и тот с сомнением ставит ногу на порог.","keywords":"цирк касса билеты продавец маленькая дверь дверца порог прохожий шатёр","clues":["Вход в представление можно унести с собой","Билет оказался настоящим испытанием"]},
-  {"card":"049-abs.webp","scene":"В ветеринарной клинике обеспокоенная женщина принесла увядшее растение, а рыжий кот-врач осматривает его с блокнотом.","keywords":"ветеринар кот врач растение цветок листья клиника женщина стетоскоп блокнот","clues":["Пациенту рекомендовали больше солнца","Врач впервые попросил поливать больного"]},
-  {"card":"050-abs.webp","scene":"Мужчина бреется у зеркала: борода растёт только у отражения, а у него в руке остаётся бесполезная бритва.","keywords":"ванная мужчина зеркало отражение борода бритьё бритва раковина","clues":["Утренний уход достался не тому лицу","Чисто выбрился только один из двоих"]},
-  {"card":"051-abs.webp","scene":"Женщина развешивает бельё на крыше, и наволочка на верёвке раздувается парусом для крошечного моряка-носка.","keywords":"крыша бельё верёвка наволочка парус лодка носок женщина стирка","clues":["Стирка неожиданно отправилась в плавание","На верёвке появился маленький капитан"]},
-  {"card":"052-abs.webp","scene":"В газетном киоске продавец выдаёт зонт из чистого газетного листа; лужи на улице складываются в завтрашний прогноз.","keywords":"газетный киоск газеты зонтик дождь продавец покупатель лужи прогноз погоды","clues":["Новости сегодня спасают от осадков","Прогноз напечатался прямо на тротуаре"]},
-  {"card":"053-abs.webp","scene":"Повар на кухне подбрасывает блин, который превращается в летающую тарелку; коллега машет лопаткой как диспетчер.","keywords":"кухня повар блин сковорода летающая тарелка НЛО лопатка ресторан","clues":["Завтрак запросил разрешение на взлёт","На кухне снова задержали посадку"]},
-  {"card":"054-abs.webp","scene":"Женщина открывает шкафчик, откуда марширует толпа маленьких календарных карточек с чемоданами.","keywords":"шкаф шкафчик женщина календарь карточки встречи дела чемоданы очередь","clues":["Все планы разом вышли из хранения","Забытые встречи уже собрали чемоданы"]},
-  {"card":"055-abs.webp","scene":"Рабочие регулируют машины вокруг ямы в асфальте, где вырос цветущий сад; оранжевый конус его поливает.","keywords":"дорога яма выбоина цветы клумба машины рабочие конус полив движение","clues":["Ремонт дороги неожиданно зацвёл","Объезд устроили ради самого маленького сада"]}
+  {
+    "card": "001-abs.webp",
+    "scene": "Девушка открывает холодильник и видит внутри море с волнами; на краю полки спокойно сидит рыба в костюме с портфелем.",
+    "keywords": "холодильник море волны вода рыба костюм портфель девушка кухня завтрак",
+    "clues": [
+      "Утро началось с прилива на кухне",
+      "На работу сегодня можно уплыть"
+    ],
+    "title_en": "Ocean in the Fridge",
+    "scene_en": "A young woman opens her refrigerator to find an ocean with rolling waves; a fish in a business suit sits on a shelf with a briefcase.",
+    "keywords_en": "ocean, fridge, young, woman, opens, refrigerator, find, rolling, waves, fish, business, suit, sits, shelf, briefcase",
+    "clues_en": [
+      "The kitchen woke up with a tide",
+      "You could sail to work from here"
+    ]
+  },
+  {
+    "card": "002-abs.webp",
+    "scene": "Покупатели стоят у кассы с корзинами, а по ленте вместо продуктов едут сердитые дождевые облака.",
+    "keywords": "магазин супермаркет касса кассовая лента облака дождь покупатели корзины продавец",
+    "clues": [
+      "Погоду пробили отдельным чеком",
+      "Очередь задержалась из-за осадков"
+    ],
+    "title_en": "Storm Clouds at Checkout",
+    "scene_en": "Shoppers wait at a supermarket checkout while angry rain clouds ride the conveyor belt instead of groceries.",
+    "keywords_en": "storm, clouds, checkout, shoppers, wait, supermarket, angry, rain, ride, conveyor, belt, groceries",
+    "clues_en": [
+      "They charged separately for the weather",
+      "The queue stalled because of a shower"
+    ]
+  },
+  {
+    "card": "003-abs.webp",
+    "scene": "Переполненный автобус растянулся вверх бесконечной лестницей; пассажиры сидят на ступенях между дверями и окнами.",
+    "keywords": "автобус салон пассажиры лестница ступеньки общественный транспорт дорога",
+    "clues": [
+      "Следующая остановка где-то этажом выше",
+      "Проезд оплачивается после подъёма"
+    ],
+    "title_en": "Endless Staircase Bus",
+    "scene_en": "A crowded bus stretches upward into an endless staircase with passengers sitting on steps between its doors and windows.",
+    "keywords_en": "endless, staircase, bus, crowded, stretches, upward, passengers, sitting, steps, doors, windows",
+    "clues_en": [
+      "The next stop is one floor higher",
+      "Pay your fare after the climb"
+    ]
+  },
+  {
+    "card": "004-abs.webp",
+    "scene": "Мужчина с лейкой поливает балконный кактус, на котором вместо колючек выросла плотная автомобильная пробка.",
+    "keywords": "кактус балкон лейка машина автомобили пробка дорожное движение растение дом",
+    "clues": [
+      "Даже поливать приходится по расписанию движения",
+      "Здесь затор вырос прямо в горшке"
+    ],
+    "title_en": "Traffic Jam Cactus",
+    "scene_en": "A man waters his balcony cactus, where a dense traffic jam has grown instead of thorns.",
+    "keywords_en": "traffic, jam, cactus, man, waters, balcony, dense, has, grown, thorns",
+    "clues_en": [
+      "Even watering is subject to traffic rules",
+      "A jam grew right in the flowerpot"
+    ]
+  },
+  {
+    "card": "005-abs.webp",
+    "scene": "Офисный работник тянется к убегающим часам на ножках за стеклянной стеной высотного здания.",
+    "keywords": "дедлайн срок часы будильник ноги офис работа мужчина стекло высотка погоня",
+    "clues": [
+      "Сроки опять быстрее сотрудников",
+      "Поймать время руками не получилось"
+    ],
+    "title_en": "Runaway Deadline",
+    "scene_en": "An office worker reaches for a clock running away on little legs behind the glass wall of a tower.",
+    "keywords_en": "runaway, deadline, office, worker, reaches, clock, running, away, legs, glass, wall, tower",
+    "clues_en": [
+      "Deadlines are faster than the employees again",
+      "Nobody managed to catch time by hand"
+    ]
+  },
+  {
+    "card": "006-abs.webp",
+    "scene": "Девочка смотрит в огромную стиральную машину, внутри которой семья ужинает за накрытым столом среди вращающейся воды.",
+    "keywords": "прачечная стиральная машина барабан семья ужин стол девочка вода бельё",
+    "clues": [
+      "Семейный вечер поставили на отжим",
+      "На ужин лучше не приходить в белом"
+    ],
+    "title_en": "Dinner in the Washing Machine",
+    "scene_en": "A girl looks into a giant washing machine where a family eats dinner at a set table amid swirling water.",
+    "keywords_en": "dinner, washing, machine, girl, looks, family, eats, set, table, amid, swirling, water",
+    "clues_en": [
+      "Family dinner was put on the spin cycle",
+      "Do not wear white to this meal"
+    ]
+  },
+  {
+    "card": "007-abs.webp",
+    "scene": "На почте пожилая женщина показывает отделению самостоятельную тёмную тень, а рядом ждёт юноша с посылкой.",
+    "keywords": "почта почтовое отделение тень женщина посылка коробка очередь письмо",
+    "clues": [
+      "Отправитель пришёл отдельно от себя",
+      "Эту посылку не завернёшь в бумагу"
+    ],
+    "title_en": "A Shadow at the Post Office",
+    "scene_en": "An elderly woman presents her independent dark shadow at the post office while a young man waits with a parcel.",
+    "keywords_en": "shadow, post, office, elderly, woman, presents, independent, dark, young, man, waits, parcel",
+    "clues_en": [
+      "The sender arrived separately from himself",
+      "This parcel cannot be wrapped in paper"
+    ]
+  },
+  {
+    "card": "008-abs.webp",
+    "scene": "Парикмахерша стрижёт клиенту голову, на которой вырос живой куст с ветками и листьями.",
+    "keywords": "парикмахерская причёска волосы куст изгородь ветки листья ножницы зеркало клиент",
+    "clues": [
+      "Стрижка внезапно стала садовыми работами",
+      "Весна наступила прямо на макушке"
+    ],
+    "title_en": "Haircut for a Living Shrub",
+    "scene_en": "A hairdresser trims a client's head where a living bush with leaves and branches has grown.",
+    "keywords_en": "haircut, living, shrub, hairdresser, trims, client, head, bush, leaves, branches, has, grown",
+    "clues_en": [
+      "The haircut became a gardening job",
+      "Spring arrived right on top of his head"
+    ]
+  },
+  {
+    "card": "009-abs.webp",
+    "scene": "Жилец на наружной лестнице пытается открыть дверь гигантским золотым ключом, пока рядом наблюдает кот.",
+    "keywords": "ключ золотой огромный дверь подъезд лестница дом мужчина кот замочная скважина",
+    "clues": [
+      "Для этой двери потребуется помощь грузчиков",
+      "Путь домой неожиданно стал тяжёлым"
+    ],
+    "title_en": "Giant Key at the Door",
+    "scene_en": "A resident on an outside staircase tries to open a door with a giant golden key while a cat watches.",
+    "keywords_en": "key, door, resident, staircase, tries, open, golden, cat, watches",
+    "clues_en": [
+      "Moving this doorway will require a crew",
+      "The route home became unexpectedly heavy"
+    ]
+  },
+  {
+    "card": "010-abs.webp",
+    "scene": "Двое взрослых заглядывают в огромную тарелку супа, где вместо овощей плавает освещённый миниатюрный город.",
+    "keywords": "суп тарелка ложка город дома улицы еда кухня мужчина женщина",
+    "clues": [
+      "На обед подали целый район",
+      "Тут даже бульвару не хватает соли"
+    ],
+    "title_en": "City in the Soup",
+    "scene_en": "Two adults peer into a giant bowl of soup where a lit miniature city floats instead of vegetables.",
+    "keywords_en": "city, soup, adults, peer, bowl, lit, miniature, floats, vegetables",
+    "clues_en": [
+      "A whole neighborhood was served for lunch",
+      "Even the boulevard could use more salt"
+    ]
+  },
+  {
+    "card": "011-abs.webp",
+    "scene": "Пожилой ботаник стоит у лифта рядом с подсолнухом в галстуке; за открытыми дверями видны разные времена года.",
+    "keywords": "лифт ботаник подсолнух цветок галстук двери этажи весна зима времена года",
+    "clues": [
+      "Каждый этаж одет не по сезону",
+      "Сосед опять придержал дверь листьями"
+    ],
+    "title_en": "Elevator",
+    "scene_en": "An elderly botanist presses a lift button and each floor slides past as a different season; one impatient sunflower in a business tie holds the door.",
+    "keywords_en": "elevator, elderly, botanist, presses, lift, button, floor, slides, past, different, season, impatient, sunflower, business, tie, holds, door",
+    "clues_en": [
+      "Every floor has dressed for a different season",
+      "The neighbor held the door open with leaves"
+    ]
+  },
+  {
+    "card": "012-abs.webp",
+    "scene": "Пекарь лежит в стоматологическом кресле с открытым ртом, а встревоженный зуб осматривает его через лупу.",
+    "keywords": "стоматолог дантист зуб пекарь кресло лупа рот больница хлеб",
+    "clues": [
+      "Пациента проверяет тот, кого обычно проверяют",
+      "На приёме поменялись местами с диагнозом"
+    ],
+    "title_en": "Dentist",
+    "scene_en": "A brave baker reclines in a dental chair while a nervous little tooth examines the dentist through a magnifying glass.",
+    "keywords_en": "dentist, brave, baker, reclines, dental, chair, nervous, tooth, examines, magnifying, glass",
+    "clues_en": [
+      "The patient was examined by the usual suspect",
+      "At this appointment the diagnosis changed seats"
+    ]
+  },
+  {
+    "card": "013-abs.webp",
+    "scene": "Ночная библиотекарша бережно ставит в банку тишину, пока подросток пытается вернуть грозовую тучу, спрятанную под курткой.",
+    "keywords": "библиотека библиотекарь подросток книги тишина банка гроза туча молния",
+    "clues": [
+      "Возврат просрочили до первой грозы",
+      "В читальном зале снова слишком громко"
+    ],
+    "title_en": "Library",
+    "scene_en": "A night librarian stamps a borrowed silence in a glass jar; a teenager tries to return a noisy thunderstorm hidden under his coat.",
+    "keywords_en": "library, night, librarian, stamps, borrowed, silence, glass, jar, teenager, tries, return, noisy, thunderstorm, hidden, coat",
+    "clues_en": [
+      "The return was overdue by one thunderstorm",
+      "The reading room is much too loud again"
+    ]
+  },
+  {
+    "card": "014-abs.webp",
+    "scene": "Худой мужчина поднимает крошечную гантель в зале, но его огромная тень поднимает всю стойку с тяжестями.",
+    "keywords": "спортзал фитнес гантель тренер мужчина тень сила штанга зеркало",
+    "clues": [
+      "Здесь нагрузку берёт на себя отражение",
+      "Самая скромная тренировка удивила стены"
+    ],
+    "title_en": "Gym",
+    "scene_en": "A shy accountant lifts a tiny dumbbell while his enormous shadow lifts the whole gym; the trainer records a score with a pebble.",
+    "keywords_en": "gym, shy, accountant, lifts, dumbbell, shadow, trainer, records, score, pebble",
+    "clues_en": [
+      "His reflection did all the heavy lifting",
+      "The smallest workout impressed the walls"
+    ]
+  },
+  {
+    "card": "015-abs.webp",
+    "scene": "Хмурый пекарь месит облако в пекарне, а над улицей уже летит огромная буханка с крошками-птицами.",
+    "keywords": "пекарня пекарь тесто облако хлеб булка буханка птицы рассвет окно",
+    "clues": [
+      "Аромат поднялся выше крыши",
+      "Сегодня выпечка не захотела лежать на прилавке"
+    ],
+    "title_en": "Bakery",
+    "scene_en": "At dawn a grumpy baker kneads a cloud like dough; the finished bread floats above the neighborhood and crumbs become little birds.",
+    "keywords_en": "bakery, dawn, grumpy, baker, kneads, cloud, dough, finished, bread, floats, neighborhood, crumbs, become, birds",
+    "clues_en": [
+      "The smell rose above the roof",
+      "Today's fresh batch refused to stay on the counter"
+    ]
+  },
+  {
+    "card": "016-abs.webp",
+    "scene": "Регулировщик останавливает поток офисных кресел на колёсиках у пешеходного перехода, пока прохожий ждёт зелёного света.",
+    "keywords": "переход зебра регулировщик кресла офисные стулья колёсики знак стоп дорога прохожий",
+    "clues": [
+      "Обеденный перерыв выехал без сотрудников",
+      "Стулья опять заняли всю полосу"
+    ],
+    "title_en": "Crosswalk",
+    "scene_en": "A traffic warden holds up a stop sign to halt a stampede of office chairs crossing for lunch; a human commuter waits patiently.",
+    "keywords_en": "crosswalk, traffic, warden, holds, stop, sign, halt, stampede, office, chairs, crossing, lunch, human, commuter, waits, patiently",
+    "clues_en": [
+      "The lunch break drove away without its employees",
+      "The chairs took up the entire lane again"
+    ]
+  },
+  {
+    "card": "017-abs.webp",
+    "scene": "Пожилая женщина получает из банкомата светящиеся полоски вчерашнего заката и складывает их в сумку.",
+    "keywords": "банк банкомат женщина пенсионерка деньги закат вчера солнце свет сумка",
+    "clues": [
+      "Сбережения выдали вчерашним вечером",
+      "На счёте неожиданно нашлось немного света"
+    ],
+    "title_en": "Bank",
+    "scene_en": "A cautious retiree withdraws a handful of yesterday from an ATM; small sunset strips spill into her shopping bag.",
+    "keywords_en": "bank, cautious, retiree, withdraws, handful, yesterday, atm, sunset, strips, spill, shopping, bag",
+    "clues_en": [
+      "Her savings arrived in yesterday's evening light",
+      "There was a little daylight left in the account"
+    ]
+  },
+  {
+    "card": "018-abs.webp",
+    "scene": "Из киноэкрана в зал льётся водопад, зрители раскрывают зонты, а работник пытается вытереть воду шваброй.",
+    "keywords": "кинотеатр экран фильм вода водопад дождь зрители зонты попкорн швабра",
+    "clues": [
+      "Этот сеанс лучше смотреть в плаще",
+      "Спецэффекты дошли до последнего ряда"
+    ],
+    "title_en": "Cinema",
+    "scene_en": "A cinema usher mops up escaped rain from the movie screen while the audience raises umbrellas and popcorn floats like life rafts.",
+    "keywords_en": "cinema, usher, mops, escaped, rain, movie, screen, audience, raises, umbrellas, popcorn, floats, life, rafts",
+    "clues_en": [
+      "Better wear a raincoat to this showing",
+      "The special effects reached the last row"
+    ]
+  },
+  {
+    "card": "019-abs.webp",
+    "scene": "Флорист вручает покупателю букет из маленьких дверей, за каждой из которых виден отдельный сад.",
+    "keywords": "цветочный магазин флорист букет маленькие двери сад цветы покупатель перчатки",
+    "clues": [
+      "В подарок можно выбрать собственный сад",
+      "За каждым лепестком оказалось новое место"
+    ],
+    "title_en": "Flower shop",
+    "scene_en": "A florist wraps a bouquet of polite little doors, each opening onto a different tiny garden; a customer chooses one with gardening gloves.",
+    "keywords_en": "flower, shop, florist, wraps, bouquet, polite, doors, opening, onto, different, garden, customer, chooses, gardening, gloves",
+    "clues_en": [
+      "Give someone a garden of their own",
+      "Behind every petal was another place"
+    ]
+  },
+  {
+    "card": "020-abs.webp",
+    "scene": "Сапожник прибивает новую подошву к потёртой радуге и сушит её рядом с грязным ботинком.",
+    "keywords": "сапожник ремонт обуви радуга подошва ботинок молоток мастерская",
+    "clues": [
+      "После дождя понадобился ремонт неба",
+      "Даже ярким вещам иногда нужна новая подошва"
+    ],
+    "title_en": "Shoe repair",
+    "scene_en": "A cobbler fits a new sole onto a worn-out rainbow and hangs it above a single muddy boot to dry.",
+    "keywords_en": "shoe, repair, cobbler, fits, sole, onto, worn, rainbow, hangs, single, muddy, boot, dry",
+    "clues_en": [
+      "The sky needed repairs after the rain",
+      "Even bright things need a new sole sometimes"
+    ]
+  },
+  {
+    "card": "021-abs.webp",
+    "scene": "Фармацевт выдаёт женщине в бумажном стаканчике час сна; посетительница прижимает к себе подушку больше себя.",
+    "keywords": "аптека фармацевт лекарство сон подушка женщина бумажный стаканчик усталость",
+    "clues": [
+      "Один час отдыха отпускают без рецепта",
+      "Покупательница принесла собственную постель"
+    ],
+    "title_en": "Pharmacy",
+    "scene_en": "A pharmacist dispenses one tiny hour of sleep in a paper cup while a customer carries a pillow larger than herself.",
+    "keywords_en": "pharmacy, pharmacist, dispenses, hour, sleep, paper, cup, customer, carries, pillow, larger, than, herself",
+    "clues_en": [
+      "One hour of rest requires no prescription",
+      "The customer brought her own bed"
+    ]
+  },
+  {
+    "card": "022-abs.webp",
+    "scene": "Спасатель у бассейна свистит процессии ванн с людьми внутри, синхронно плывущих по дорожкам.",
+    "keywords": "бассейн спасатель свисток ванны купание синхронное плавание вода люди",
+    "clues": [
+      "Соревнование перенесли из ванной комнаты",
+      "За нарушение дорожки сегодня оштрафуют сантехнику"
+    ],
+    "title_en": "Swimming pool",
+    "scene_en": "A lifeguard blows a whistle at a neat procession of bathtubs doing synchronized swimming while their owners sit on the edge.",
+    "keywords_en": "swimming, pool, lifeguard, blows, whistle, neat, procession, bathtubs, doing, synchronized, owners, sit, edge",
+    "clues_en": [
+      "The race moved out of the bathroom",
+      "The plumbing will be fined for changing lanes"
+    ]
+  },
+  {
+    "card": "023-abs.webp",
+    "scene": "Огромная раскрытая книга затягивает продавщицу внутрь страницы, а покупатели держат её за ноги между стеллажами.",
+    "keywords": "книжный магазин библиотека книга продавщица страницы ветер покупатели стеллажи",
+    "clues": [
+      "Сюжет слишком увлёк даже продавца",
+      "Последнюю страницу пришлось спасать всем магазином"
+    ],
+    "title_en": "Bookshop",
+    "scene_en": "A bespectacled bookseller is pulled through a page by the wind of an enormous paperback; two customers anchor her by her shoes.",
+    "keywords_en": "bookshop, bespectacled, bookseller, pulled, page, wind, paperback, customers, anchor, shoes",
+    "clues_en": [
+      "The plot swept away even the bookseller",
+      "The whole shop had to rescue the last page"
+    ]
+  },
+  {
+    "card": "024-abs.webp",
+    "scene": "Грозовое облако на крошечной машине въезжает на автомойку и выезжает оттуда сияющим солнцем.",
+    "keywords": "автомойка машина автомобиль облако гроза дождь солнце щётки работник",
+    "clues": [
+      "После мойки прогноз резко улучшился",
+      "Эта машина привезла плохую погоду"
+    ],
+    "title_en": "Car wash",
+    "scene_en": "A mechanic watches a tiny thundercloud drive its own car through spinning brushes; at the exit the cloud emerges perfectly sunny.",
+    "keywords_en": "car, wash, mechanic, watches, thundercloud, drive, spinning, brushes, exit, cloud, emerges, perfectly, sunny",
+    "clues_en": [
+      "The forecast improved after a quick wash",
+      "This little car brought some terrible weather"
+    ]
+  },
+  {
+    "card": "025-abs.webp",
+    "scene": "На рынке торговец продаёт банки, внутри которых шепчут крошечные рты; покупательница слушает одну у прилавка.",
+    "keywords": "рынок торговец банка стеклянная банка сплетни рот шёпот покупательница овощи",
+    "clues": [
+      "Новости уже расфасовали по банкам",
+      "Этот товар лучше не открывать при соседях"
+    ],
+    "title_en": "Farmers market",
+    "scene_en": "A vendor stacks gossip in jars while a skeptical shopper holds one to her ear and hears its tiny lips whisper.",
+    "keywords_en": "farmers, market, vendor, stacks, gossip, jars, skeptical, shopper, holds, ear, hears, lips, whisper",
+    "clues_en": [
+      "The news has already been packed in jars",
+      "Best not open this purchase near the neighbors"
+    ]
+  },
+  {
+    "card": "026-abs.webp",
+    "scene": "Уставший скрипач ждёт на перроне поезда из соединённых будильников, который ведёт сонная черепаха в фуражке.",
+    "keywords": "вокзал перрон поезд будильники часы черепаха проводник скрипач чемодан",
+    "clues": [
+      "Расписание движется, но очень неспешно",
+      "На этот рейс лучше не ставить будильник"
+    ],
+    "title_en": "Train platform",
+    "scene_en": "A tired violinist waits for a train made of neatly linked alarm clocks; the conductor is a sleepy tortoise with a cap.",
+    "keywords_en": "train, platform, tired, violinist, waits, made, neatly, linked, alarm, clocks, conductor, sleepy, tortoise, cap",
+    "clues_en": [
+      "The timetable moves, just not very quickly",
+      "Do not set an alarm for this service"
+    ]
+  },
+  {
+    "card": "027-abs.webp",
+    "scene": "Портной пытается справиться с гигантской молнией-застёжкой, которая разделила мастерскую на лето и снежную зиму.",
+    "keywords": "портной ателье молния застёжка зима снег лето одежда шитьё ткань",
+    "clues": [
+      "Одним движением сменили сезон",
+      "Примерочная не договорилась с погодой"
+    ],
+    "title_en": "Tailor's impossible zipper",
+    "scene_en": "A giant floor zipper splits the tailor shop into summer and winter.",
+    "keywords_en": "tailor, impossible, zipper, floor, splits, shop, summer, winter",
+    "clues_en": [
+      "One quick move changed the season",
+      "The fitting room could not agree with the weather"
+    ]
+  },
+  {
+    "card": "028-abs.webp",
+    "scene": "Официант подаёт салат, в котором маленькие офисные дома спорят за последний зелёный лист.",
+    "keywords": "ресторан официант салат тарелка город дома офисные здания зелень лист ужин",
+    "clues": [
+      "За гарнир разгорелся городской спор",
+      "На тарелке сегодня очень тесно"
+    ],
+    "title_en": "Restaurant",
+    "scene_en": "A waiter serves a salad in which small office buildings argue over the last leaf; the diner politely offers them a fork.",
+    "keywords_en": "restaurant, waiter, serves, salad, which, office, buildings, argue, last, leaf, diner, politely, offers, fork",
+    "clues_en": [
+      "A citywide argument broke out over the garnish",
+      "There is very little room on today's plate"
+    ]
+  },
+  {
+    "card": "029-abs.webp",
+    "scene": "Мастер открыл смартфон, и из него вылетела стая бумажных птиц-мыслей к изумлённой хозяйке.",
+    "keywords": "ремонт смартфон телефон мастерская бумажные птицы мысли экран женщина инструменты",
+    "clues": [
+      "Непрочитанное наконец вырвалось наружу",
+      "В памяти устройства оказалось слишком много крыльев"
+    ],
+    "title_en": "Repair shop",
+    "scene_en": "A technician unscrews a broken smartphone and releases a flock of tiny unread thoughts as paper birds; owner reaches for one.",
+    "keywords_en": "repair, shop, technician, unscrews, broken, smartphone, releases, flock, unread, thoughts, paper, birds, owner, reaches",
+    "clues_en": [
+      "The unread messages finally escaped",
+      "There were too many wings in the device's memory"
+    ]
+  },
+  {
+    "card": "030-abs.webp",
+    "scene": "На мокрой остановке женщина стоит под огромным зонтом, а скамейка рядом уходит прочь на резиновых сапогах.",
+    "keywords": "автобусная остановка дождь зонтик женщина скамейка резиновые сапоги лужа",
+    "clues": [
+      "Место ожидания устало ждать первым",
+      "Под таким дождём даже мебель ушла домой"
+    ],
+    "title_en": "Bus stop",
+    "scene_en": "A woman waits under a giant umbrella held by a miniature raincoat, while the bench slowly walks away on rubber-boot feet.",
+    "keywords_en": "bus, stop, woman, waits, umbrella, held, miniature, raincoat, bench, slowly, walks, away, rubber, boot, feet",
+    "clues_en": [
+      "The place to wait got tired of waiting first",
+      "Even the furniture went home in this rain"
+    ]
+  },
+  {
+    "card": "031-abs.webp",
+    "scene": "В зоомагазине продавец подбирает поводок воспитанному перекати-полю, пока собака оплачивает покупку костью.",
+    "keywords": "зоомагазин продавец собака поводок кость перекати-поле прилавок питомец",
+    "clues": [
+      "Покупатель сегодня сам приносит оплату",
+      "Самый послушный питомец катится без лап"
+    ],
+    "title_en": "Pet shop",
+    "scene_en": "A shopkeeper carefully sells a leash to a very well-behaved tumbleweed; a dog at the counter pays with a bone.",
+    "keywords_en": "pet, shop, shopkeeper, carefully, sells, leash, well, behaved, tumbleweed, dog, counter, pays, bone",
+    "clues_en": [
+      "Today's customer brought his own payment",
+      "The best-behaved pet rolls without paws"
+    ]
+  },
+  {
+    "card": "032-abs.webp",
+    "scene": "Учитель гонится по коридору за контрольной, сложившейся в бумажный самолёт; следом бегут ластики.",
+    "keywords": "школа учитель коридор контрольная бумажный самолётик ластики тетрадь экзамен",
+    "clues": [
+      "Работа сама сбежала с проверки",
+      "Сегодня оценки летят быстрее учеников"
+    ],
+    "title_en": "School hallway",
+    "scene_en": "A teacher chases a runaway examination paper that folds itself into a paper airplane and leads a swarm of erasers.",
+    "keywords_en": "school, hallway, teacher, chases, runaway, examination, paper, folds, itself, airplane, leads, swarm, erasers",
+    "clues_en": [
+      "The assignment escaped before anyone could grade it",
+      "Today the marks fly faster than the students"
+    ]
+  },
+  {
+    "card": "033-abs.webp",
+    "scene": "Бариста наливает кофе, а из бумажного стакана вылезает крошечный сонный человек в тапочках.",
+    "keywords": "кофейня бариста кофе эспрессо стакан понедельник сонный человек тапочки",
+    "clues": [
+      "Начало недели опять вылезло из чашки",
+      "Заказ бодрости пришёл с задержкой"
+    ],
+    "title_en": "Coffee stand",
+    "scene_en": "A barista pours espresso into a paper cup and an entire tiny Monday crawls out, yawning and wearing slippers.",
+    "keywords_en": "coffee, stand, barista, pours, espresso, paper, cup, entire, monday, crawls, yawning, wearing, slippers",
+    "clues_en": [
+      "Monday climbed right out of the cup again",
+      "The order for energy arrived late"
+    ]
+  },
+  {
+    "card": "034-abs.webp",
+    "scene": "Садовник заглядывает в сарай и видит улиток на ковровой дорожке: одна в короне, остальные собрались на церемонию.",
+    "keywords": "садовник сарай улитки корона трон церемония ковёр сад",
+    "clues": [
+      "Самую медленную коронацию дождались не все",
+      "Во дворце наконец выбрали терпеливого правителя"
+    ],
+    "title_en": "Snail coronation",
+    "scene_en": "A gardener discovers a snail coronation inside his shed.",
+    "keywords_en": "snail, coronation, gardener, discovers, shed",
+    "clues_en": [
+      "Not everyone stayed for the slowest coronation",
+      "At last the palace chose a patient ruler"
+    ]
+  },
+  {
+    "card": "035-abs.webp",
+    "scene": "В строительном магазине лестницы с глазами и руками спорят друг с другом, пока покупатель решает, какую взять.",
+    "keywords": "хозяйственный магазин лестницы стремянки покупатель инструменты глаза руки спор",
+    "clues": [
+      "Выбор высоты вызвал настоящий скандал",
+      "Полки поссорились из-за верхней ступени"
+    ],
+    "title_en": "Hardware store",
+    "scene_en": "A contractor tries to choose a ladder; each ladder argues with its reflection about how high it should reach.",
+    "keywords_en": "hardware, store, contractor, tries, choose, ladder, argues, reflection, about, how, high, should, reach",
+    "clues_en": [
+      "Choosing a height caused quite a scandal",
+      "The shelves argued over the top rung"
+    ]
+  },
+  {
+    "card": "036-abs.webp",
+    "scene": "Таксист смотрит в зеркало заднего вида и видит там вчерашних пассажиров на далёкой улице.",
+    "keywords": "такси водитель зеркало заднего вида пассажиры вчера машина город вечер",
+    "clues": [
+      "Поездка закончилась, а прощание всё ещё идёт",
+      "В этом зеркале тариф считают за прошлое"
+    ],
+    "title_en": "Taxi",
+    "scene_en": "A cab driver checks the rear-view mirror and finds yesterday's passengers still waving from a tiny distant street inside it.",
+    "keywords_en": "taxi, cab, driver, checks, rear, view, mirror, finds, yesterday, passengers, still, waving, distant, street",
+    "clues_en": [
+      "The ride ended, but the farewell went on",
+      "This mirror charges for the past"
+    ]
+  },
+  {
+    "card": "037-abs.webp",
+    "scene": "Гардеробщица принимает пальто, из карманов которого высыпается целая зима со снежинками.",
+    "keywords": "гардероб пальто старик служащая вешалка снег зима карманы",
+    "clues": [
+      "На хранение сдали целый сезон",
+      "В карманах нашлась погода похолоднее"
+    ],
+    "title_en": "Museum cloakroom",
+    "scene_en": "An attendant takes an old man's coat, and the coat carries off his whole winter in its pockets as snowflakes.",
+    "keywords_en": "museum, cloakroom, attendant, takes, man, coat, carries, off, winter, pockets, snowflakes",
+    "clues_en": [
+      "An entire season was checked into storage",
+      "The pockets held colder weather than expected"
+    ]
+  },
+  {
+    "card": "038-abs.webp",
+    "scene": "Пара раскладывает плед для пикника, а кусок газона на ножках сворачивается и просится с ними домой.",
+    "keywords": "пикник плед трава газон пара парк корзина живой кусок земли",
+    "clues": [
+      "После прогулки домой захотела сама поляна",
+      "Место для отдыха оказалось очень общительным"
+    ],
+    "title_en": "Picnic",
+    "scene_en": "A young couple lays out a blanket; a small patch of lawn rolls itself up and asks to be taken home.",
+    "keywords_en": "picnic, young, couple, lays, blanket, patch, lawn, rolls, itself, asks, taken, home",
+    "clues_en": [
+      "The meadow wanted to come home too",
+      "The picnic spot was unusually sociable"
+    ]
+  },
+  {
+    "card": "039-abs.webp",
+    "scene": "Секретарша копирует скрепку, а из аппарата маршируют всё новые скрепки с лицами и руками.",
+    "keywords": "офис копир ксерокс скрепка скрепки секретарша бумага принтер",
+    "clues": [
+      "Тираж оказался слишком самостоятельным",
+      "Одна канцелярская мелочь собрала целую армию"
+    ],
+    "title_en": "Office copier",
+    "scene_en": "A secretary photocopies a single paper clip and a line of increasingly proud metal clip creatures marches out.",
+    "keywords_en": "office, copier, secretary, photocopies, single, paper, clip, line, increasingly, proud, metal, creatures, marches",
+    "clues_en": [
+      "The print run developed its own plans",
+      "One office trifle assembled a whole army"
+    ]
+  },
+  {
+    "card": "040-abs.webp",
+    "scene": "Продавец у моря кладёт закат в вафельный рожок, пока голуби спорят за последние светящиеся капли.",
+    "keywords": "мороженое рожок продавец закат солнце море набережная голуби",
+    "clues": [
+      "Последнюю порцию вечера разобрали у воды",
+      "Птицы тоже захотели попробовать сумерки"
+    ],
+    "title_en": "Ice cream cart",
+    "scene_en": "An ice cream vendor scoops a sunset into a cone while two pigeons argue over the last glowing drop.",
+    "keywords_en": "ice, cream, cart, vendor, scoops, sunset, cone, pigeons, argue, last, glowing, drop",
+    "clues_en": [
+      "The last serving of evening sold out by the sea",
+      "Even the birds wanted a taste of dusk"
+    ]
+  },
+  {
+    "card": "041-abs.webp",
+    "scene": "Грузчик несёт коробку с целой миниатюрной квартирой внутри; крошечный жилец держит ему дверь.",
+    "keywords": "переезд грузчик коробка квартира миниатюрный дом мебель жилец дверь лестница",
+    "clues": [
+      "Квартиру удалось унести в одних руках",
+      "Хозяин попросил не трясти прихожую"
+    ],
+    "title_en": "Apartment move",
+    "scene_en": "A mover carries a cardboard box that contains a whole apartment; its miniature occupant holds the door open for him.",
+    "keywords_en": "apartment, move, mover, carries, cardboard, box, contains, miniature, occupant, holds, door, open, him",
+    "clues_en": [
+      "The apartment fit in one pair of hands",
+      "The owner asked him not to shake the hallway"
+    ]
+  },
+  {
+    "card": "042-abs.webp",
+    "scene": "Женщина зашивает дырку в сумочке, из которой строем убегают пуговицы с ножками.",
+    "keywords": "швея сумка сумочка игла нитка дырка пуговицы маленькие человечки",
+    "clues": [
+      "Все мелочи решили покинуть карман",
+      "Починка превратилась в массовый побег"
+    ],
+    "title_en": "Seamstress",
+    "scene_en": "A woman mends a hole in her handbag; through it a small marching band escapes in single file carrying buttons.",
+    "keywords_en": "seamstress, woman, mends, hole, handbag, marching, band, escapes, single, file, carrying, buttons",
+    "clues_en": [
+      "Every little thing decided to leave the pocket",
+      "A simple repair turned into a mass escape"
+    ]
+  },
+  {
+    "card": "043-abs.webp",
+    "scene": "Покупательница выбирает рыбу на рынке, но большая рыба на льду указывает плавником прямо на неё.",
+    "keywords": "рыбный рынок продавец покупательница рыба прилавок лёд плавник спор",
+    "clues": [
+      "Покупку выбирают с обеих сторон прилавка",
+      "У этого товара есть собственное мнение"
+    ],
+    "title_en": "Fishmonger",
+    "scene_en": "A customer points to a fresh fish, but the fish points back to the customer on a chalk-free display; the seller looks embarrassed.",
+    "keywords_en": "fishmonger, customer, points, fresh, fish, but, back, chalk, free, display, seller, looks, embarrassed",
+    "clues_en": [
+      "The purchase chose from both sides of the counter",
+      "This product has an opinion of its own"
+    ]
+  },
+  {
+    "card": "044-abs.webp",
+    "scene": "На крыше электрик распутывает спутниковые тарелки с лицами; над ними кружат облачка с велосипедами из их снов.",
+    "keywords": "крыша электрик антенны спутниковые тарелки провода лица сон велосипед облака",
+    "clues": [
+      "Соседние крыши опять подслушали друг друга",
+      "Даже антеннам снится дорога"
+    ],
+    "title_en": "Rooftop antennas",
+    "scene_en": "An electrician untangles satellite dishes listening to one another's dreams; visible dream bubbles contain tiny bicycles.",
+    "keywords_en": "rooftop, antennas, electrician, untangles, satellite, dishes, listening, another, dreams, visible, dream, bubbles, contain, bicycles",
+    "clues_en": [
+      "The neighboring rooftops listened in again",
+      "Even antennas dream of the open road"
+    ]
+  },
+  {
+    "card": "045-abs.webp",
+    "scene": "Ребёнок оседлал маленький велосипед с огромными колёсами-пончиками, а мастер серьёзно проверяет давление.",
+    "keywords": "веломагазин велосипед колёса пончики ребёнок мастер насос шины",
+    "clues": [
+      "Эта поездка выглядит слишком сладкой",
+      "На шиномонтаже неожиданно пахнет глазурью"
+    ],
+    "title_en": "Bicycle shop",
+    "scene_en": "A child tries out a tiny bicycle whose wheels are two enormous spinning donuts; mechanic solemnly checks tire pressure.",
+    "keywords_en": "bicycle, shop, child, tries, wheels, spinning, donuts, mechanic, solemnly, checks, tire, pressure",
+    "clues_en": [
+      "This ride looks far too sweet",
+      "The tire shop smells unexpectedly like icing"
+    ]
+  },
+  {
+    "card": "046-abs.webp",
+    "scene": "В больничной очереди рядом с пациенткой сидят цифры на стульях в шарфах, ожидая своего вызова.",
+    "keywords": "поликлиника очередь цифры числа пациентка стулья шарфы зал ожидания",
+    "clues": [
+      "Даже номер устал ждать приёма",
+      "Место в очереди заняло отдельное кресло"
+    ],
+    "title_en": "Clinic waiting room",
+    "scene_en": "A patient waits while the numbers in a queue patiently wait in chairs themselves, each wearing a scarf.",
+    "keywords_en": "clinic, waiting, room, patient, waits, numbers, queue, patiently, wait, chairs, themselves, wearing, scarf",
+    "clues_en": [
+      "Even the number got tired of waiting",
+      "A place in line took its own chair"
+    ]
+  },
+  {
+    "card": "047-abs.webp",
+    "scene": "Садовник у фонтана отступает от каменных рыб, которые выплёвывают разноцветные зонты вместо воды.",
+    "keywords": "парк фонтан садовник каменные рыбы зонты вода прохожие",
+    "clues": [
+      "Вода пришла с собственной защитой от дождя",
+      "Прогулка потребовала сразу несколько куполов"
+    ],
+    "title_en": "Park fountain",
+    "scene_en": "A gardener hoses a public fountain, but the stone fish spits out umbrellas instead of water; joggers dodge the umbrellas.",
+    "keywords_en": "park, fountain, gardener, hoses, public, but, stone, fish, spits, umbrellas, water, joggers, dodge",
+    "clues_en": [
+      "The water brought its own protection from rain",
+      "This walk called for several roofs at once"
+    ]
+  },
+  {
+    "card": "048-abs.webp",
+    "scene": "Продавец билетов в цирке вручает прохожему маленькую дверь вместо билета, и тот с сомнением ставит ногу на порог.",
+    "keywords": "цирк касса билеты продавец маленькая дверь дверца порог прохожий шатёр",
+    "clues": [
+      "Вход в представление можно унести с собой",
+      "Билет оказался настоящим испытанием"
+    ],
+    "title_en": "Ticket booth",
+    "scene_en": "A circus ticket seller hands a commuter a small door instead of a ticket; the man hesitates with one foot on the threshold.",
+    "keywords_en": "ticket, booth, circus, seller, hands, commuter, door, man, hesitates, foot, threshold",
+    "clues_en": [
+      "You can carry the entrance home with you",
+      "The ticket turned out to be the real test"
+    ]
+  },
+  {
+    "card": "049-abs.webp",
+    "scene": "В ветеринарной клинике обеспокоенная женщина принесла увядшее растение, а рыжий кот-врач осматривает его с блокнотом.",
+    "keywords": "ветеринар кот врач растение цветок листья клиника женщина стетоскоп блокнот",
+    "clues": [
+      "Пациенту рекомендовали больше солнца",
+      "Врач впервые попросил поливать больного"
+    ],
+    "title_en": "Pet veterinarian",
+    "scene_en": "A worried woman brings her houseplant to a vet; the plant lies on the examination table with a thermometer while the cat takes notes.",
+    "keywords_en": "pet, veterinarian, worried, woman, brings, houseplant, vet, plant, lies, examination, table, thermometer, cat, takes, notes",
+    "clues_en": [
+      "The patient was prescribed more sunlight",
+      "For once the doctor asked someone to water the patient"
+    ]
+  },
+  {
+    "card": "050-abs.webp",
+    "scene": "Мужчина бреется у зеркала: борода растёт только у отражения, а у него в руке остаётся бесполезная бритва.",
+    "keywords": "ванная мужчина зеркало отражение борода бритьё бритва раковина",
+    "clues": [
+      "Утренний уход достался не тому лицу",
+      "Чисто выбрился только один из двоих"
+    ],
+    "title_en": "Apartment bathroom",
+    "scene_en": "A man shaves his reflection, but only the mirror grows a beard; he holds the razor outside, baffled.",
+    "keywords_en": "apartment, bathroom, man, shaves, reflection, but, mirror, grows, beard, holds, razor, baffled",
+    "clues_en": [
+      "The morning routine reached the wrong face",
+      "Only one of them ended up clean-shaven"
+    ]
+  },
+  {
+    "card": "051-abs.webp",
+    "scene": "Женщина развешивает бельё на крыше, и наволочка на верёвке раздувается парусом для крошечного моряка-носка.",
+    "keywords": "крыша бельё верёвка наволочка парус лодка носок женщина стирка",
+    "clues": [
+      "Стирка неожиданно отправилась в плавание",
+      "На верёвке появился маленький капитан"
+    ],
+    "title_en": "Rooftop laundry",
+    "scene_en": "An aunt hangs laundry and a pillowcase inflates into a miniature sailboat carrying a sock captain.",
+    "keywords_en": "rooftop, laundry, aunt, hangs, pillowcase, inflates, miniature, sailboat, carrying, sock, captain",
+    "clues_en": [
+      "The laundry unexpectedly set sail",
+      "A tiny captain appeared on the line"
+    ]
+  },
+  {
+    "card": "052-abs.webp",
+    "scene": "В газетном киоске продавец выдаёт зонт из чистого газетного листа; лужи на улице складываются в завтрашний прогноз.",
+    "keywords": "газетный киоск газеты зонтик дождь продавец покупатель лужи прогноз погоды",
+    "clues": [
+      "Новости сегодня спасают от осадков",
+      "Прогноз напечатался прямо на тротуаре"
+    ],
+    "title_en": "Newsstand",
+    "scene_en": "A vendor hands out umbrellas made from blank newspapers while the pavement displays tomorrow's weather as puddle shapes.",
+    "keywords_en": "newsstand, vendor, hands, umbrellas, made, blank, newspapers, pavement, displays, tomorrow, weather, puddle, shapes",
+    "clues_en": [
+      "Today's news will keep the rain off",
+      "Tomorrow's forecast printed itself on the pavement"
+    ]
+  },
+  {
+    "card": "053-abs.webp",
+    "scene": "Повар на кухне подбрасывает блин, который превращается в летающую тарелку; коллега машет лопаткой как диспетчер.",
+    "keywords": "кухня повар блин сковорода летающая тарелка НЛО лопатка ресторан",
+    "clues": [
+      "Завтрак запросил разрешение на взлёт",
+      "На кухне снова задержали посадку"
+    ],
+    "title_en": "Fast food kitchen",
+    "scene_en": "A cook flips a pancake that refuses to land and becomes a small hovering UFO; colleague raises a spatula like an air-traffic baton.",
+    "keywords_en": "fast, food, kitchen, cook, flips, pancake, refuses, land, becomes, hovering, ufo, colleague, raises, spatula, air, traffic, baton",
+    "clues_en": [
+      "Breakfast requested clearance for takeoff",
+      "Another landing was delayed in the kitchen"
+    ]
+  },
+  {
+    "card": "054-abs.webp",
+    "scene": "Женщина открывает шкафчик, откуда марширует толпа маленьких календарных карточек с чемоданами.",
+    "keywords": "шкаф шкафчик женщина календарь карточки встречи дела чемоданы очередь",
+    "clues": [
+      "Все планы разом вышли из хранения",
+      "Забытые встречи уже собрали чемоданы"
+    ],
+    "title_en": "Storage locker",
+    "scene_en": "A woman opens a locker to retrieve a suitcase; hundreds of tiny appointment cards walk out carrying their own luggage.",
+    "keywords_en": "storage, locker, woman, opens, retrieve, suitcase, hundreds, appointment, cards, walk, carrying, luggage",
+    "clues_en": [
+      "All the plans came out of storage at once",
+      "Forgotten meetings have already packed their bags"
+    ]
+  },
+  {
+    "card": "055-abs.webp",
+    "scene": "Рабочие регулируют машины вокруг ямы в асфальте, где вырос цветущий сад; оранжевый конус его поливает.",
+    "keywords": "дорога яма выбоина цветы клумба машины рабочие конус полив движение",
+    "clues": [
+      "Ремонт дороги неожиданно зацвёл",
+      "Объезд устроили ради самого маленького сада"
+    ],
+    "title_en": "Flowering pothole",
+    "scene_en": "Road workers politely guide cars around a pothole filled with blossoming flowers; one orange construction cone waters them.",
+    "keywords_en": "flowering, pothole, road, workers, politely, guide, cars, filled, blossoming, flowers, orange, construction, cone, waters",
+    "clues_en": [
+      "Road repairs suddenly began to bloom",
+      "The detour was built for the smallest garden"
+    ]
+  }
 ]
