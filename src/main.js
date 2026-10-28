@@ -6,6 +6,7 @@ import { rankPlayers, fallbackStory, fitStory, storyLanguage, unquoteStoryClues 
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
 import { storyCardExcerpt } from './story-share-card.mjs';
+import { localizedBotName } from './bot-names.mjs';
 import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
 import './style.css';
@@ -822,7 +823,7 @@ routeLiveRound=serialRefresh(async function(){
   else {
     const {data:submitted,error}=await ownSubmissionQuery(round.id,'id',context).maybeSingle();if(error)throw error;
     if(submitted||isRoundStoryteller(round,context))showLiveRoundWaiting();
-     else {const roster=await loadLiveRoster(round.room_id);const storyteller=seatForGameRef(roster,round.storyteller_participant_id,round.storyteller_id);demoShowGuesser({name:storyteller?.is_bot?storyteller.bot_name:storyteller?.profile?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦',isBot:storyteller?.is_bot},round.clue)}
+     else {const roster=await loadLiveRoster(round.room_id);const storyteller=seatForGameRef(roster,round.storyteller_participant_id,round.storyteller_id);demoShowGuesser({name:storyteller?.displayName||'Storyteller',avatar:storyteller?.avatar||'✦',isBot:storyteller?.is_bot},round.clue)}
   }
   const main=document.querySelector('main');if(main)main.dataset.roundView=key;
 });
@@ -1208,7 +1209,7 @@ async function loadLiveRoster(roomId){
   }
   const roster=seats.map(seat=>{
     const profile=seat.user_id?liveProfileCache.get(seat.user_id):null;
-    return {...seat,profile,displayName:seat.is_bot?escapeHtml(seat.bot_name||'Bot'):profile?.nickname||'Dreamer',avatar:seat.is_bot?seat.bot_avatar||'✦':profile?.avatar||'✦'};
+    return {...seat,profile,displayName:seat.is_bot?escapeHtml(localizedBotName(seat.bot_name,language)):profile?.nickname||'Dreamer',avatar:seat.is_bot?seat.bot_avatar||'✦':profile?.avatar||'✦'};
   });
   if(liveGameContext?.room.id===roomId){liveGameContext.mySeatId=seatForUser(roster,liveGameContext.session.user.id)?.id||null;liveGameContext.hasBots=roster.some(seat=>seat.is_bot)}
   return roster;
