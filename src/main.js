@@ -489,11 +489,12 @@ function startInvitationFromLink(){
 document.addEventListener('click',event=>{const button=event.target.closest('#revealButton');if(!button?.classList.contains('is-ready'))return;const image=document.querySelector('.hand-card.selected img');if(image)activeStorytellerCard=image.src.split('/').pop()});
 function showResults(){const player=JSON.parse(localStorage.getItem('luminaria-player')||'{"name":"Dreamer","avatar":"✦"}');const ru=language==='ru';const defaultCards=['01-library-whale.png','03-mending-rain.png','04-teapot-city.png','08-cloud-bakery.png'];const cards=activeStorytellerCard?[activeStorytellerCard,...defaultCards.filter(card=>card!==activeStorytellerCard)].slice(0,4):defaultCards;const correctIndex=0;const otherNames=['Mira','Leo','June'];let otherIndex=0;const owners=cards.map((card,index)=>index===correctIndex?player.name:otherNames[otherIndex++]);const scores=[[player.name,'+5',ru?'Базовые +3 и +2 за двух угадавших':'Base +3 and +2 for two correct guesses'],['Mira','+3',ru?'Угадала карту ведущего':'Guessed the storyteller’s card'],['Leo','+0',ru?'Не угадал':'Did not guess'],['June','+3',ru?'Два голоса за её карту + бонус «Созвездие»':'Two votes for her card + Constellation bonus']];document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="results-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><div class="game-round">${ru?'Раунд':'Round'} <b>1</b> <span>•</span> ${ru?'Результаты':'Results'}</div><button class="language" id="resultLanguage">${ru?'EN':'RU'}</button></nav><section class="result-head"><span class="result-star">✦</span><p class="eyebrow"><span></span><span>${ru?'Карты раскрыты':'Cards revealed'}</span></p><h1>${ru?'Вот что скрывалось<br>за <em>ассоциацией.</em>':'Here is what hid<br>behind the <em>clue.</em>'}</h1><p class="result-clue">“${activeRoundClue||(ru?'Твоя ассоциация':'Your clue')}”</p></section><section class="reveal-grid">${cards.map((card,index)=>`<article class="reveal-card ${index===correctIndex?'correct':''}"><img src="/deck-preview/${card}${cardAssetVersion(card)}" alt="Revealed card ${index+1}">${index===correctIndex?`<span class="correct-tag">✓ ${ru?'Карта ведущего':'Storyteller’s card'}</span>`:''}<small>${owners[index]}</small></article>`).join('')}</section><section class="scores"><div class="panel-title"><h2>${ru?'Очки за раунд':'Round scores'}</h2><span class="count">${ru?'Раунд 1':'Round 1'}</span></div>${scores.map((item,index)=>`<div class="score-row ${index===0?'me':''}"><span class="score-avatar">${index===0?'✦':['☽','♢','☼'][index-1]}</span><strong>${item[0]}</strong><em>${item[2]}</em><b>${item[1]}</b></div>`).join('')}<button class="primary-button next-round" id="nextRound">${ru?'Следующий раунд':'Next round'} <b>→</b></button></section></main>`;$('#nextRound').addEventListener('click',()=>{activeRoundClue='';activeStorytellerCard='';showGame()});$('#resultLanguage').addEventListener('click',()=>{language=language==='en'?'ru':'en';localStorage.setItem('luminaria-language',language);showResults()})}
 let liveGameContext=null,liveRound=null,liveRoundChannel=null,liveHandVersion=0,liveStorytellerId=null,liveRoundNumber=1,liveRoundNumberForId=null,liveTotalRounds=0;
+let resultsReviewPending=false;
 let botAdvanceTimer=null,botAdvanceInFlight=false,botAdvanceLastAt=0;
 function scheduleBotAdvance(room,round){
   const context=liveGameContext;
   if(!context?.hasBots||room?.status!=='playing'||botAdvanceTimer||botAdvanceInFlight)return;
-  if(!room.awaiting_storyteller&&!['submitting','voting','results'].includes(round?.phase))return;
+  if(!room.awaiting_storyteller&&!['submitting','voting'].includes(round?.phase))return;
   if(Date.now()-botAdvanceLastAt<800)return;
   const roomId=room.id,epoch=liveGameEpoch;
   botAdvanceTimer=setTimeout(async()=>{
@@ -501,22 +502,12 @@ function scheduleBotAdvance(room,round){
     if(!liveGameContext||liveGameContext.room.id!==roomId||epoch!==liveGameEpoch||botAdvanceInFlight)return;
     botAdvanceInFlight=true;botAdvanceLastAt=Date.now();
     try{
-      if(!room.awaiting_storyteller&&round?.phase==='results'){
-        const roster=await loadLiveRoster(roomId);
-        if(!roster.some(seat=>seat.is_bot&&seat.id===room.current_storyteller_participant_id)){botAdvanceLastAt=0;return}
-        const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:roomId}).single();
-        if(deckError)throw deckError;
-        if(deckState.remaining_cards===0||liveRoundNumber>=deckState.cards_per_player){botAdvanceLastAt=0;return}
-        const {data:nextRoom,error:nextError}=await supabase.rpc('start_next_turn',{p_room_id:roomId});
-        if(nextError)throw nextError;
-        if(liveGameContext?.room.id===roomId)liveGameContext.room=nextRoom;
-      }
       const {data,error}=await supabase.rpc('advance_luminaria_bots',{target_room_id:roomId});
       if(error)throw error;
       if(data?.advanced&&liveGameContext?.room.id===roomId)await routeLiveRound();
     }catch(error){console.error('Bot turn failed',error);showInlineGameError(language==='ru'?'Ход ИИ-игрока задержался. Повторяем попытку…':'AI player turn is delayed. Retrying…')}
     finally{botAdvanceInFlight=false}
-  },round?.phase==='results'?2500:500);
+  },500);
 }
 function isCurrentStoryteller(context=liveGameContext){
   if(!context)return false;
@@ -543,6 +534,7 @@ function resetLiveParty(){
   liveGameEpoch++;
   if(botAdvanceTimer)clearTimeout(botAdvanceTimer);
   botAdvanceTimer=null;botAdvanceLastAt=0;
+  resultsReviewPending=false;
   resetPartyStars();
   liveRound=null;liveHandCache=[];liveStorytellerId=null;
   liveRoundNumber=1;liveRoundNumberForId=null;liveTotalRounds=0;liveHandVersion=0;
@@ -746,6 +738,7 @@ async function showLiveVoting(round){
 }
 routeLiveRound=async function(){const round=await loadLiveRound();if(!round)return showLiveRoundWaiting();const context=liveGameContext;if(round.phase==='voting')return showLiveVoting(round);if(round.phase==='submitting'&&!isRoundStoryteller(round,context)){const {data:storyteller}=await supabase.from('profiles').select('nickname,avatar').eq('id',round.storyteller_id).single();return demoShowGuesser({name:storyteller?.nickname||'Storyteller',avatar:storyteller?.avatar||'✦'},round.clue)}showLiveRoundWaiting()};
 async function showLiveResults(round){
+  resultsReviewPending=true;
   round={...round,clue:escapeHtml(round.clue)};
   const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:round.room_id}).single();
   if(deckError)throw deckError;
@@ -793,6 +786,8 @@ routeLiveRound=serialRefresh(async function(){
   const {data:roomState,error}=await supabase.from('rooms').select('*').eq('id',liveGameContext.room.id).maybeSingle();if(error)throw error;
   if(epoch!==liveGameEpoch)return;
   if(roomState)liveGameContext.room=roomState;
+  // Results are a player-controlled pause, even when another tab starts the turn.
+  if(resultsReviewPending&&document.querySelector('.results-page'))return;
   if(roomState?.status==='finished'){
     liveGameContext.room.status='finished';
     const {data:finalRound,error:finalRoundError}=await supabase.from('rounds').select('*').eq('room_id',liveGameContext.room.id).eq('phase','results').order('created_at',{ascending:false}).order('id',{ascending:false}).limit(1).maybeSingle();
@@ -1107,13 +1102,29 @@ async function prepareNextLiveRound(){
   if(!liveGameContext||preparingNextRound)return;
   preparingNextRound=true;
   try{
+    const {data:currentRoom,error:currentRoomError}=await supabase.from('rooms').select('*').eq('id',liveGameContext.room.id).single();
+    if(currentRoomError)throw currentRoomError;
+    liveGameContext.room=currentRoom;
+    if(currentRoom.status==='finished'){
+      resultsReviewPending=false;
+      return showGameFinished();
+    }
+    if(currentRoom.awaiting_storyteller){
+      resultsReviewPending=false;
+      liveRoundNumber+=1;
+      liveRoundNumberForId=null;
+      preparingNextRound=false;
+      await routeLiveRound();
+      return;
+    }
     const {data:deckState,error:deckError}=await supabase.rpc('luminaria_deck_state',{target_room_id:liveGameContext.room.id}).single();
     if(deckError)throw deckError;
     const completed=await loadLiveRound();
-    if(completed&&completed.phase!=='results'){preparingNextRound=false;return routeLiveRound()}
-    if(deckState.remaining_cards===0||(completed&&liveRoundNumber>=deckState.cards_per_player))return showGameFinished();
+    if(completed&&completed.phase!=='results'){resultsReviewPending=false;preparingNextRound=false;return routeLiveRound()}
+    if(deckState.remaining_cards===0||(completed&&liveRoundNumber>=deckState.cards_per_player)){resultsReviewPending=false;return showGameFinished()}
     const {data:room,error:roomError}=await supabase.rpc('start_next_turn',{p_room_id:liveGameContext.room.id});
     if(roomError)throw roomError;
+    resultsReviewPending=false;
     liveGameContext.room=room;
     liveStorytellerId=room.current_storyteller_id;
     liveHandVersion=completed?.id||0;
