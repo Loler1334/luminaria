@@ -105,14 +105,14 @@
     "card": "082-card.webp",
     "title": "Ребёнок спит среди планет",
     "scene": "Спящий ребёнок парит над кроватью в комнате, заполненной планетами, солнцем, луной и звёздами.",
-    "keywords": "ребёнок сон кровать спальня планеты космос солнце луна звёзды",
+    "keywords": "ребёнок сон кровать спальня под одеялом все миры вселенная планеты космос солнце луна звёзды",
     "clues": [
       "Перед сном вселенная заглянула в гости",
       "Под одеялом не хватило места для всех миров"
     ],
     "title_en": "Child Sleeps Among Planets",
     "scene_en": "A sleeping child floats over a bed in a room filled with planets, the sun, the moon and stars.",
-    "keywords_en": "sleeping child, floating bed, bedroom, planets, sun, moon, stars",
+    "keywords_en": "sleeping child, floating bed, bedroom, under blanket, all worlds, universe, planets, sun, moon, stars",
     "clues_en": [
       "The universe dropped by before bedtime",
       "There was no room beneath the blanket for every world"
