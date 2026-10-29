@@ -10,10 +10,10 @@ assert.equal(unquoteStoryClues('Он увидел «сонную улитку» 
 
 const roomId='12345678-1234-1234-1234-123456789abc';
 const rounds=Array.from({length:28},(_,i)=>({id:`round-${i}`,clue:`Ассоциация ${i}`,phase:'results'}));
-let member=true,finished=true,roomLanguage=null,aiCalls=0,providedClues,persistedStory=null,providedTokenLimit=0,providedPrompt='';
+let member=true,finished=true,roomLanguage=null,players=[],aiCalls=0,providedClues,persistedStory=null,providedTokenLimit=0,providedPrompt='';
 const fetcher=async(url,options={})=>{
   if(url.endsWith('/auth/v1/user'))return Response.json({id:'user'});
-  if(url.includes('room_players?'))return Response.json(member?[{user_id:'user'}]:[]);
+  if(url.includes('room_players?'))return Response.json(url.includes('select=id,is_bot')?players:(member?[{user_id:'user'}]:[]));
   if(url.includes('rooms?'))return Response.json([{status:finished?'finished':'playing',language:roomLanguage}]);
   if(url.includes('rounds?'))return Response.json(rounds);
   if(url.includes('luminaria_deck_state'))return Response.json([{remaining_cards:finished?0:10}]);
@@ -58,6 +58,13 @@ assert.equal(roomEnglish.status,503);
 assert(roomPrompt.includes('in English'));
 roomLanguage=null;
 for(const round of rounds)round.clue='Moonlit forest';
+store.clear();persistedStory=null;roomLanguage='en';players=[{id:'human-seat',is_bot:false},{id:'bot-seat',is_bot:true}];
+rounds.splice(0,rounds.length,{id:'human-round',clue:'Чаепитие',phase:'results',storyteller_participant_id:'human-seat'},
+  {id:'bot-round',clue:'The rainbow skipped school',phase:'results',storyteller_participant_id:'bot-seat'});
+let mixedPrompt='',mixedClues;
+const mixed=await handleStory(request(),{AI:{async run(model,{messages}){mixedPrompt=messages[0].content;mixedClues=JSON.parse(messages[1].content);return {response:'Чаепитие началось в пустом замке. Радуга прогуляла школу и спряталась в чайнике, а хозяин замка вместо сахара высыпал туда звёзды. К утру все гости сияли так ярко, что чайник потребовал солнцезащитные очки.'}}}},config,{fetcher,cache});
+assert.equal(mixed.status,200);assert.equal((await mixed.json()).language,'ru');assert(mixedPrompt.includes('русским языком'));assert.deepEqual(mixedClues.botClues,['The rainbow skipped school']);
+rounds.splice(0,rounds.length,...Array.from({length:18},(_,i)=>({id:`rematch-${i}`,clue:'Moonlit forest',phase:'results'})));players=[];roomLanguage=null;
 console.log('PASS: story authorization, compact adaptive length, all clues sent, canonical cross-client story, shared cache, concurrency and fallback handling.');
 
 // A cut-off or oversized draft must be rewritten, never persisted as-is.

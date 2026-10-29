@@ -972,7 +972,9 @@ async function showGameFinished(){
     if(liveGameContext?.room.id!==context.room.id)return;
     const ru=language==='ru',decode=document.createElement('textarea');
      const ranking=rankPlayers(roster).map(seat=>{decode.innerHTML=seat.displayName;return {...seat,name:decode.value,avatarHtml:seatAvatarMarkup(seat,'✦')}});
-    const history=rounds||[],partyLanguage=['ru','en'].includes(context.room.language)?context.room.language:storyLanguage(history),story=fallbackStory(history,partyLanguage);
+    const history=rounds||[],humanHistory=history.filter(round=>ranking.some(seat=>!seat.is_bot&&(seat.id===round.storyteller_participant_id||seat.user_id===round.storyteller_id)));
+    let partyLanguage=humanHistory.length?storyLanguage(humanHistory):(['ru','en'].includes(context.room.language)?context.room.language:storyLanguage(history));
+    const story=fallbackStory(history,partyLanguage);
     await syncStarParty();
     finaleStarRanking=ranking;
     document.body.innerHTML=finaleMarkup({starScores:liveStarScores,ranking,rounds:history,roomId:context.room.id,roomCode:context.room.code,userId:context.session.user.id,language,story,isHost:context.room.host_id===context.session.user.id});
@@ -1032,21 +1034,35 @@ async function showGameFinished(){
       const canvas=document.createElement('canvas');canvas.width=1080;const ctx=canvas.getContext('2d');
       const image=new Image();image.src=shareCardImage.src;
       return image.decode().then(()=>{
-        const layout=storyCardTextLayout(storyText,(value,size)=>{ctx.font=`${size}px Georgia,serif`;return ctx.measureText(value).width});
-        const imageHeight=480,storyStart=imageHeight+175;
-        const textEnd=storyStart+Math.max(layout.left.length,layout.right.length)*layout.lineHeight;
-        const playersLabelY=textEnd+44,footerY=playersLabelY+112;
-        canvas.height=Math.max(1350,footerY+65);
-         const scale=Math.max(1080/image.naturalWidth,imageHeight/image.naturalHeight),width=image.naturalWidth*scale,height=image.naturalHeight*scale;
-         ctx.drawImage(image,(1080-width)/2,(imageHeight-height)/2,width,height);const gradient=ctx.createLinearGradient(0,imageHeight-40,0,canvas.height);gradient.addColorStop(0,'#20213a');gradient.addColorStop(1,'#101326');ctx.fillStyle=gradient;ctx.fillRect(0,imageHeight-40,1080,canvas.height-imageHeight+40);
-         ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,imageHeight+74);
-         ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(ru?'Наша общая история':'Our shared story',72,imageHeight+145);
-         ctx.fillStyle='#e2d8ee';ctx.font=`${layout.fontSize}px Georgia,serif`;
-         layout.left.forEach((value,index)=>ctx.fillText(value,72,storyStart+index*layout.lineHeight));
-         layout.right.forEach((value,index)=>ctx.fillText(value,72+layout.columnWidth+36,storyStart+index*layout.lineHeight));
-        ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(ru?'УЧАСТНИКИ':'PLAYERS',72,playersLabelY);
-         ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';ctx.fillText(`${ranking.length} ${ru?'участника':'players'}`,72,playersLabelY+38);
-         ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,canvas.height-50);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+        const cardRu=partyLanguage==='ru',padding=48,contentX=96,contentWidth=888,artY=96,artHeight=560;
+        const storyStart=944;
+        const layout=storyCardTextLayout(storyText,(value,size)=>{ctx.font=`${size}px Georgia,serif`;return ctx.measureText(value).width},contentWidth);
+        const textEnd=storyStart+(Math.max(layout.left.length,layout.right.length)-1)*layout.lineHeight;
+        const playersLabelY=textEnd+72;
+        const names=ranking.map(seat=>seat.name||seat.displayName).filter(Boolean);
+        const playerLines=[];let playerLine='';ctx.font='26px Arial,sans-serif';
+        for(const name of names.length?names:[`${ranking.length} ${cardRu?'участника':'players'}`]){
+          const next=playerLine?`${playerLine} · ${name}`:name;
+          if(playerLine&&ctx.measureText(next).width>contentWidth){playerLines.push(playerLine);playerLine=name}else playerLine=next;
+        }
+        if(playerLine)playerLines.push(playerLine);
+        const playersStart=playersLabelY+46;
+        canvas.height=Math.max(1400,playersStart+playerLines.length*38+160);
+        const rounded=(x,y,w,h,r)=>{ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath()};
+        ctx.fillStyle='#070a1e';ctx.fillRect(0,0,canvas.width,canvas.height);
+        rounded(padding,padding,canvas.width-padding*2,canvas.height-padding*2,28);
+        const gradient=ctx.createLinearGradient(0,padding,0,canvas.height-padding);gradient.addColorStop(0,'#242844');gradient.addColorStop(1,'#171b34');ctx.fillStyle=gradient;ctx.fill();ctx.strokeStyle='#b99a655c';ctx.lineWidth=2;ctx.stroke();
+        rounded(contentX,artY,contentWidth,artHeight,18);ctx.fillStyle='#10162e';ctx.fill();ctx.strokeStyle='#d6b77a55';ctx.stroke();
+        const scale=Math.min(contentWidth/image.naturalWidth,artHeight/image.naturalHeight),width=image.naturalWidth*scale,height=image.naturalHeight*scale;
+        ctx.save();rounded(contentX,artY,contentWidth,artHeight,18);ctx.clip();ctx.drawImage(image,contentX+(contentWidth-width)/2,artY+(artHeight-height)/2,width,height);ctx.restore();
+        ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',contentX,748);
+        ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(cardRu?'Наша общая история':'Our shared story',contentX,840);
+        ctx.fillStyle='#e2d8ee';ctx.font=`${layout.fontSize}px Georgia,serif`;
+        layout.left.forEach((value,index)=>ctx.fillText(value,contentX,storyStart+index*layout.lineHeight));
+        layout.right.forEach((value,index)=>ctx.fillText(value,contentX+layout.columnWidth+36,storyStart+index*layout.lineHeight));
+        ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(cardRu?'УЧАСТНИКИ':'PLAYERS',contentX,playersLabelY);
+        ctx.fillStyle='#b9bfd3';ctx.font='26px Arial,sans-serif';playerLines.forEach((line,index)=>ctx.fillText(line,contentX,playersStart+index*38));
+        ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',contentX,canvas.height-104);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
       });
     };
     const loadIllustration=async storyText=>{
@@ -1063,7 +1079,8 @@ async function showGameFinished(){
     illustrationRetry.addEventListener('click',()=>loadIllustration($('#partyStory').textContent));
     root.querySelector('#shareFinaleCard').addEventListener('click',async event=>{
       const button=event.currentTarget;button.disabled=true;
-      const caption=`${ru?'Наша общая история в Luminaria':'Our shared story in Luminaria'}\n\n${$('#partyStory').textContent}\n\n${ru?'Игроки':'Players'}: ${ranking.map(seat=>seat.name).join(', ')}\n\n${ru?'Сыграть с друзьями':'Play with friends'}: https://luminaria.cc`;
+      const storyRu=partyLanguage==='ru';
+      const caption=`${storyRu?'Наша общая история в Luminaria':'Our shared story in Luminaria'}\n\n${$('#partyStory').textContent}\n\n${storyRu?'Игроки':'Players'}: ${ranking.map(seat=>seat.name).join(', ')}\n\n${storyRu?'Сыграть с друзьями':'Play with friends'}: https://luminaria.cc`;
       try{const blob=shareCardBlob;if(!blob)throw new Error('Could not create story card');const file=new File([blob],'luminaria-story.png',{type:'image/png'});const payload={title:ru?'История нашей партии в Luminaria':'Our Luminaria story',text:caption,files:[file]};
         if(/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)&&navigator.canShare?.({files:[file]})){await navigator.share(payload);illustrationStatus.textContent=ru?'Карточкой поделились!':'Story card shared!'}
         else if(navigator.clipboard?.write&&typeof ClipboardItem!=='undefined'){await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);illustrationStatus.textContent=ru?'Картинка с историей скопирована — вставь её в чат через Ctrl+V.':'The illustrated story is copied — paste it into a chat.'}
@@ -1082,6 +1099,7 @@ async function showGameFinished(){
         if(!response.ok)throw new Error('Story unavailable');
         const result=await response.json();if(typeof result.story!=='string'||!result.story.trim())throw new Error('Empty story');
         if(!root.isConnected)return;
+        if(result.language==='ru'||result.language==='en')partyLanguage=result.language;
         text.textContent=unquoteStoryClues(fitStory(result.story),history);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';void loadIllustration(text.textContent);
       }catch{
         if(root.isConnected){status.textContent=ru?'Пока — эпилог из отдельных фраз. История по всей партии временно недоступна; все ассоциации сохранены ниже.':'For now, a vignette from a few clues. The full story is temporarily unavailable; every clue is listed below.';illustrationStatus.textContent=ru?'Сначала загрузим полную историю, затем нарисуем к ней карточку.':'The full story must load before its illustrated card can be created.';retry.hidden=false}
