@@ -30,7 +30,7 @@ assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).stat
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('примерно 392 слов'));assert(providedPrompt.includes('максимум 549 слов'));assert(providedPrompt.includes('причинную связь'));assert(providedTokenLimit>=1176);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('примерно 252 слов'));assert(providedPrompt.includes('максимум 315 слов'));assert(providedPrompt.includes('причинную связь'));assert(providedTokenLimit>=1176);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
 assert.equal(persistedStory.finalRoundId,'round-27');
 const oldStory=persistedStory.story;

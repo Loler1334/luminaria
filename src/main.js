@@ -5,7 +5,7 @@ import './lobby-settings.css';
 import { rankPlayers, fallbackStory, fitStory, storyLanguage, unquoteStoryClues } from './game-finale.mjs';
 import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
-import { storyCardExcerpt } from './story-share-card.mjs';
+import { storyCardTextLayout } from './story-share-card.mjs';
 import { localizedBotName } from './bot-names.mjs';
 import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
@@ -1032,20 +1032,21 @@ async function showGameFinished(){
       const canvas=document.createElement('canvas');canvas.width=1080;const ctx=canvas.getContext('2d');
       const image=new Image();image.src=shareCardImage.src;
       return image.decode().then(()=>{
-        const wrap=(value,font)=>{ctx.font=font;const lines=[];let line='';for(const word of value.split(/\s+/)){const next=line?`${line} ${word}`:word;if(ctx.measureText(next).width>930&&line){lines.push(line);line=word}else line=next}if(line)lines.push(line);return lines};
-         const storyLines=wrap(storyCardExcerpt(storyText,160),'italic 42px Georgia,serif').slice(0,4);
-         const playerLines=[`${ranking.length} ${ru?'участника':'players'}`];
-         const imageHeight=720,storyStart=imageHeight+175,storyLineHeight=48,playersLabelY=storyStart+storyLines.length*storyLineHeight+30,playersStart=playersLabelY+38,footerY=1315;
-         canvas.height=1350;
+        const layout=storyCardTextLayout(storyText,(value,size)=>{ctx.font=`${size}px Georgia,serif`;return ctx.measureText(value).width});
+        const imageHeight=480,storyStart=imageHeight+175;
+        const textEnd=storyStart+Math.max(layout.left.length,layout.right.length)*layout.lineHeight;
+        const playersLabelY=textEnd+44,footerY=playersLabelY+112;
+        canvas.height=Math.max(1350,footerY+65);
          const scale=Math.max(1080/image.naturalWidth,imageHeight/image.naturalHeight),width=image.naturalWidth*scale,height=image.naturalHeight*scale;
          ctx.drawImage(image,(1080-width)/2,(imageHeight-height)/2,width,height);const gradient=ctx.createLinearGradient(0,imageHeight-40,0,canvas.height);gradient.addColorStop(0,'#20213a');gradient.addColorStop(1,'#101326');ctx.fillStyle=gradient;ctx.fillRect(0,imageHeight-40,1080,canvas.height-imageHeight+40);
-        ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,imageHeight+74);
+         ctx.fillStyle='#edbd71';ctx.font='700 28px Arial,sans-serif';ctx.fillText('✦ LUMINARIA',72,imageHeight+74);
          ctx.fillStyle='#fff2dc';ctx.font='600 54px Georgia,serif';ctx.fillText(ru?'Наша общая история':'Our shared story',72,imageHeight+145);
-         ctx.fillStyle='#e2d8ee';ctx.font='italic 42px Georgia,serif';storyLines.forEach((value,index)=>ctx.fillText(value,72,storyStart+index*storyLineHeight));
+         ctx.fillStyle='#e2d8ee';ctx.font=`${layout.fontSize}px Georgia,serif`;
+         layout.left.forEach((value,index)=>ctx.fillText(value,72,storyStart+index*layout.lineHeight));
+         layout.right.forEach((value,index)=>ctx.fillText(value,72+layout.columnWidth+36,storyStart+index*layout.lineHeight));
         ctx.fillStyle='#edbd71';ctx.font='700 24px Arial,sans-serif';ctx.fillText(ru?'УЧАСТНИКИ':'PLAYERS',72,playersLabelY);
-        ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';playerLines.forEach((value,index)=>ctx.fillText(value,72,playersStart+index*34));
-         ctx.fillStyle='#b9bfd3';ctx.font='22px Arial,sans-serif';ctx.fillText(ru?'Полная история — в тексте сообщения':'Full story in the message text',72,1260);
-        ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,footerY);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
+         ctx.fillStyle='#b9bfd3';ctx.font='24px Arial,sans-serif';ctx.fillText(`${ranking.length} ${ru?'участника':'players'}`,72,playersLabelY+38);
+         ctx.fillStyle='#edbd71';ctx.font='700 22px Arial,sans-serif';ctx.fillText('luminaria.cc',72,canvas.height-50);return new Promise(resolve=>canvas.toBlob(resolve,'image/png'));
       });
     };
     const loadIllustration=async storyText=>{
@@ -1055,7 +1056,7 @@ async function showGameFinished(){
         const until=Date.now()+150000;let result;
         do{const response=await fetch('/api/finale-illustration',{method:'POST',headers:{'Content-Type':'application/json',Authorization:`Bearer ${session.access_token}`},body:JSON.stringify({roomId:context.room.id,language:partyLanguage}),signal:AbortSignal.timeout(65000)});if(response.status===202){await new Promise(resolve=>setTimeout(resolve,4000));continue}if(!response.ok)throw new Error('Illustration unavailable');result=await response.json()}while(!result?.image&&Date.now()<until);
         if(!result?.image)throw new Error('Illustration timed out');if(!root.isConnected)return;
-        shareCardImage.src=result.image;await shareCardImage.decode();shareCardStory.textContent=storyText;shareCardBlob=await makeShareCard(storyText);if(!shareCardBlob)throw new Error('Could not create story card');shareCard.hidden=false;illustrationStatus.textContent=ru?'Картинка содержит начало истории; полный текст отправится вместе с ней. Его также можно скопировать отдельно.':'The image shows the opening; the full story is included as message text and can be copied separately.';root.querySelector('#shareFinaleCard').hidden=false;
+        shareCardImage.src=result.image;await shareCardImage.decode();shareCardStory.textContent=storyText;shareCardBlob=await makeShareCard(storyText);if(!shareCardBlob)throw new Error('Could not create story card');shareCard.hidden=false;illustrationStatus.textContent=ru?'Вся история, включая концовку, помещена на картинку. Текст также можно скопировать отдельно.':'The full story, including its ending, is on the image. You can also copy the text separately.';root.querySelector('#shareFinaleCard').hidden=false;
       }catch{if(root.isConnected){illustrationStatus.textContent=ru?'Не удалось создать иллюстрацию. История сохранена — попробуй ещё раз.':'Could not create the illustration. Your story is saved — please try again.';illustrationRetry.hidden=false}}
       finally{illustrationLoading=false}
     };
