@@ -7,6 +7,8 @@ import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
 import { storyCardTextLayout } from './story-share-card.mjs';
 import { localizedBotName } from './bot-names.mjs';
+import { progressionChip, progressionPins, progressionModalMarkup, finaleProgressionMarkup, xpForLevel } from './progression.mjs';
+import './progression.css';
 import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
 import './style.css';
@@ -979,6 +981,12 @@ async function showGameFinished(){
     finaleStarRanking=ranking;
     document.body.innerHTML=finaleMarkup({starScores:liveStarScores,ranking,rounds:history,roomId:context.room.id,roomCode:context.room.code,userId:context.session.user.id,language,story,isHost:context.room.host_id===context.session.user.id});
     const root=document.querySelector('.game-finale');
+    if(!context.session.user.is_anonymous){
+      const {data:progression,error:progressionError}=await supabase.rpc('my_luminaria_progression',{target_room_id:context.room.id});
+      if(!progressionError&&progression&&root.isConnected){
+        root.querySelector('#finaleStarAward')?.insertAdjacentHTML('afterend',finaleProgressionMarkup(progression,language));
+      }
+    }
     const bestRoundSection=root.querySelector('#bestRoundSection');
     if(history.length){
       const ids=history.map(round=>round.id);
@@ -1101,6 +1109,13 @@ async function showGameFinished(){
         if(!root.isConnected)return;
         if(result.language==='ru'||result.language==='en')partyLanguage=result.language;
         text.textContent=unquoteStoryClues(fitStory(result.story),history);status.textContent=ru?'История по ассоциациям всей партии.':'A story inspired by every round.';void loadIllustration(text.textContent);
+        if(!context.session.user.is_anonymous){
+          const {data:updatedProgress}=await supabase.rpc('my_luminaria_progression',{target_room_id:context.room.id});
+          if(updatedProgress&&root.isConnected){
+            root.querySelector('.finale-progression')?.remove();
+            root.querySelector('#finaleStarAward')?.insertAdjacentHTML('afterend',finaleProgressionMarkup(updatedProgress,language));
+          }
+        }
       }catch{
         if(root.isConnected){status.textContent=ru?'Пока — эпилог из отдельных фраз. История по всей партии временно недоступна; все ассоциации сохранены ниже.':'For now, a vignette from a few clues. The full story is temporarily unavailable; every clue is listed below.';illustrationStatus.textContent=ru?'Сначала загрузим полную историю, затем нарисуем к ней карточку.':'The full story must load before its illustrated card can be created.';retry.hidden=false}
       }finally{storyLoading=false}
@@ -1217,6 +1232,41 @@ function applyLiveProfileUpdate(userId,nickname,avatar){
   });
   if(liveStarScores[userId]){liveStarScores[userId]={...liveStarScores[userId],name:safeName};const key=starStorageKey();if(key)localStorage.setItem(key,JSON.stringify(liveStarScores));renderStarScores()}
 }
+const roomProgressionCache=new Map();
+async function refreshRoomProgression(roomId,session){
+  if(!session?.user?.id)return;
+  const {data,error}=await supabase.rpc('luminaria_room_profiles',{target_room_id:roomId});
+  if(error){if(!isMissingRpc(error))console.warn('Could not load player progression',error);return}
+  for(const entry of data||[])roomProgressionCache.set(entry.user_id,entry);
+}
+async function openProgressionDialog(roomId){
+  const {data,error}=await supabase.rpc('my_luminaria_progression',{target_room_id:roomId});
+  if(error)throw error;
+  if(!data)return;
+  let state=data;
+  const show=()=>{
+    document.querySelector('#progressionOverlay')?.remove();
+    document.body.insertAdjacentHTML('beforeend',progressionModalMarkup(state,language));
+    const overlay=document.querySelector('#progressionOverlay');
+    const close=()=>overlay.remove();
+    overlay.querySelector('.progression-close').addEventListener('click',close);
+    overlay.addEventListener('click',event=>{if(event.target===overlay)close()});
+    overlay.querySelectorAll('[data-badge-id]:not(:disabled)').forEach(button=>button.addEventListener('click',async()=>{
+      const id=button.dataset.badgeId;
+      const next=new Set(state.pinned_badges||[]);
+      if(next.has(id))next.delete(id);
+      else if(next.size<3)next.add(id);
+      else {showInlineGameError(language==='ru'?'Можно закрепить только три достижения.':'You can pin only three achievements.');return}
+      const {data:pins,error:pinError}=await supabase.rpc('pin_luminaria_badges',{badge_ids:[...next]});
+      if(pinError){showInlineGameError(pinError.message);return}
+      state={...state,pinned_badges:pins};
+      roomProgressionCache.set(liveGameContext.session.user.id,{...roomProgressionCache.get(liveGameContext.session.user.id),pinned_badges:pins});
+      show();
+      refreshLiveLobby?.();
+    }));
+  };
+  show();
+}
 async function loadLiveRoster(roomId){
   const {data:seats,error}=await supabase.from('room_players').select('id,user_id,is_bot,bot_name,bot_avatar,is_ready,score,joined_at').eq('room_id',roomId).order('joined_at').order('id');
   if(error)throw error;
@@ -1252,6 +1302,13 @@ document.addEventListener('click',async event=>{
 });
 function showLiveLobby(room,player,session){document.documentElement.lang=language;liveRoomChannel?.unsubscribe();if(room.status==='lobby')liveProfileCache.clear();const ru=language==='ru';const invite=roomInviteUrl(location.origin,room.code);document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="lobby-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><button class="language" id="lobbyLanguage" aria-label="${ru?'Язык интерфейса: русский':'Interface language: English'}">${language.toUpperCase()}</button></nav><section class="lobby-hero"><div><p class="eyebrow"><span></span><span>${ru?'Комната':'Room'} ${room.code}</span></p><h1>${ru?'Собираем<br><em>мечтателей.</em>':'Gathering<br><em>dreamers.</em>'}</h1><p class="lead">${ru?'Комната обновляется в реальном времени. Собери стол из 3–10 участников: пригласи друзей или добавь ИИ-игроков.':'This room updates live. Fill 3–10 seats with friends or AI players.'}</p></div><div class="lobby-orb">✦</div></section><section class="lobby-grid"><article class="lobby-panel players-panel"><div class="panel-title"><h2>${ru?'Игроки':'Players'}</h2><span class="count" id="liveCount">0 / 10</span></div><div id="liveRoster"></div>${room.host_id===session.user.id?`<button class="text-button add-bot-button" id="addBotButton" type="button">＋ ${ru?'Добавить ИИ-игрока':'Add AI player'}</button>`:''}</article><article class="lobby-panel invite-panel"><span class="invite-icon">↗</span><h2>${ru?'Пригласить друзей':'Invite friends'}</h2><p>${ru?'Любой, у кого есть ссылка, сможет войти в комнату.':'Anyone with this link can join your room.'}</p><div class="share-link"><span>${invite}</span><button id="copyInvite">${ru?'Скопировать':'Copy link'}</button></div><button class="text-button share-room-button" id="shareInvite">${ru?'Поделиться ссылкой':'Share invitation'}</button><div class="ready-line"><span class="ready-check" id="readyCheck">✓</span><span id="readyLabel">${ru?'Не готов':'Not ready'}</span></div><button class="primary-button full" id="readyButton">${ru?'Я готов':'I’m ready'} <b>→</b></button>${room.host_id===session.user.id?`<p class="host-start-hint">${ru?'После того как все игроки будут готовы, ведущий нажмёт «Начать игру».':'When everyone is ready, the host can press “Start the game”.'}</p><button class="start-button" id="startButton" disabled>${ru?'Начать игру':'Start the game'}</button>`:''}</article></section></main>`;const root=$('.lobby-page'),context=liveGameContext;
 const isCurrent=()=>root.isConnected&&liveGameContext===context;
+if(!session.user.is_anonymous){
+  const progressButton=document.createElement('button');
+  progressButton.type='button';progressButton.className='lobby-progression-button';progressButton.id='lobbyProgression';
+  progressButton.textContent=ru?'Мои достижения':'My achievements';
+  root.querySelector('.nav')?.insertBefore(progressButton,root.querySelector('#lobbyLanguage'));
+  progressButton.addEventListener('click',()=>openProgressionDialog(room.id).catch(error=>showInlineGameError(error.message)));
+}
 let removedFromLobby=false;
 const render=serialRefresh(async()=>{try{
   if(!isCurrent())return;
@@ -1261,6 +1318,7 @@ const render=serialRefresh(async()=>{try{
   room=latest;context.room=room;
   if(room.status==='closed'){showClosedRoom();return}
   const roster=await loadLiveRoster(room.id);
+  await refreshRoomProgression(room.id,session);
   if(!isCurrent())return;
   if(!roster.some(seat=>seat.user_id===session.user.id)){exitRemovedLobby();return}
   if(room.status==='playing'){await showGame();return}
@@ -1272,6 +1330,24 @@ renderRoundSelector(roster);
 $('#liveCount').textContent=`${roster.length} / 10`;
 $('#liveRoster').innerHTML=roster.map(seat=>`<div class="player-row"><span class="lobby-avatar"${seatProfileAttrs(seat,'avatar')}>${seatAvatarMarkup(seat,'☽')}</span><div><strong${seatProfileAttrs(seat,'nickname')}>${seat.displayName}${seatBotBadge(seat)}</strong><small>${seat.is_bot?(ru?'ИИ-игрок · Готов':'AI player · Ready'):seat.user_id===room.host_id?(ru?'Ведущий':'Host')+' · '+(seat.is_ready?(ru?'Готов':'Ready'):(ru?'Не готов':'Not ready')):seat.is_ready?(ru?'Готов':'Ready'):(ru?'Не готов':'Not ready')}</small></div><span class="status-dot ${seat.is_ready?'is-ready':'is-not-ready'}" aria-label="${seat.is_ready?(ru?'Готов':'Ready'):(ru?'Не готов':'Not ready')}"></span>${room.host_id===session.user.id&&seat.is_bot?`<button type="button" class="kick-player-button" data-remove-bot-id="${seat.id}" title="${ru?'Убрать ИИ-игрока':'Remove AI player'}" aria-label="${ru?'Убрать ИИ-игрока':'Remove AI player'}">×</button>`:room.host_id===session.user.id&&seat.user_id!==room.host_id?`<button type="button" class="kick-player-button" data-kick-user-id="${seat.user_id}" title="${ru?'Исключить из комнаты':'Remove from room'}" aria-label="${ru?'Исключить из комнаты':'Remove from room'}">×</button>`:''}</div>`).join('')+Array.from({length:Math.max(0,3-roster.length)},()=>`<div class="empty-seat"><span>+</span><p>${ru?'Ждём мечтателей…':'Waiting for dreamers…'}</p></div>`).join('');
 const addBotButton=$('#addBotButton');if(addBotButton)addBotButton.disabled=roster.length>=10;
+roster.forEach((seat,index)=>{
+  const row=$('#liveRoster')?.querySelectorAll('.player-row')[index];
+  const info=row?.querySelector('div');
+  if(!info)return;
+  const detail=document.createElement('div');detail.className='lobby-progress-detail';
+  const progress=roomProgressionCache.get(seat.user_id);
+  detail.innerHTML=seat.is_bot?`<small class="progression-guest">${ru?'Бот':'Bot'}</small>`:progress
+    ?progressionChip(progress,language)+progressionPins(progress,language)
+    :`<small class="progression-guest" title="${ru?'Войдите, чтобы сохранять уровень и достижения.':'Sign in to save your level and achievements.'}">${ru?'Гость':'Guest'}</small>`;
+  info.append(detail);
+});
+const mineProgress=roomProgressionCache.get(session.user.id);
+const progressButton=$('#lobbyProgression');
+if(progressButton&&mineProgress){
+  const next=xpForLevel((mineProgress.level||1)+1),previous=xpForLevel(mineProgress.level||1);
+  const percent=Math.max(0,Math.min(100,Math.round(((mineProgress.xp||0)-previous)/(next-previous)*100)));
+  progressButton.innerHTML=`${progressionChip(mineProgress,language)} <span>🏆 ${mineProgress.unlocked_count||0}/12</span><span class="progression-bar"><span style="width:${percent}%"></span></span>`;
+}
 if(mine.is_ready){$('#readyCheck').classList.add('is-ready');$('#readyLabel').textContent=ru?'Готов':'Ready';$('#readyButton').classList.add('is-ready');$('#readyButton').innerHTML=`✓ ${ru?'Готов':'Ready'}`}else{$('#readyCheck').classList.remove('is-ready');$('#readyLabel').textContent=ru?'Не готов':'Not ready';$('#readyButton').classList.remove('is-ready');$('#readyButton').innerHTML=`${ru?'Я готов':'I’m ready'} <b>→</b>`}if(room.host_id===session.user.id)$('#startButton').disabled=savingLobbySettings||!selectedRoundOption(roster.length,selectedDeckCards().length,room.round_cycles||2)||!roster.every(seat=>seat.is_ready)}catch(error){console.error('Could not refresh lobby',error)}});refreshLiveLobby=render;$('#addBotButton')?.addEventListener('click',async event=>{const button=event.currentTarget;if(button.disabled||room.host_id!==session.user.id)return;button.disabled=true;try{const {error}=await supabase.rpc('add_luminaria_bot',{target_room_id:room.id});if(error)throw error;await render()}catch(error){alert(error.message||'Could not add AI player.');button.disabled=false}});
 $('#liveRoster').addEventListener('click',async event=>{const botButton=event.target.closest('[data-remove-bot-id]');if(botButton&&room.host_id===session.user.id){botButton.disabled=true;const {error}=await supabase.rpc('remove_luminaria_bot',{target_room_id:room.id,target_participant_id:botButton.dataset.removeBotId});if(error){alert(error.message);botButton.disabled=false;return}await render();return}const button=event.target.closest('[data-kick-user-id]');if(!button||button.disabled||room.host_id!==session.user.id)return;const nickname=button.closest('.player-row')?.querySelector('strong')?.textContent||'Dreamer';if(!confirm(ru?`Исключить ${nickname} из комнаты?`:`Remove ${nickname} from the room?`))return;button.disabled=true;const {error}=await supabase.rpc('kick_luminaria_player',{target_room_id:room.id,target_user_id:button.dataset.kickUserId});if(error){alert(error.message);button.disabled=false;return}render()});
 $('#copyInvite').addEventListener('click',event=>copyRoomInvitation(invite,event.currentTarget,ru));$('#shareInvite').addEventListener('click',async()=>{try{if(navigator.share)await navigator.share({title:'Luminaria',text:ru?'Присоединяйся к моей комнате в Luminaria':'Join my Luminaria room',url:invite});else{await copyRoomInvitation(invite,$('#shareInvite'),ru)}}catch(error){if(error?.name!=='AbortError')await copyRoomInvitation(invite,$('#shareInvite'),ru)}});$('#readyButton').addEventListener('click',async()=>{const roster=await loadLiveRoster(room.id);const mine=roster.find(seat=>seat.user_id===session.user.id);const {error}=await supabase.from('room_players').update({is_ready:!mine?.is_ready}).eq('room_id',room.id).eq('user_id',session.user.id);if(error)return alert(error.message);render()});$('#lobbyLanguage').addEventListener('click',()=>{language=language==='en'?'ru':'en';localStorage.setItem('luminaria-language',language);showLiveLobby(room,player,session)});installRoomVisibilityControls(room,session);liveRoomChannel=supabase.channel(`room-${room.id}`).on('postgres_changes',{event:'*',schema:'public',table:'room_players',filter:`room_id=eq.${room.id}`},render).on('postgres_changes',{event:'UPDATE',schema:'public',table:'rooms',filter:`id=eq.${room.id}`},()=>render()).subscribe();render()}
