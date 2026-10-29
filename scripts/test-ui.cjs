@@ -10,7 +10,7 @@ catch {
 }
 const output = fs.mkdtempSync(path.join(os.tmpdir(), 'luminaria-ui-'));
 console.log(`UI screenshots: ${output}`);
-for (const test of ['lobby-sync-ui', 'lobby-ui', 'voting-ui', 'reroll-ui', 'finale-ui', 'branding-ui']) {
+for (const test of ['mobile-game-header-ui', 'lobby-sync-ui', 'lobby-ui', 'voting-ui', 'reroll-ui', 'finale-ui', 'branding-ui']) {
   const result = spawnSync(process.execPath, [`tests/${test}.cjs`], {
     stdio: 'inherit', env: { ...process.env, UI_TEST_OUTPUT_DIR: output }
   });
