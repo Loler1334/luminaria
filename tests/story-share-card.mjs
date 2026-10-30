@@ -9,6 +9,8 @@ assert.ok(excerpt.endsWith('…'));
 assert.ok(!excerpt.includes('  '));
 for (const story of [longStory, longStory.repeat(4), 'A short ending.']) {
   const layout = storyCardTextLayout(story, value => value.length * 18);
+  assert.equal(layout.columns, 1);
+  assert.equal(layout.right.length, 0);
   const rendered = [...layout.left, ...layout.right].join(' ');
   assert.equal(rendered, story.replace(/\s+/g, ' ').trim());
   assert.ok(layout.left.every(line => line.length * 18 <= layout.columnWidth));

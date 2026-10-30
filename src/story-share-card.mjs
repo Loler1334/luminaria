@@ -10,10 +10,10 @@ export function storyCardExcerpt(story, limit = 240) {
 // canonical story, including the ending of older, longer saved stories.
 export function storyCardTextLayout(story, measure, maxWidth = 936) {
   const text = String(story || '').replace(/\s+/g, ' ').trim();
-  const columns = text.length > 700 ? 2 : 1;
-  const fontSize = columns === 2 ? 32 : 38;
-  const lineHeight = columns === 2 ? 44 : 50;
-  const columnWidth = columns === 2 ? Math.floor((maxWidth - 36) / 2) : maxWidth;
+  const columns = 1;
+  const fontSize = text.length > 1400 ? 34 : 38;
+  const lineHeight = fontSize === 34 ? 47 : 50;
+  const columnWidth = maxWidth;
   const words = text.split(' ').filter(Boolean);
   const lines = [];
   let line = '';
@@ -25,6 +25,5 @@ export function storyCardTextLayout(story, measure, maxWidth = 936) {
     } else line = next;
   }
   if (line) lines.push(line);
-  const split = columns === 2 ? Math.ceil(lines.length / 2) : lines.length;
-  return { columns, columnWidth, fontSize, lineHeight, left: lines.slice(0, split), right: lines.slice(split) };
+  return { columns, columnWidth, fontSize, lineHeight, left: lines, right: [] };
 }

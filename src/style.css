@@ -106,3 +106,5 @@
   main:is(.game-page,.waiting-page,.voting-page,.results-page)>.nav:has(.game-round)>.game-round span{margin:0 3px}
 }
 .bot-badge{display:inline-block!important;margin:0 0 0 5px!important;padding:2px 6px;border:1px solid #f1c98588;border-radius:999px;color:#f1c985!important;background:#f1c9851c;font:700 10px/1.2 system-ui,sans-serif;vertical-align:middle;letter-spacing:.05em}.add-bot-button{margin-top:16px;width:100%;text-align:center}.add-bot-button:disabled{opacity:.5;cursor:not-allowed}
+.players-panel .add-bot-button{display:block;margin-top:17px;padding:12px 18px;border:1px solid #e9bf78a8;border-radius:12px;background:linear-gradient(125deg,#f0c98425,#9b6aba1c);color:#ffe6b1;font:700 14px 'DM Sans',sans-serif;letter-spacing:.01em;box-shadow:0 5px 20px #e7b6621a;transition:background .2s,transform .2s,box-shadow .2s}
+.players-panel .add-bot-button:hover:not(:disabled){background:linear-gradient(125deg,#f0c98438,#9b6aba28);transform:translateY(-2px);box-shadow:0 8px 24px #e7b66234}
