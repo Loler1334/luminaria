@@ -7,7 +7,7 @@ import { finaleMarkup, starAwardMarkup } from './finale-view.mjs';
 import { roundHighlights, bestRoundIndex, renderBestRoundCard } from './best-round-card.mjs';
 import { storyCardTextLayout } from './story-share-card.mjs';
 import { localizedBotName } from './bot-names.mjs';
-import { progressionChip, progressionPins, progressionModalMarkup, finaleProgressionMarkup, xpForLevel } from './progression.mjs';
+import { progressionChip, progressionPins, progressionModalMarkup, finaleProgressionMarkup, xpForLevel, rankForLevel } from './progression.mjs';
 import './progression.css';
 import { seatForUser, seatForGameRef, gameSeatId } from './seat-identity.mjs';
 import { votingOrder, serialRefresh, finalRoundReached } from './round-state.js';
@@ -307,6 +307,28 @@ async function addAuthButton(){
   }
   const target=document.querySelector('.nav-tools')||document.querySelector('.nav-actions')||document.querySelector('.nav');
   if(target&&button.parentElement!==target){const languageButton=[...target.children].find(child=>child.matches?.('.language'))||null;target.insertBefore(button,languageButton)}
+  if(target&&(target.matches('.nav-actions')||document.querySelector('.game-finale')))updateProgressionNavButton(target,session);
+}
+let progressionNavRequest=0;
+function updateProgressionNavButton(target,session){
+  let chip=target.querySelector('#navProgression');
+  if(!chip){chip=document.createElement('button');chip.type='button';chip.id='navProgression';chip.className='nav-progression-button';chip.addEventListener('click',()=>openProgressionDialog(liveGameContext?.room?.id||null).catch(error=>showInlineGameError(error.message)));target.prepend(chip)}
+  const key=`${session?.user?.id||'guest'}:${language}`;
+  if(chip._progressKey===key)return;
+  chip._progressKey=key;
+  const guest=!session||session.user.is_anonymous;
+  const paint=progress=>{
+    if(!chip.isConnected)return;
+    const rank=rankForLevel(progress?.level||1,language);
+    const next=xpForLevel((progress?.level||1)+1),previous=xpForLevel(progress?.level||1);
+    const percent=Math.max(0,Math.min(100,Math.round(((progress?.xp||0)-previous)/(next-previous)*100)));
+    chip.innerHTML=`<span class="nav-progression-crest">${rank.art}</span><span class="nav-progression-copy"><span>${guest?(language==='ru'?'Профиль и достижения':'Profile & achievements'):`${language==='ru'?'Ур.':'Lv.'} ${progress?.level||1} · ${rank.name}`}</span><small>🏆 ${progress?.achievements?.length||progress?.unlocked_count||0}/12</small></span><span class="nav-progression-meter"><span style="width:${percent}%"></span></span>`;
+    chip.setAttribute('aria-label',language==='ru'?'Профиль и достижения':'Profile and achievements');
+  };
+  paint(null);
+  const request=++progressionNavRequest;
+  if(guest)return;
+  supabase.rpc('my_luminaria_progression',{target_room_id:null}).then(({data,error})=>{if(request!==progressionNavRequest||error||!data)return;paint(data)});
 }
 function ensureGameNavTools(){const nav=$('.nav');if(!nav||nav.querySelector('.nav-actions'))return;let tools=nav.querySelector('.nav-tools');if(!tools){tools=document.createElement('div');tools.className='nav-tools';nav.append(tools)}if(!tools.querySelector('#deckButton')){const deck=document.createElement('button');deck.type='button';deck.id='deckButton';deck.className='ghost-button deck-nav-button';deck.textContent=language==='ru'?'Колоды':'Decks';tools.append(deck)}if(!tools.querySelector('#roomRulesButton')){const rules=document.createElement('button');rules.type='button';rules.id='roomRulesButton';rules.className='room-rules-button';rules.textContent=language==='ru'?'Как играть':'How to play';rules.onclick=showRoomRules;tools.prepend(rules)}addAuthButton()}
 let navToolsQueued=false;const navToolsObserver=new MutationObserver(()=>{if(navToolsQueued)return;navToolsQueued=true;requestAnimationFrame(()=>{navToolsQueued=false;ensureGameNavTools()})});navToolsObserver.observe(document.body,{childList:true,subtree:true});
@@ -386,6 +408,7 @@ async function syncAuthProfile(session){if(!session)return;$('#authEntry')?.remo
 supabase.auth.onAuthStateChange((_event,session)=>{setTimeout(()=>syncAuthProfile(session),0)});
 const lobbyWithDecks=showLobby;showLobby=function(player){lobbyWithDecks(player);addAuthButton()};
 addAuthButton();
+document.querySelector('#languageToggle')?.addEventListener('click',()=>addAuthButton());
 
 let liveRoomChannel=null,liveChatChannel=null,liveChatRoomId=null,liveChatMessages=[],liveStarScores={},unreadChatCount=0;
 function chatStorageKey(){return liveChatRoomId?`luminaria-chat-${liveChatRoomId}`:null}
@@ -980,6 +1003,7 @@ async function showGameFinished(){
     await syncStarParty();
     finaleStarRanking=ranking;
     document.body.innerHTML=finaleMarkup({starScores:liveStarScores,ranking,rounds:history,roomId:context.room.id,roomCode:context.room.code,userId:context.session.user.id,language,story,isHost:context.room.host_id===context.session.user.id});
+    addAuthButton();
     const root=document.querySelector('.game-finale');
     if(!context.session.user.is_anonymous){
       const {data:progression,error:progressionError}=await supabase.rpc('my_luminaria_progression',{target_room_id:context.room.id});
@@ -1239,19 +1263,24 @@ async function refreshRoomProgression(roomId,session){
   if(error){if(!isMissingRpc(error))console.warn('Could not load player progression',error);return}
   for(const entry of data||[])roomProgressionCache.set(entry.user_id,entry);
 }
-async function openProgressionDialog(roomId){
-  const {data,error}=await supabase.rpc('my_luminaria_progression',{target_room_id:roomId});
-  if(error)throw error;
-  if(!data)return;
-  let state=data;
+async function openProgressionDialog(roomId=null){
+  const session=(await supabase.auth.getSession()).data.session;
+  const guest=!session||session.user.is_anonymous;
+  let state=null;
+  if(!guest){
+    const {data,error}=await supabase.rpc('my_luminaria_progression',{target_room_id:roomId});
+    if(error)throw error;
+    state=data;
+  }
   const show=()=>{
     document.querySelector('#progressionOverlay')?.remove();
-    document.body.insertAdjacentHTML('beforeend',progressionModalMarkup(state,language));
+    document.body.insertAdjacentHTML('beforeend',progressionModalMarkup(state,language,{guest}));
     const overlay=document.querySelector('#progressionOverlay');
     const close=()=>overlay.remove();
     overlay.querySelector('.progression-close').addEventListener('click',close);
     overlay.addEventListener('click',event=>{if(event.target===overlay)close()});
-    overlay.querySelectorAll('[data-badge-id]:not(:disabled)').forEach(button=>button.addEventListener('click',async()=>{
+    overlay.querySelector('#progressionSignIn')?.addEventListener('click',()=>{close();openAuth()});
+    overlay.querySelectorAll('.progression-achievement.is-unlocked').forEach(button=>button.addEventListener('click',async()=>{
       const id=button.dataset.badgeId;
       const next=new Set(state.pinned_badges||[]);
       if(next.has(id))next.delete(id);
@@ -1260,9 +1289,9 @@ async function openProgressionDialog(roomId){
       const {data:pins,error:pinError}=await supabase.rpc('pin_luminaria_badges',{badge_ids:[...next]});
       if(pinError){showInlineGameError(pinError.message);return}
       state={...state,pinned_badges:pins};
-      roomProgressionCache.set(liveGameContext.session.user.id,{...roomProgressionCache.get(liveGameContext.session.user.id),pinned_badges:pins});
+      roomProgressionCache.set(session.user.id,{...roomProgressionCache.get(session.user.id),pinned_badges:pins});
       show();
-      refreshLiveLobby?.();
+      if(liveGameContext)refreshLiveLobby?.();
     }));
   };
   show();
@@ -1302,13 +1331,11 @@ document.addEventListener('click',async event=>{
 });
 function showLiveLobby(room,player,session){document.documentElement.lang=language;liveRoomChannel?.unsubscribe();if(room.status==='lobby')liveProfileCache.clear();const ru=language==='ru';const invite=roomInviteUrl(location.origin,room.code);document.body.innerHTML=`<div class="sky"><i></i><i></i><i></i><i></i><i></i><i></i></div><main class="lobby-page"><nav class="nav"><a class="brand" href="/"><span class="brand-mark">✦</span> Luminaria</a><button class="language" id="lobbyLanguage" aria-label="${ru?'Язык интерфейса: русский':'Interface language: English'}">${language.toUpperCase()}</button></nav><section class="lobby-hero"><div><p class="eyebrow"><span></span><span>${ru?'Комната':'Room'} ${room.code}</span></p><h1>${ru?'Собираем<br><em>мечтателей.</em>':'Gathering<br><em>dreamers.</em>'}</h1><p class="lead">${ru?'Комната обновляется в реальном времени. Собери стол из 3–10 участников: пригласи друзей или добавь ИИ-игроков.':'This room updates live. Fill 3–10 seats with friends or AI players.'}</p></div><div class="lobby-orb">✦</div></section><section class="lobby-grid"><article class="lobby-panel players-panel"><div class="panel-title"><h2>${ru?'Игроки':'Players'}</h2><span class="count" id="liveCount">0 / 10</span></div><div id="liveRoster"></div>${room.host_id===session.user.id?`<button class="text-button add-bot-button" id="addBotButton" type="button">＋ ${ru?'Добавить ИИ-игрока':'Add AI player'}</button>`:''}</article><article class="lobby-panel invite-panel"><span class="invite-icon">↗</span><h2>${ru?'Пригласить друзей':'Invite friends'}</h2><p>${ru?'Любой, у кого есть ссылка, сможет войти в комнату.':'Anyone with this link can join your room.'}</p><div class="share-link"><span>${invite}</span><button id="copyInvite">${ru?'Скопировать':'Copy link'}</button></div><button class="text-button share-room-button" id="shareInvite">${ru?'Поделиться ссылкой':'Share invitation'}</button><div class="ready-line"><span class="ready-check" id="readyCheck">✓</span><span id="readyLabel">${ru?'Не готов':'Not ready'}</span></div><button class="primary-button full" id="readyButton">${ru?'Я готов':'I’m ready'} <b>→</b></button>${room.host_id===session.user.id?`<p class="host-start-hint">${ru?'После того как все игроки будут готовы, ведущий нажмёт «Начать игру».':'When everyone is ready, the host can press “Start the game”.'}</p><button class="start-button" id="startButton" disabled>${ru?'Начать игру':'Start the game'}</button>`:''}</article></section></main>`;const root=$('.lobby-page'),context=liveGameContext;
 const isCurrent=()=>root.isConnected&&liveGameContext===context;
-if(!session.user.is_anonymous){
-  const progressButton=document.createElement('button');
-  progressButton.type='button';progressButton.className='lobby-progression-button';progressButton.id='lobbyProgression';
-  progressButton.textContent=ru?'Мои достижения':'My achievements';
-  root.querySelector('.nav')?.insertBefore(progressButton,root.querySelector('#lobbyLanguage'));
-  progressButton.addEventListener('click',()=>openProgressionDialog(room.id).catch(error=>showInlineGameError(error.message)));
-}
+const progressButton=document.createElement('button');
+progressButton.type='button';progressButton.className='lobby-progression-button';progressButton.id='lobbyProgression';
+progressButton.innerHTML=`<span class="nav-progression-crest">${rankForLevel(1,language).art}</span><span>${ru?'Профиль и достижения':'Profile & achievements'}</span><span>🏆 0/12</span>`;
+root.querySelector('.nav')?.insertBefore(progressButton,root.querySelector('#lobbyLanguage'));
+progressButton.addEventListener('click',()=>openProgressionDialog(room.id).catch(error=>showInlineGameError(error.message)));
 let removedFromLobby=false;
 const render=serialRefresh(async()=>{try{
   if(!isCurrent())return;

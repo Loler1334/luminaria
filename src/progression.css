@@ -33,3 +33,22 @@
 .finale-progression>strong{font:700 2rem Georgia,serif;color:#f7d18b}.finale-progression>span{color:#c8cada}
 .finale-new-badge{margin:.3rem 0;color:#f6d693;font-weight:700}
 @media(max-width:640px){.lobby-page .nav{flex-wrap:wrap}.lobby-progression-button{order:3;width:100%;justify-content:space-between;margin:.3rem 0 0;font-size:.72rem;padding:.45rem .65rem}.lobby-progression-button .progression-bar{display:none}.progression-rank{white-space:normal}.progression-dialog{padding:1.4rem;max-height:92vh}.progression-achievements{grid-template-columns:1fr}}
+.progression-art{display:block;width:100%;height:100%;flex:none;overflow:visible}
+.progression-rank{display:inline-flex;align-items:center;gap:.25rem}.progression-rank .progression-art{width:1.35rem;height:1.35rem}
+.progression-pin{width:1.5rem;height:1.5rem;overflow:hidden}.progression-pin .progression-art{width:100%;height:100%}
+.progression-rank-heading{display:flex;align-items:center;gap:1rem;margin:.4rem 0 1rem}.progression-rank-heading h2{margin:0}.progression-rank-heading .progression-level-line{margin:.3rem 0 0}
+.rank-crest{display:block;width:80px;height:80px;flex:none;filter:drop-shadow(0 5px 15px #d29a5a55)}
+.achievement-icon{width:56px;height:56px;border-radius:15px;background:none!important;font-size:inherit;filter:saturate(.45);opacity:.55;transition:filter .2s,opacity .2s,transform .2s}
+.progression-achievement:hover .achievement-icon,.progression-achievement:focus-visible .achievement-icon{filter:saturate(1);opacity:1;transform:scale(1.08)}
+.progression-achievement.is-unlocked .achievement-icon{filter:saturate(1) drop-shadow(0 0 7px #e7bb6f88);opacity:1}
+.progression-achievement[aria-disabled="true"]{cursor:default}.progression-achievement:focus-visible{outline:2px solid #e8c37b;outline-offset:2px}
+.pin-check{display:block;margin:.35rem 0 0;font:600 .67rem system-ui;color:#f9d78a}
+.progression-guest-callout{display:flex;align-items:center;gap:1rem;justify-content:space-between;padding:.85rem 1rem;margin:.65rem 0;border:1px solid #dab26d77;border-radius:12px;background:#e8bd6a14;color:#f2ddba;font-size:.82rem;line-height:1.4}
+.progression-guest-callout button{flex:none;border:1px solid #f2d18b;border-radius:999px;padding:.4rem .9rem;background:#e5b965;color:#171a2e;cursor:pointer;font:700 .8rem system-ui}
+.nav-progression-button{position:relative;display:flex;align-items:center;gap:.4rem;min-width:120px;max-width:210px;padding:.25rem .5rem .4rem;border:1px solid #d7ae7177;border-radius:14px;background:#22253ebd;color:#f9e2b2;text-align:left;cursor:pointer;font:inherit}
+.nav-progression-button:hover,.nav-progression-button:focus-visible{border-color:#f8d28c;background:#35334e;outline:none}
+.nav-progression-crest{display:block;width:34px;height:34px;flex:none}.nav-progression-copy{display:grid;gap:.05rem;min-width:0;font-size:.68rem;font-weight:700;line-height:1.18}.nav-progression-copy>span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.nav-progression-copy small{font-size:.6rem;color:#c9c4c8}
+.nav-progression-meter{position:absolute;left:8px;right:8px;bottom:4px;height:2px;border-radius:5px;background:#ffffff2b;overflow:hidden}.nav-progression-meter>span{display:block;height:100%;background:linear-gradient(90deg,#c891db,#f8cb75)}
+.finale-rank-art{width:68px;height:68px;margin:auto}.finale-new-badge{display:flex;align-items:center;justify-content:center;gap:.35rem}.finale-new-badge .progression-art{width:34px;height:34px}
+@media(max-width:640px){.nav-progression-button{min-width:0;max-width:115px}.nav-progression-crest{width:27px;height:27px}.nav-progression-copy{font-size:.58rem}.nav-progression-copy small{font-size:.55rem}.progression-rank-heading .rank-crest{width:68px;height:68px}.progression-guest-callout{align-items:flex-start;flex-direction:column}}
+@media(max-width:480px){main:has(.hero)>.nav{flex-wrap:wrap;gap:.65rem}main:has(.hero)>.nav>.nav-actions{width:100%;justify-content:flex-start;flex-wrap:wrap}main:has(.hero) .nav-progression-button{max-width:170px}}
