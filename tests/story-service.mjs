@@ -30,7 +30,7 @@ assert.equal((await handleStory(request(false),env,config,{fetcher,cache})).stat
 finished=false;assert.equal((await handleStory(request(),env,config,{fetcher,cache})).status,409);assert.equal(aiCalls,0);
 finished=true;
 const results=await Promise.all([handleStory(request(),env,config,{fetcher,cache}),handleStory(request(),env,config,{fetcher,cache})]);
-const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('примерно 252 слов'));assert(providedPrompt.includes('максимум 315 слов'));assert(providedPrompt.includes('причинную связь'));assert(providedTokenLimit>=1176);
+const first=await results[0].json();assert.equal(first.clueCount,28);assert.equal(providedClues.at(-1),'ассоциация 27');assert.equal(aiCalls,1);assert(first.story.length>400);assert(providedPrompt.includes('примерно 308 слов'));assert(providedPrompt.includes('максимум 478 слов'));assert(providedPrompt.includes('причинную связь'));assert(providedTokenLimit>=8192);
 assert.equal((await (await handleStory(request(),env,config,{fetcher,cache})).json()).story,first.story);assert.equal(aiCalls,1);
 assert.equal(persistedStory.finalRoundId,'round-27');
 const oldStory=persistedStory.story;
@@ -72,7 +72,7 @@ for (const badDraft of [
   {response:'Король внезапно увидел 突然 и заговорил с чайником. Эта странная история закончилась тем, что чайник стал королём, а король отправился мыть посуду.'},
   {response:'The kettle swallowed the entire royal palace and demanded a refund. The king crowned a teaspoon, folded the kingdom into a napkin and paid the bill.'},
   {response:'The king summoned a flying kettle and then'},
-  {response:'A finished sentence. '.repeat(100)},
+  {response:'A finished sentence. '.repeat(180)},
   {response:'A sentence ending in punctuation.',finish_reason:'length'},
   {response:'The king was just about to explain everything…'}
 ]) {
@@ -107,7 +107,12 @@ const markerResult=await handleStory(request(),{AI:{run:async()=>({choices:[{fin
 assert.equal(markerResult.status,200);assert(!persistedStory.story.includes('[[clue:'));
 assert.deepEqual(missingStoryClues(persistedStory.story,rounds.map(round=>round.clue)),[]);
 const fallbackClues=Array.from({length:18},(_,i)=>({clue:`Длинная неизменённая ассоциация номер ${i}`}));
-assert.deepEqual(missingStoryClues(fallbackStory(fallbackClues),fallbackClues.map(round=>round.clue)),[]);
-console.log('PASS: markers expand to original clues; the offline vignette also preserves all 18 phrases.');
+const offline=fallbackStory(fallbackClues);
+assert(offline.includes(fallbackClues[0].clue));
+assert(offline.includes(fallbackClues[8].clue));
+assert(offline.includes(fallbackClues[17].clue));
+assert(!offline.includes(fallbackClues[9].clue));
+assert.deepEqual(missingStoryClues('Он спросил, что он тут вообще делает?', ['что тут он делает?']),[]);
+console.log('PASS: markers expand to original clues; offline vignette stays short and question-word order is flexible.');
 
 assert.deepEqual(missingStoryClues('Он съел съедобную корону, заплакал каменными слезами и заиграл на печальной гармонике.', ['Съедобная корона','Каменные слёзы','Печальная гармоника']),[]);

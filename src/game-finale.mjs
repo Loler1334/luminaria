@@ -72,15 +72,19 @@ export function fallbackStory(rounds, language = 'ru') {
   if (!clues.length) return language === 'ru'
     ? 'Ночью за пустым столом зажглась звезда. Никто не помнил, кто её загадал. К рассвету все карты исчезли, а на последней осталась дверь. За ней кто-то тихо произнёс наши имена. Кажется, история только начинается.'
     : 'At midnight a star appeared above the empty table. Nobody remembered naming it. By dawn the cards had vanished, leaving a door. From the other side, someone whispered our names. Perhaps the story was only beginning.';
-  const fragmentCount = clues.length;
-  const positions = fragmentCount === 1
-    ? [0]
-    : Array.from({ length: fragmentCount }, (_, i) => Math.round(i * (clues.length - 1) / (fragmentCount - 1)));
-  // The labelled offline vignette also preserves every original clue.
-
-  const fragments = positions.map(index => clues[index]);
-  const words = fragments.join(', ');
+  // This is a short offline vignette, not a substitute for the canonical story.
+  // The complete set of clues remains available in the finale history below.
+  const fragments = [...new Set([0, Math.floor((clues.length - 1) / 2), clues.length - 1])]
+    .map(index => clues[index]);
+  const [first, middle, last] = fragments;
+  if (fragments.length === 1) return fitStory(language === 'ru'
+    ? `Ночью хранитель карт нашёл на двери записку: «${first}». В этом городе написанное становилось правдой, поэтому он поспешил убрать записку до рассвета. Утром всё успокоилось, но теперь соседи просили его читать их письма только в перчатках.`
+    : `At night the keeper of cards found a note on the door: “${first}”. In this town anything written down became true, so he hurried to take it down before sunrise. By morning things had settled, but the neighbors now asked him to read their letters only while wearing gloves.`);
+  const middleSentence = middle && last ? (language === 'ru'
+    ? `К утру появилась новая улика — «${middle}», и привычный порядок окончательно рассыпался. `
+    : `By morning another clue appeared — “${middle}” — and ordinary life fell apart. `) : '';
+  const ending = last || middle;
   return fitStory(language === 'ru'
-    ? `Ночью городской принтер напечатал приказ: ${words}. По нелепому закону всё напечатанное тут же становилось правдой. Мэр пытался выключить принтер, но тот выдал ему счёт за аренду реальности. Утром город удалось спасти: принтер назначили мэром. Теперь он хотя бы не врёт о бюджете.`
-    : `At midnight the city printer issued a decree: ${words}. By an absurd local law, everything it printed became true. The mayor tried to unplug it, but it billed him for renting reality. By morning the city was saved: they made the printer mayor. At least it never lies about the budget.`);
+    ? `Ночью хранитель карт нашёл на двери записку: «${first}». Он решил проверить её и обнаружил, что в этом городе написанное становится правдой. ${middleSentence}Тогда хранитель оставил на дверях последнюю подсказку: «${ending}». Город успокоился, а хранителю за спасение поручили лично отвечать на каждую новую записку.`
+    : `At night the keeper of cards found a note on the door: “${first}”. He tested it and discovered that, in this town, anything written down became true. ${middleSentence}So the keeper left one final note: “${ending}”. The town settled down, but as a reward he was made responsible for answering every new note himself.`);
 }

@@ -36,14 +36,14 @@
     "scene": "Переполненный автобус растянулся вверх бесконечной лестницей; пассажиры сидят на ступенях между дверями и окнами.",
     "keywords": "автобус салон пассажиры лестница ступеньки общественный транспорт дорога",
     "clues": [
-      "Следующая остановка где-то этажом выше",
+      "Кондуктор впервые пожалел, что боится высоты",
       "Проезд оплачивается после подъёма"
     ],
     "title_en": "Endless Staircase Bus",
     "scene_en": "A crowded bus stretches upward into an endless staircase with passengers sitting on steps between its doors and windows.",
     "keywords_en": "endless, staircase, bus, crowded, stretches, upward, passengers, sitting, steps, doors, windows",
     "clues_en": [
-      "The next stop is one floor higher",
+      "The conductor finally admits a fear of heights",
       "Pay your fare after the climb"
     ]
   },
@@ -68,14 +68,14 @@
     "scene": "Офисный работник тянется к убегающим часам на ножках за стеклянной стеной высотного здания.",
     "keywords": "дедлайн срок часы будильник ноги офис работа мужчина стекло высотка погоня",
     "clues": [
-      "Сроки опять быстрее сотрудников",
+      "К обеду опоздал даже сам понедельник",
       "Поймать время руками не получилось"
     ],
     "title_en": "Runaway Deadline",
     "scene_en": "An office worker reaches for a clock running away on little legs behind the glass wall of a tower.",
     "keywords_en": "runaway, deadline, office, worker, reaches, clock, running, away, legs, glass, wall, tower",
     "clues_en": [
-      "Deadlines are faster than the employees again",
+      "Even Monday was late for lunch",
       "Nobody managed to catch time by hand"
     ]
   },
@@ -133,14 +133,14 @@
     "keywords": "ключ золотой огромный дверь подъезд лестница дом мужчина кот замочная скважина",
     "clues": [
       "Для этой двери потребуется помощь грузчиков",
-      "Путь домой неожиданно стал тяжёлым"
+      "Мелкая бытовая задача потребовала целую бригаду"
     ],
     "title_en": "Giant Key at the Door",
     "scene_en": "A resident on an outside staircase tries to open a door with a giant golden key while a cat watches.",
     "keywords_en": "key, door, resident, staircase, tries, open, golden, cat, watches",
     "clues_en": [
       "Moving this doorway will require a crew",
-      "The route home became unexpectedly heavy"
+      "One little errand took an entire moving crew"
     ]
   },
   {
@@ -404,14 +404,14 @@
     "scene": "Уставший скрипач ждёт на перроне поезда из соединённых будильников, который ведёт сонная черепаха в фуражке.",
     "keywords": "вокзал перрон поезд будильники часы черепаха проводник скрипач чемодан",
     "clues": [
-      "Расписание движется, но очень неспешно",
+      "Пунктуальность сегодня взяла больничный",
       "На этот рейс лучше не ставить будильник"
     ],
     "title_en": "Train platform",
     "scene_en": "A tired violinist waits for a train made of neatly linked alarm clocks; the conductor is a sleepy tortoise with a cap.",
     "keywords_en": "train, platform, tired, violinist, waits, made, neatly, linked, alarm, clocks, conductor, sleepy, tortoise, cap",
     "clues_en": [
-      "The timetable moves, just not very quickly",
+      "Punctuality called in sick today",
       "Do not set an alarm for this service"
     ]
   },
@@ -437,14 +437,14 @@
     "keywords": "ресторан официант салат тарелка город дома офисные здания зелень лист ужин",
     "clues": [
       "За гарнир разгорелся городской спор",
-      "На тарелке сегодня очень тесно"
+      "Совещание затянулось до десерта"
     ],
     "title_en": "Restaurant",
     "scene_en": "A waiter serves a salad in which small office buildings argue over the last leaf; the diner politely offers them a fork.",
     "keywords_en": "restaurant, waiter, serves, salad, which, office, buildings, argue, last, leaf, diner, politely, offers, fork",
     "clues_en": [
       "A citywide argument broke out over the garnish",
-      "There is very little room on today's plate"
+      "The meeting ran all the way into dessert"
     ]
   },
   {
@@ -724,14 +724,14 @@
     "scene": "В больничной очереди рядом с пациенткой сидят цифры на стульях в шарфах, ожидая своего вызова.",
     "keywords": "поликлиника очередь цифры числа пациентка стулья шарфы зал ожидания",
     "clues": [
-      "Даже номер устал ждать приёма",
+      "На приём записали даже само ожидание",
       "Место в очереди заняло отдельное кресло"
     ],
     "title_en": "Clinic waiting room",
     "scene_en": "A patient waits while the numbers in a queue patiently wait in chairs themselves, each wearing a scarf.",
     "keywords_en": "clinic, waiting, room, patient, waits, numbers, queue, patiently, wait, chairs, themselves, wearing, scarf",
     "clues_en": [
-      "Even the number got tired of waiting",
+      "Even waiting itself had an appointment",
       "A place in line took its own chair"
     ]
   },
@@ -805,14 +805,14 @@
     "keywords": "крыша бельё верёвка наволочка парус лодка носок женщина стирка",
     "clues": [
       "Стирка неожиданно отправилась в плавание",
-      "На верёвке появился маленький капитан"
+      "После обычных хлопот понадобилась карта океанов"
     ],
     "title_en": "Rooftop laundry",
     "scene_en": "An aunt hangs laundry and a pillowcase inflates into a miniature sailboat carrying a sock captain.",
     "keywords_en": "rooftop, laundry, aunt, hangs, pillowcase, inflates, miniature, sailboat, carrying, sock, captain",
     "clues_en": [
       "The laundry unexpectedly set sail",
-      "A tiny captain appeared on the line"
+      "An ordinary chore suddenly required an ocean map"
     ]
   },
   {

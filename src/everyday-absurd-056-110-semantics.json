@@ -708,14 +708,14 @@
     "scene": "Мастер с лестницы спасает облако, зацепившееся за бельевую верёвку на крыше; облако держит потерянный носок.",
     "keywords": "крыша бельё верёвка облако туча носок лестница мастер стирка",
     "clues": [
-      "Пропажу из стирки нашла погода",
+      "Пропажа вернулась с прогнозом на завтра",
       "Зацепившийся гость не умеет спускаться"
     ],
     "title_en": "Town laundromat roof",
     "scene_en": "A repairer climbs a ladder to rescue a cloud snagged on a laundry line; the cloud clutches one missing sock.",
     "keywords_en": "town, laundromat, roof, repairer, climbs, ladder, rescue, cloud, snagged, laundry, line, clutches, missing, sock",
     "clues_en": [
-      "The weather found what the laundry had lost",
+      "The missing thing returned with tomorrow's forecast",
       "The visitor is caught and cannot climb down"
     ]
   },
